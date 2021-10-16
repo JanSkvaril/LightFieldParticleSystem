@@ -20,6 +20,9 @@ add_library(glad include/glad/glad.h src/glad.c)
 #target_link_libraries(glad dl)
 target_include_directories(glad PUBLIC include/)
 target_link_libraries(light_field_ps_bp glad)
+
+add_subdirectory(include/glm)
+target_link_libraries(light_field_ps_bp glm)
     
 # run target
 add_custom_target(run-ex1
