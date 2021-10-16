@@ -69,3 +69,8 @@ unsigned int Shader::GetShaderProgram()
 {
     return shader_program;
 }
+
+int Shader::GetUniformLocation(std::string uniform_name)
+{
+    return glGetUniformLocation(shader_program, "ourColor");
+}

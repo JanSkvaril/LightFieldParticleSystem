@@ -6,6 +6,7 @@ class Shader
 {
 public:
     Shader(std::string vertex_path, std::string fragment_path);
+    int GetUniformLocation(std::string uniform_name);
     unsigned int GetShaderProgram();
 
 protected:
