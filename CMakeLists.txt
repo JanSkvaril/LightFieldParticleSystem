@@ -2,7 +2,9 @@ cmake_minimum_required(VERSION 3.9)
 
 project(LIGHT_FIELD_PS)
 set(CMAKE_CXX_STANDARD 17)     
-add_executable(light_field_ps_bp src/main.cpp)
+add_executable(light_field_ps_bp src/main.cpp
+    src/shader.h
+    src/shader.cpp)
 
 # open gl
 set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
@@ -31,3 +33,8 @@ add_custom_target(run-ex1
     WORKING_DIRECTORY ${CMAKE_PROJECT_DIR}
 )
 
+
+add_custom_target(copy_assets
+        COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_LIST_DIR}/assets ${CMAKE_CURRENT_BINARY_DIR}/
+        )
+add_dependencies(light_field_ps_bp copy_assets)
