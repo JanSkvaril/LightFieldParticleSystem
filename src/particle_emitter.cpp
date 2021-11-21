@@ -31,13 +31,14 @@ void ParticleEmitter::Update()
             particle.position += particle.direction * particle.speed;
         }
     }
+    SortByDepth();
 }
 
 void ParticleEmitter::ResetParticle(Particle &particle)
 {
     particle.direction = glm::vec3((rand() % 100) - 50, (rand() % 100 - 50), (rand() % 100) - 50);
     particle.direction = glm::normalize(particle.direction);
-    particle.speed = 0.02f;
+    particle.speed = 0.08f;
     particle.time_to_live = rand() % 500;
     particle.position = glm::vec3(0.0f, 0.0f, 0.0f);
 }
@@ -51,7 +52,7 @@ void ParticleEmitter::Draw()
     glm::mat4 model = glm::mat4(1.0f);
     glm::mat4 view = glm::mat4(1.0f);
     glm::mat4 projection = glm::mat4(1.0f);
-    model = glm::rotate(model, glm::radians(0.0f), glm::vec3(1.0f, 0.8f, 0.0f));
+    model = glm::rotate(model, glm::radians(time), glm::vec3(1.0f, 0.8f, 0.0f));
     model = glm::scale(model, glm::vec3(0.5f, 0.5f, 0.5f));
     view = glm::translate(view, glm::vec3(0.0f, 0.0f, -10.0f));
     projection = glm::perspective(glm::radians(45.0f), (float)800 / (float)600, 0.1f, 100.0f);
@@ -74,19 +75,24 @@ void ParticleEmitter::Draw()
 void ParticleEmitter::CreateVAO()
 {
     float vertices[] = {
-        1.0f, 1.0f, 0.0f,
-        1.0f, -1.0f, 0.0f,
-        -1.0f, 1.0f, 0.0f,
-        1.0f, -1.0f, 0.0f,
-        -1.0f, -1.0f, 0.0f,
-        -1.0f, 1.0f, 0.0f};
+        1.0f, 1.0f, 0.0f, 1.0f, 1.0f,
+        1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
+        -1.0f, 1.0f, 0.0f, 0.0f, 1.0f,
+
+        1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
+        -1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
+        -1.0f, 1.0f, 0.0f, 0.0f, 1.0f};
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
     glBindVertexArray(VAO);
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+    // position
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void *)0);
+    // texture
+    glEnableVertexAttribArray(1);
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void *)(3 * sizeof(float)));
     // reset
     glBindVertexArray(0);
 }
@@ -96,4 +102,10 @@ void ParticleEmitter::DrawParticle(Particle &particle)
     const auto p_pos = particle.position;
     glUniform3f(shader.GetUniformLocation("offset"), p_pos.x, p_pos.y, p_pos.z);
     glDrawArrays(GL_TRIANGLES, 0, GL_UNSIGNED_INT);
+}
+
+void ParticleEmitter::SortByDepth()
+{
+    std::sort(particles.begin(), particles.end(), [](Particle &p_a, Particle &p_b)
+              { return glm::length(p_a.position) > glm::length(p_b.position); });
 }

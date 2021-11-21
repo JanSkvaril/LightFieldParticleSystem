@@ -11,5 +11,5 @@ uniform vec3 offset;
 void main()
 {
     gl_Position = projection * (view * model * vec4(aPos, 1.0) + vec4(offset.xyz, 1.0));
-    TexCoord = vec2(aPos.x, aPos.y);
+    TexCoord = vec2(aTexCoord.x, aTexCoord.y);
 }

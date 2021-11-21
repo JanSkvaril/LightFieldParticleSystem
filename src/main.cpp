@@ -51,9 +51,10 @@ int main()
         return -1;
     }
 
-    ParticleEmitter ps(10);
+    ParticleEmitter ps(500);
 
-    glEnable(GL_DEPTH_TEST);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     float time = 0.0f;
     while (!glfwWindowShouldClose(window))
     {
@@ -64,6 +65,7 @@ int main()
 
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         ps.Draw();
         glfwSwapBuffers(window);
         glfwPollEvents();

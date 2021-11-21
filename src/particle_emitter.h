@@ -10,6 +10,7 @@
 #include <GLFW/glfw3.h>
 #include <cmath>
 #include "shader.h"
+#include <algorithm>
 class ParticleEmitter
 {
 public:
@@ -26,6 +27,7 @@ protected:
     void ResetParticle(Particle &particle);
     void Bind();
     void DrawParticle(Particle &particle);
+    void SortByDepth();
     void CreateVAO();
     unsigned int VAO, VBO;
     const int amount_of_particles;

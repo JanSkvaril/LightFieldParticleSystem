@@ -11,6 +11,7 @@ void main()
 {
     // linearly interpolate between both textures (80% container, 20% awesomeface)
     vec3 col = vec3(0.6 - TexCoord.x, 0.6 - TexCoord.y * TexCoord.x, sin(TexCoord.x));
-    
-    FragColor = vec4(col.xyz, 1.0);
+    float alpha = 1.0 - distance(TexCoord, vec2(0.5, 0.5)) * 2.0;
+    alpha = alpha * 2.0;
+    FragColor = vec4(col.xyz, alpha);
 }
