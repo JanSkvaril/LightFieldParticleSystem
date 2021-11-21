@@ -98,7 +98,7 @@ int main()
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         // be sure to activate the shader before any calls to glUniform
-        glUseProgram(shaderProgram);
+        shader.Use();
 
         // update shader uniform
         glm::mat4 model = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
@@ -107,15 +107,13 @@ int main()
         model = glm::rotate(model, glm::radians(time), glm::vec3(1.0f, 0.8f, 0.0f));
         view = glm::translate(view, glm::vec3(0.0f, 0.0f, -10.0f));
         projection = glm::perspective(glm::radians(45.0f), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
-        // retrieve the matrix uniform locations
-        unsigned int modelLoc = glGetUniformLocation(shaderProgram, "model");
-        unsigned int viewLoc = glGetUniformLocation(shaderProgram, "view");
+
         // pass them to the shaders (3 different ways)
         glUniformMatrix4fv(shader.GetUniformLocation("model"), 1, GL_FALSE, glm::value_ptr(model));
         glUniformMatrix4fv(shader.GetUniformLocation("view"), 1, GL_FALSE, glm::value_ptr(view));
         // note: currently we set the projection matrix each frame, but since the projection matrix rarely changes it's often best practice to set it outside the main loop only once.
         glUniformMatrix4fv(shader.GetUniformLocation("projection"), 1, GL_FALSE, glm::value_ptr(projection));
-        glUniform3f(shader.GetUniformLocation("offset"), 0.0f, 0.0f, 0.0f);
+        glUniform3f(shader.GetUniformLocation("offset"), 0.0f, 0.0f, sin(time));
         // render the triangle
         glBindVertexArray(VAO); // seeing as we only have a single VAO there's no need to bind it every time, but we'll do so to keep things a bit more organized
         // glDrawArrays(GL_TRIANGLES, 0, 6);
