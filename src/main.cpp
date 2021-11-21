@@ -5,6 +5,7 @@
 #include <cmath>
 
 #include "shader.h"
+#include "particle_emitter.h"
 #include <string>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -42,6 +43,7 @@ int main()
     glfwMakeContextCurrent(window);
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
+    ParticleEmitter ps(10);
     // glad: load all OpenGL function pointers
     // ---------------------------------------
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
@@ -87,6 +89,7 @@ int main()
     float time = 0.0f;
     while (!glfwWindowShouldClose(window))
     {
+        ps.Update();
         time += 0.4f;
         // input
         // -----
@@ -104,7 +107,8 @@ int main()
         glm::mat4 model = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
         glm::mat4 view = glm::mat4(1.0f);
         glm::mat4 projection = glm::mat4(1.0f);
-        model = glm::rotate(model, glm::radians(time), glm::vec3(1.0f, 0.8f, 0.0f));
+        model = glm::rotate(model, glm::radians(0.0f), glm::vec3(1.0f, 0.8f, 0.0f));
+        model = glm::scale(model, glm::vec3(0.5f, 0.5f, 0.5f));
         view = glm::translate(view, glm::vec3(0.0f, 0.0f, -10.0f));
         projection = glm::perspective(glm::radians(45.0f), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
 
@@ -113,11 +117,16 @@ int main()
         glUniformMatrix4fv(shader.GetUniformLocation("view"), 1, GL_FALSE, glm::value_ptr(view));
         // note: currently we set the projection matrix each frame, but since the projection matrix rarely changes it's often best practice to set it outside the main loop only once.
         glUniformMatrix4fv(shader.GetUniformLocation("projection"), 1, GL_FALSE, glm::value_ptr(projection));
-        glUniform3f(shader.GetUniformLocation("offset"), 0.0f, 0.0f, sin(time));
+
         // render the triangle
         glBindVertexArray(VAO); // seeing as we only have a single VAO there's no need to bind it every time, but we'll do so to keep things a bit more organized
         // glDrawArrays(GL_TRIANGLES, 0, 6);
-        glDrawArrays(GL_TRIANGLES, 0, GL_UNSIGNED_INT);
+        for (int i = 0; i < ps.particles.size(); i++)
+        {
+            glm::vec3 p_pos = ps.particles[i].position;
+            glUniform3f(shader.GetUniformLocation("offset"), p_pos.x, p_pos.y, p_pos.z);
+            glDrawArrays(GL_TRIANGLES, 0, GL_UNSIGNED_INT);
+        }
 
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         // -------------------------------------------------------------------------------

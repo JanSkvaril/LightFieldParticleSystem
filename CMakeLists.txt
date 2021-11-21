@@ -4,7 +4,10 @@ project(LIGHT_FIELD_PS)
 set(CMAKE_CXX_STANDARD 17)     
 add_executable(light_field_ps_bp src/main.cpp
     src/shader.h
-    src/shader.cpp)
+    src/shader.cpp
+    src/particle.h
+    src/particle_emitter.h
+    src/particle_emitter.cpp)
 
 # open gl
 set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
