@@ -3,6 +3,13 @@
 #include <vector>
 #include "particle.h"
 #include <glm/geometric.hpp>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+#include <glad/glad.h>
+#include <GLFW/glfw3.h>
+#include <cmath>
+#include "shader.h"
 class ParticleEmitter
 {
 public:
@@ -14,7 +21,13 @@ public:
     std::vector<Particle> particles;
 
 protected:
+    float time = 0.0f;
+    Shader shader;
     void ResetParticle(Particle &particle);
+    void Bind();
+    void DrawParticle(Particle &particle);
+    void CreateVAO();
+    unsigned int VAO, VBO;
     const int amount_of_particles;
 };
 
