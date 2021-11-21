@@ -51,9 +51,9 @@ int main()
         return -1;
     }
 
-    ParticleEmitter ps(500);
+    ParticleEmitter ps(200);
 
-    glEnable(GL_BLEND);
+    glEnable(GL_DEPTH_TEST);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     float time = 0.0f;
     while (!glfwWindowShouldClose(window))

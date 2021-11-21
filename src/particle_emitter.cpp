@@ -38,8 +38,8 @@ void ParticleEmitter::ResetParticle(Particle &particle)
 {
     particle.direction = glm::vec3((rand() % 100) - 50, (rand() % 100 - 50), (rand() % 100) - 50);
     particle.direction = glm::normalize(particle.direction);
-    particle.speed = 0.08f;
-    particle.time_to_live = rand() % 500;
+    particle.speed = 0.01f;
+    particle.time_to_live = rand() % 1000;
     particle.position = glm::vec3(0.0f, 0.0f, 0.0f);
 }
 
@@ -52,9 +52,10 @@ void ParticleEmitter::Draw()
     glm::mat4 model = glm::mat4(1.0f);
     glm::mat4 view = glm::mat4(1.0f);
     glm::mat4 projection = glm::mat4(1.0f);
-    model = glm::rotate(model, glm::radians(time), glm::vec3(1.0f, 0.8f, 0.0f));
+    //  model = glm::rotate(model, glm::radians(0.0f), glm::vec3(1.0f, 0.8f, 0.0f));
     model = glm::scale(model, glm::vec3(0.5f, 0.5f, 0.5f));
     view = glm::translate(view, glm::vec3(0.0f, 0.0f, -10.0f));
+    view = glm::rotate(view, glm::radians(-time * 4.0f), glm::vec3(1.0f, 0.8f, 0.0f));
     projection = glm::perspective(glm::radians(45.0f), (float)800 / (float)600, 0.1f, 100.0f);
 
     // set emittor object to uniforms
@@ -106,6 +107,7 @@ void ParticleEmitter::DrawParticle(Particle &particle)
 
 void ParticleEmitter::SortByDepth()
 {
+    return;
     std::sort(particles.begin(), particles.end(), [](Particle &p_a, Particle &p_b)
               { return glm::length(p_a.position) > glm::length(p_b.position); });
 }
