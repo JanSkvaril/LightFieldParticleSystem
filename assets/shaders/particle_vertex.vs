@@ -11,7 +11,7 @@ uniform vec3 offset;
 void main()
 {
     vec3 camera_normal = vec3(view[0][2], view[1][2], view[2][2]);
-    // camera_normal = - camera_normal;
+    camera_normal = - camera_normal;
     vec3 up = vec3(view[0][0], view[1][0], view[2][0]);
     vec3 r = cross(up, camera_normal);
     r = normalize(r);

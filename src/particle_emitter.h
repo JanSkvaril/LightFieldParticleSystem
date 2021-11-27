@@ -11,6 +11,7 @@
 #include <cmath>
 #include "shader.h"
 #include <algorithm>
+#include "texture.h"
 class ParticleEmitter
 {
 public:
@@ -20,12 +21,12 @@ public:
     void Draw();
 
     std::vector<Particle> particles;
+    Texture texture;
 
 protected:
     float time = 0.0f;
     Shader shader;
     void ResetParticle(Particle &particle);
-    void Bind();
     void DrawParticle(Particle &particle);
     void SortByDepth();
     void CreateVAO();

@@ -1,3 +1,4 @@
+#define STB_IMAGE_IMPLEMENTATION
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
@@ -51,7 +52,7 @@ int main()
         return -1;
     }
 
-    ParticleEmitter ps(200);
+    ParticleEmitter ps(1);
 
     glEnable(GL_DEPTH_TEST);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
