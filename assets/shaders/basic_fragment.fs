@@ -7,10 +7,10 @@ uniform sampler2D u_texture;
 uniform mat4 view; // emittor position
 void main()
 {
-    float zoom = 5.0;
+    float zoom = 7.0;
     vec2 pos = TexCoord;
-    pos += 2.0;
-    float m = view[3][0] * 10.0;
+    pos += 3.0;
+    float m = view[3][0] * 15.0;
     
     float u = floor(m);
     
