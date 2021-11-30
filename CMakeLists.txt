@@ -32,7 +32,8 @@ add_subdirectory(include/glm)
 target_link_libraries(light_field_ps_bp glm)
 
 # stb image
-add_library(stb_img INTERFACE include/stb_image/stb_image.h)
+add_library(stb_img INTERFACE)
+target_include_directories(stb_img INTERFACE include/stb_image/stb_image.h)
 target_link_libraries(light_field_ps_bp stb_img)
 
 # run target
