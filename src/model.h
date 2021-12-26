@@ -4,6 +4,7 @@
 #include <vector>
 #include <assimp/scene.h>
 #include "shader.h"
+#include "model_vertex.h"
 class Model
 {
 public:
@@ -13,8 +14,8 @@ public:
 protected:
     Shader shader;
     unsigned int VAO, VBO, EBO;
-    std::vector<aiMesh *> meshes;
     std::vector<unsigned int> indicies;
+    std::vector<ModelVertex> verticies;
     void Setup();
 };
 #endif

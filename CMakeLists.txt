@@ -11,7 +11,8 @@ add_executable(light_field_ps_bp src/main.cpp
     src/texture.h
     src/texture.cpp
     src/model.h
-    src/model.cpp)
+    src/model.cpp
+    src/model_vertex.h)
 
 # open gl
 set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)

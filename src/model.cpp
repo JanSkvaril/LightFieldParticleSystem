@@ -22,15 +22,23 @@ Model::Model(std::string path) : shader("shaders/basic_vertex.vs", "shaders/basi
         std::cout << "ERROR::ASSIMP::" << import.GetErrorString() << std::endl;
         exit(69);
     }
-    for (size_t i = 0; i < scene->mNumMeshes; i++)
+    auto mesh = scene->mMeshes[0];
+    for (unsigned int i = 0; i < mesh->mNumFaces; i++)
     {
-        meshes.push_back(scene->mMeshes[i]);
-    }
-    for (unsigned int i = 0; i < meshes[0]->mNumFaces; i++)
-    {
-        aiFace face = meshes[0]->mFaces[i];
+        aiFace face = mesh->mFaces[i];
         for (unsigned int j = 0; j < face.mNumIndices; j++)
             indicies.push_back(face.mIndices[j]);
+    }
+    // exit(0);
+    for (unsigned int i = 0; i < mesh->mNumVertices; i++)
+    {
+        auto vert = mesh->mVertices[i];
+        auto normal = mesh->mNormals[i];
+        auto tx = mesh->mTextureCoords[0][i];
+        verticies.push_back(ModelVertex{
+            glm::vec3(vert.x, vert.y, vert.z),
+            glm::vec3(normal.x, normal.y, normal.z),
+            glm::vec2(tx.x, tx.y)});
     }
     // std::cout << "size " << meshes[0]->mNormals[0].x << "\n";
     Setup();
@@ -42,7 +50,7 @@ void Model::Draw()
     glm::mat4 model = glm::mat4(1.0f);
     glm::mat4 view = glm::mat4(1.0f);
     glm::mat4 projection = glm::mat4(1.0f);
-    view = glm::translate(view, glm::vec3(0.0f, 0.0f, -0.5f));
+    view = glm::translate(view, glm::vec3(0.0f, 0.0f, -5.5f));
     projection = glm::perspective(glm::radians(45.0f), (float)800 / (float)600, 0.1f, 100.0f);
 
     // set emittor object to uniforms
@@ -66,14 +74,20 @@ void Model::Setup()
     glBindVertexArray(VAO);
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
 
-    glBufferData(GL_ARRAY_BUFFER, meshes[0]->mNumVertices * sizeof(aiVector3D), meshes[0]->mVertices, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, verticies.size() * sizeof(ModelVertex), &verticies[0], GL_STATIC_DRAW);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, indicies.size() * sizeof(unsigned int),
                  &indicies[0], GL_STATIC_DRAW);
 
     // vertex positions
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(aiVector3D), (void *)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(ModelVertex), (void *)0);
+    // normal
+    glEnableVertexAttribArray(1);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(ModelVertex), (void *)(sizeof(glm::vec3)));
+    // tex
+    glEnableVertexAttribArray(2);
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(ModelVertex), (void *)(sizeof(glm::vec3) + sizeof(glm::vec3)));
 
     glBindVertexArray(0);
 }
