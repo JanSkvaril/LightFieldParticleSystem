@@ -12,6 +12,8 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include "model.h"
+
 void framebuffer_size_callback(GLFWwindow *window, int width, int height);
 void processInput(GLFWwindow *window);
 
@@ -52,14 +54,14 @@ int main()
         return -1;
     }
 
-    ParticleEmitter ps(1);
-
+    // ParticleEmitter ps(1);
+    Model model("models/bunny.obj");
     glEnable(GL_DEPTH_TEST);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     float time = 0.0f;
     while (!glfwWindowShouldClose(window))
     {
-        ps.Update();
+        //  ps.Update();
         time += 0.4f;
 
         processInput(window);
@@ -67,7 +69,9 @@ int main()
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        ps.Draw();
+        // model.Draw();
+        //   ps.Draw();
+        model.Draw();
         glfwSwapBuffers(window);
         glfwPollEvents();
     }

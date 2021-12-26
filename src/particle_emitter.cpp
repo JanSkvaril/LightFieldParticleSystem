@@ -1,7 +1,7 @@
 #include "particle_emitter.h"
 ParticleEmitter::ParticleEmitter(int particles)
     : amount_of_particles(particles),
-      shader("shaders/particle_vertex.vs", "shaders/basic_fragment.fs"),
+      shader("shaders/particle_vertex.vs", "shaders/particle_fragment.fs"),
       texture("imgs/dice.png")
 {
     this->particles.resize(particles);

@@ -9,7 +9,9 @@ add_executable(light_field_ps_bp src/main.cpp
     src/particle_emitter.h
     src/particle_emitter.cpp
     src/texture.h
-    src/texture.cpp)
+    src/texture.cpp
+    src/model.h
+    src/model.cpp)
 
 # open gl
 set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
