@@ -51,7 +51,7 @@ int main()
         return -1;
     }
 
-    ParticleEmitter ps(200);
+    ParticleEmitter ps(10000);
 
     glEnable(GL_DEPTH_TEST);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);

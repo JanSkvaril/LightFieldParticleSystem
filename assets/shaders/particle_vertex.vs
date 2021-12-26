@@ -1,7 +1,7 @@
 #version 330 core
 layout(location = 0)in vec3 aPos;
 layout(location = 1)in vec2 aTexCoord;
-
+layout(location = 2)in vec3 offset2;
 out vec2 TexCoord;
 
 uniform mat4 model; // emittor rotation
@@ -18,7 +18,7 @@ void main()
     vec3 new_up = cross(camera_normal , r);
     mat3 rot = mat3(r, new_up, camera_normal);
     vec3 posi = rot * aPos;
-    vec3 new_offset = rot * offset.xyz;
+    vec3 new_offset = rot * offset2.xyz;
     vec4 word_space = (view * model * vec4(posi, 1.0) + vec4(new_offset, 1.0));
     vec4 screen_pos = projection * word_space;
     screen_pos = screen_pos / screen_pos.w;

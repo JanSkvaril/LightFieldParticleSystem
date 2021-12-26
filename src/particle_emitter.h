@@ -8,6 +8,7 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+#include <array>
 #include <cmath>
 #include "shader.h"
 #include <algorithm>
@@ -19,9 +20,9 @@ public:
     void Update();
     void Draw();
 
-    std::vector<Particle> particles;
-
 protected:
+    std::vector<Particle> particles;
+    std::vector<glm::vec3> positions;
     float time = 0.0f;
     Shader shader;
     void ResetParticle(Particle &particle);
@@ -29,7 +30,9 @@ protected:
     void DrawParticle(Particle &particle);
     void SortByDepth();
     void CreateVAO();
+    void BindPositionVBO();
     unsigned int VAO, VBO;
+    unsigned int position_VBO;
     const int amount_of_particles;
 };
 

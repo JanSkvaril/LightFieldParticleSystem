@@ -4,7 +4,13 @@ ParticleEmitter::ParticleEmitter(int particles)
       shader("shaders/particle_vertex.vs", "shaders/basic_fragment.fs")
 {
     this->particles.resize(particles);
+    this->positions.resize(amount_of_particles);
     Reset();
+    for (size_t i = 0; i < 1000; i++)
+    {
+        // Update();
+    }
+
     CreateVAO();
 }
 
@@ -18,6 +24,7 @@ void ParticleEmitter::Reset()
 
 void ParticleEmitter::Update()
 {
+    int i = 0;
     time += 0.1f;
     for (auto &particle : particles)
     {
@@ -30,8 +37,11 @@ void ParticleEmitter::Update()
         {
             particle.position += particle.direction * particle.speed;
         }
+        positions[i] = particle.position;
+        i++;
     }
-    SortByDepth();
+    BindPositionVBO();
+    // SortByDepth();
 }
 
 void ParticleEmitter::ResetParticle(Particle &particle)
@@ -65,16 +75,19 @@ void ParticleEmitter::Draw()
 
     // bind VAO
     glBindVertexArray(VAO);
-
+    glDrawArraysInstanced(GL_TRIANGLES, 0, GL_UNSIGNED_INT, amount_of_particles);
     // draw particles
     for (auto &particle : particles)
     {
-        DrawParticle(particle);
+        // DrawParticle(particle);
     }
 }
 
 void ParticleEmitter::CreateVAO()
 {
+    glGenBuffers(1, &position_VBO);
+    BindPositionVBO();
+
     float vertices[] = {
         1.0f, 1.0f, 0.0f, 1.0f, 1.0f,
         1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
@@ -94,6 +107,11 @@ void ParticleEmitter::CreateVAO()
     // texture
     glEnableVertexAttribArray(1);
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void *)(3 * sizeof(float)));
+    // particle position
+    glEnableVertexAttribArray(2);
+    glBindBuffer(GL_ARRAY_BUFFER, position_VBO);
+    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *)0);
+    glVertexAttribDivisor(2, 1);
     // reset
     glBindVertexArray(0);
 }
@@ -110,4 +128,11 @@ void ParticleEmitter::SortByDepth()
     return;
     std::sort(particles.begin(), particles.end(), [](Particle &p_a, Particle &p_b)
               { return glm::length(p_a.position) > glm::length(p_b.position); });
+}
+
+void ParticleEmitter::BindPositionVBO()
+{
+    glBindBuffer(GL_ARRAY_BUFFER, position_VBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(float) * amount_of_particles * 3, &positions[0], GL_STATIC_DRAW);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
