@@ -12,8 +12,8 @@ void main()
 {
     vec3 camera_normal = vec3(view[0][2], view[1][2], view[2][2]);
     camera_normal = - camera_normal;
-    vec3 up = vec3(view[0][0], view[1][0], view[2][0]);
-    vec3 r = cross(up, camera_normal);
+    vec3 up = vec3(view[0][1], view[1][1], view[2][1]);
+    vec3 r = cross(camera_normal, up);
     r = normalize(r);
     vec3 new_up = cross(camera_normal , r);
     mat3 rot = mat3(r, new_up, camera_normal);

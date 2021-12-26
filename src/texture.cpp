@@ -3,7 +3,7 @@
 Texture::Texture(std::string path)
 {
     int nrChannels;
-    data = stbi_load("imgs/dice.png", &width, &height, &nrChannels, 0);
+    data = stbi_load(path.c_str(), &width, &height, &nrChannels, 0);
     std::cout << width << "\n";
     glGenTextures(1, &texture);
     glBindTexture(GL_TEXTURE_2D, texture);
