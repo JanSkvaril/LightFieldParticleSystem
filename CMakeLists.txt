@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.9)
-
 project(LIGHT_FIELD_PS)
-set(CMAKE_CXX_STANDARD 17)     
+set(CMAKE_CXX_STANDARD 17)   
+#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP")  
 add_executable(light_field_ps_bp src/main.cpp
     src/shader.h
     src/shader.cpp
@@ -30,6 +30,9 @@ target_link_libraries(light_field_ps_bp glad)
 
 add_subdirectory(include/glm)
 target_link_libraries(light_field_ps_bp glm)
+
+add_subdirectory(include/assimp)
+target_link_libraries(light_field_ps_bp assimp)
 
 # stb image
 add_library(stb_img INTERFACE)
