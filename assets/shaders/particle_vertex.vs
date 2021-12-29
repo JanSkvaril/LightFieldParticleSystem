@@ -3,7 +3,7 @@ layout(location = 0)in vec3 aPos;
 layout(location = 1)in vec2 aTexCoord;
 layout(location = 2)in vec3 offset2;
 out vec2 TexCoord;
-
+out vec2 Offset;
 uniform mat4 model; // emittor rotation
 uniform mat4 view; // emittor position
 uniform mat4 projection;
@@ -26,4 +26,5 @@ void main()
     gl_Position = screen_pos;
     
     TexCoord = vec2(aTexCoord.x, aTexCoord.y);
+    Offset = offset2.xy;
 }

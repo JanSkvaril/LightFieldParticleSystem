@@ -1,8 +1,8 @@
 #include "particle_emitter.h"
+#include "glm/gtx/fast_square_root.hpp"
 ParticleEmitter::ParticleEmitter(int particles)
     : amount_of_particles(particles),
-      shader("shaders/particle_vertex.vs", "shaders/particle_fragment.fs"),
-      texture("imgs/dice.png")
+      shader("shaders/particle_vertex.vs", "shaders/particle_fragment.fs")
 {
     this->particles.resize(particles);
     this->positions.resize(amount_of_particles);
@@ -41,16 +41,18 @@ void ParticleEmitter::Update()
         positions[i] = particle.position;
         i++;
     }
+
+    SortByDepth();
     BindPositionVBO();
-    // SortByDepth();
 }
 
 void ParticleEmitter::ResetParticle(Particle &particle)
 {
     particle.direction = glm::vec3((rand() % 100) - 50, (rand() % 100 - 50), (rand() % 100) - 50);
+    // particle.direction = glm::vec3(0.0f, -1.0f, 0.0f);
     particle.direction = glm::normalize(particle.direction);
-    particle.speed = 0.00f;
-    particle.time_to_live = rand() % 1000;
+    particle.speed = 0.01f;
+    particle.time_to_live = 200 + rand() % 250;
     particle.position = glm::vec3(0.0f, 0.0f, 0.0f);
 }
 #include <iostream>
@@ -66,8 +68,8 @@ void ParticleEmitter::Draw()
     glm::mat4 projection = glm::mat4(1.0f);
     //  model = glm::rotate(model, glm::radians(0.0f), glm::vec3(1.0f, 0.8f, 0.0f));
     // model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
-    view = glm::translate(view, glm::vec3(cos(time * 0.5f) * 0.2, sin(time * 0.5f) * 0.2, -2.5f));
-    // view = glm::translate(view, glm::vec3(0.0f, 0.0f, -5.5f));
+    // view = glm::translate(view, glm::vec3(cos(time * 0.5f) * 0.2, sin(time * 0.5f) * 0.2, -2.5f));
+    view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.5f));
     //  view = glm::rotate(view, glm::radians(-time * 4.0f), glm::vec3(1.0f, 0.8f, 0.0f));
     projection = glm::perspective(glm::radians(45.0f), (float)800 / (float)600, 0.1f, 100.0f);
 
@@ -127,9 +129,10 @@ void ParticleEmitter::DrawParticle(Particle &particle)
 
 void ParticleEmitter::SortByDepth()
 {
-    return;
-    std::sort(particles.begin(), particles.end(), [](Particle &p_a, Particle &p_b)
-              { return glm::length(p_a.position) > glm::length(p_b.position); });
+    std::sort(positions.begin(), positions.end(), [](glm::vec3 p_a, glm::vec3 p_b)
+              { 
+                    glm::vec3 camera = glm::vec3(0.0f, 0.0f, -5.5f);
+                    return p_a.z > p_b.z; });
 }
 
 void ParticleEmitter::BindPositionVBO()

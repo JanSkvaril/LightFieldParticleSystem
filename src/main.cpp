@@ -58,7 +58,7 @@ int main()
     }
 
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    ParticleEmitter ps(1);
+    ParticleEmitter ps(10);
     Model model("models/bunny.obj");
     Generator generator(&model);
     generator.Generate();

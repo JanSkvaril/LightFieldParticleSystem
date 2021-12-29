@@ -2,8 +2,10 @@
 out vec4 FragColor;
 
 in vec2 TexCoord;
+in vec2 Offset;
 
 uniform sampler2D u_texture;
+uniform vec3 offset;
 uniform mat4 view; // emittor position
 float bilinear(float x, float y, vec2 p1, vec2 p2, vec4 q) {
     float w1 = (p2.x - x) * (p2.y - y) / (p2.x - p1.x) * (p2.y - p1.y);
@@ -18,7 +20,7 @@ void main()
     float zoom = 5.0;
     vec2 pos = TexCoord;
     pos += 2.0;
-    vec2 m = vec2(view[3][0] * 10.0, view[3][1] * 10.0);
+    vec2 m = vec2(Offset.x * 1.5, - Offset.y * 1.5);
     
     vec2 u1 = floor(m);
     
