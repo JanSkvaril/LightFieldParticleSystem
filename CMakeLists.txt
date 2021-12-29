@@ -1,13 +1,24 @@
 cmake_minimum_required(VERSION 3.9)
-
 project(LIGHT_FIELD_PS)
-set(CMAKE_CXX_STANDARD 17)     
+set(CMAKE_CXX_STANDARD 17)   
+#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP")  
 add_executable(light_field_ps_bp src/main.cpp
     src/shader.h
     src/shader.cpp
     src/particle.h
     src/particle_emitter.h
-    src/particle_emitter.cpp)
+    src/particle_emitter.cpp
+    src/texture.h
+    src/texture.cpp
+    src/model.h
+    src/model.cpp
+    src/model_vertex.h
+    src/generator.h
+    src/generator.cpp
+    src/generator_texture.cpp
+    src/generator_texture.h
+    src/rectangle.h
+    src/rectangle.cpp)
 
 # open gl
 set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
@@ -28,7 +39,15 @@ target_link_libraries(light_field_ps_bp glad)
 
 add_subdirectory(include/glm)
 target_link_libraries(light_field_ps_bp glm)
-    
+
+add_subdirectory(include/assimp)
+target_link_libraries(light_field_ps_bp assimp)
+
+# stb image
+add_library(stb_img INTERFACE)
+target_include_directories(stb_img INTERFACE include/stb_image/stb_image.h)
+target_link_libraries(light_field_ps_bp stb_img)
+
 # run target
 add_custom_target(run-ex1
     COMMAND light_field_ps_bp 
