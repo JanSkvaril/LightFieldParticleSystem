@@ -10,6 +10,7 @@ class Model
 public:
     Model(std::string path);
     void Draw();
+    void Draw(float angle, glm::vec3 axis, glm::vec3 position);
 
 protected:
     Shader shader;

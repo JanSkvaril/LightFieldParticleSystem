@@ -13,6 +13,9 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include "model.h"
+#include "generator.h"
+#include "generator_texture.h"
+#include "rectangle.h"
 
 void framebuffer_size_callback(GLFWwindow *window, int width, int height);
 void processInput(GLFWwindow *window);
@@ -54,24 +57,29 @@ int main()
         return -1;
     }
 
-    // ParticleEmitter ps(1);
+    ParticleEmitter ps(1);
     Model model("models/bunny.obj");
+    GeneratorTexture gt(&model, 100, 100);
+    gt.Generate(0.0f, glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
     glEnable(GL_DEPTH_TEST);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     float time = 0.0f;
+    Rectangle rec;
     while (!glfwWindowShouldClose(window))
     {
-        //  ps.Update();
-        time += 0.4f;
+        ps.Update();
+        time += 0.04f;
 
         processInput(window);
-
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         // model.Draw();
-        //   ps.Draw();
-        model.Draw();
+        glViewport(0, 0, 800, 600);
+        gt.BindTexture();
+        rec.Draw(glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 1.0f));
+        // ps.Draw();
+        //  model.Draw(time, glm::vec3(1.0f, 1.0f, 1.0f));
         glfwSwapBuffers(window);
         glfwPollEvents();
     }

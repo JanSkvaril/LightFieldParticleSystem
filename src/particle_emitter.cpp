@@ -1,7 +1,7 @@
 #include "particle_emitter.h"
 ParticleEmitter::ParticleEmitter(int particles)
     : amount_of_particles(particles),
-      shader("shaders/particle_vertex.vs", "shaders/particle_fragment.fs"),
+      shader("shaders/particle_vertex.vs", "shaders/particle_simple_fragment.fs"),
       texture("imgs/dice.png")
 {
     this->particles.resize(particles);
@@ -46,8 +46,8 @@ void ParticleEmitter::ResetParticle(Particle &particle)
 #include <iostream>
 void ParticleEmitter::Draw()
 {
-    texture.Bind();
-    // load shader program
+    // texture.Bind();
+    //  load shader program
     shader.Use();
 
     // emittor object

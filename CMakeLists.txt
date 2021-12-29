@@ -12,7 +12,13 @@ add_executable(light_field_ps_bp src/main.cpp
     src/texture.cpp
     src/model.h
     src/model.cpp
-    src/model_vertex.h)
+    src/model_vertex.h
+    src/generator.h
+    src/generator.cpp
+    src/generator_texture.cpp
+    src/generator_texture.h
+    src/rectangle.h
+    src/rectangle.cpp)
 
 # open gl
 set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
