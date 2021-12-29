@@ -6,15 +6,18 @@ GeneratorTexture::GeneratorTexture(Model *model, GLsizei width, GLsizei height) 
     Setup();
 }
 
-GLuint GeneratorTexture::Generate(float angle, glm::vec3 axis, glm::vec3 position)
+GLuint GeneratorTexture::Generate(glm::vec3 rotation, glm::vec3 position)
 {
     glBindFramebuffer(GL_FRAMEBUFFER, FramebufferName);
-    glViewport(0, 0, width, height);
     glEnable(GL_DEPTH_TEST);
-    // glViewport(0, 0, 1024, 768);
-    glClearColor(0.0f, 0.1f, 0.1f, 1.0f);
+    glEnable(GL_BLEND);
+    glViewport(0, 0, width, height);
+    //  glEnable(GL_DEPTH_TEST);
+    //  glViewport(0, 0, 1024, 768);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    model->Draw(angle, axis, position);
+    model->Draw(rotation, position);
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     return renderedTexture;
 }
@@ -39,7 +42,7 @@ void GeneratorTexture::Setup()
     glBindTexture(GL_TEXTURE_2D, renderedTexture);
 
     // Give an empty image to OpenGL ( the last "0" )
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
 
     // Poor filtering. Needed !
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);

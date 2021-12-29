@@ -3,7 +3,8 @@
 #include "model.h"
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
-
+#include "rectangle.h"
+#include "generator_texture.h"
 class Generator
 {
 public:
@@ -15,7 +16,8 @@ public:
 protected:
     void CreateRenderTexture();
     Model *model;
-
+    Rectangle rectangle;
+    GeneratorTexture gt;
     GLuint FramebufferName = 0;
     GLuint renderedTexture;
     GLuint depthrenderbuffer;

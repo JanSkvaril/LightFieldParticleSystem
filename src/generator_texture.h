@@ -3,11 +3,12 @@
 #include "model.h"
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+#include <glm/vec3.hpp>
 class GeneratorTexture
 {
 public:
     GeneratorTexture(Model *model, GLsizei width, GLsizei height);
-    GLuint Generate(float angle, glm::vec3 axis, glm::vec3 position);
+    GLuint Generate(glm::vec3 rotation, glm::vec3 position);
     void BindTexture();
     void Delete();
 

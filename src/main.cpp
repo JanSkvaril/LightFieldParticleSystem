@@ -57,29 +57,32 @@ int main()
         return -1;
     }
 
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     ParticleEmitter ps(1);
     Model model("models/bunny.obj");
-    GeneratorTexture gt(&model, 100, 100);
-    gt.Generate(0.0f, glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
-    glEnable(GL_DEPTH_TEST);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    Generator generator(&model);
+    generator.Generate();
+    //  GeneratorTexture gt(&model, 1000, 1000);
+
     float time = 0.0f;
     Rectangle rec;
+
+    glEnable(GL_BLEND);
     while (!glfwWindowShouldClose(window))
     {
         ps.Update();
         time += 0.04f;
 
         processInput(window);
-        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+        glClearColor(0.2f, 0.2f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         // model.Draw();
         glViewport(0, 0, 800, 600);
-        gt.BindTexture();
-        rec.Draw(glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 1.0f));
-        // ps.Draw();
-        //  model.Draw(time, glm::vec3(1.0f, 1.0f, 1.0f));
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        generator.Bind();
+        // rec.Draw(glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 1.0f));
+        ps.Draw();
+        //   model.Draw(glm::vec3(time, time, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f));
         glfwSwapBuffers(window);
         glfwPollEvents();
     }

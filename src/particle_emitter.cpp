@@ -1,7 +1,7 @@
 #include "particle_emitter.h"
 ParticleEmitter::ParticleEmitter(int particles)
     : amount_of_particles(particles),
-      shader("shaders/particle_vertex.vs", "shaders/particle_simple_fragment.fs"),
+      shader("shaders/particle_vertex.vs", "shaders/particle_fragment.fs"),
       texture("imgs/dice.png")
 {
     this->particles.resize(particles);
@@ -57,7 +57,8 @@ void ParticleEmitter::Draw()
     //  model = glm::rotate(model, glm::radians(0.0f), glm::vec3(1.0f, 0.8f, 0.0f));
     // model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
     view = glm::translate(view, glm::vec3(cos(time * 0.5f) * 0.2, sin(time * 0.5f) * 0.2, -2.5f));
-    // view = glm::rotate(view, glm::radians(-time * 4.0f), glm::vec3(1.0f, 0.8f, 0.0f));
+    // view = glm::translate(view, glm::vec3(0.0f, 0.0f, -5.5f));
+    //  view = glm::rotate(view, glm::radians(-time * 4.0f), glm::vec3(1.0f, 0.8f, 0.0f));
     projection = glm::perspective(glm::radians(45.0f), (float)800 / (float)600, 0.1f, 100.0f);
 
     // set emittor object to uniforms

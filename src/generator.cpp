@@ -1,6 +1,6 @@
 #include "generator.h"
 
-Generator::Generator(Model *model)
+Generator::Generator(Model *model) : gt(model, 1000, 1000)
 {
     this->model = model;
     CreateRenderTexture();
@@ -20,7 +20,7 @@ void Generator::CreateRenderTexture()
     glBindTexture(GL_TEXTURE_2D, renderedTexture);
 
     // Give an empty image to OpenGL ( the last "0" )
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 10000, 10000, 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 10000, 10000, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
 
     // Poor filtering. Needed !
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
@@ -43,18 +43,23 @@ void Generator::CreateRenderTexture()
 void Generator::Generate()
 {
     glBindFramebuffer(GL_FRAMEBUFFER, FramebufferName);
+    glEnable(GL_BLEND);
+
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glViewport(0, 0, 10000, 10000);
-    glEnable(GL_DEPTH_TEST);
-    // glViewport(0, 0, 1024, 768);
-    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+    glClearColor(1.0f, 0.0f, 0.0f, 0.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    for (int x = -3; x <= 3; x++)
+    //  glDisable(GL_DEPTH_TEST);
+
+    for (int x = -2; x <= 2; x++)
     {
-        for (int y = -3; y <= 3; y++)
+        for (int y = -2; y <= 2; y++)
         {
-            /* code */
-            // model->Draw();
-            model->Draw(1.0f, glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(0.0 + x * 3., 0.0 + y * 3., -22.0f));
+            gt.Generate(glm::vec3(x * 0.05f, y * 0.05f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f));
+            glBindFramebuffer(GL_FRAMEBUFFER, FramebufferName);
+            glViewport(0, 0, 10000, 10000);
+            gt.BindTexture();
+            rectangle.Draw(glm::vec2(x * 2.0f, y * 2.0f), glm::vec2(0.2f, 0.2f));
         }
     }
 
@@ -68,7 +73,7 @@ GLuint Generator::GetTexture()
 
 void Generator::Bind()
 {
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
     glBindTexture(GL_TEXTURE_2D, renderedTexture);
 }
