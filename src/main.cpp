@@ -58,8 +58,8 @@ int main()
     }
 
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    ParticleEmitter ps(500);
-    Model model("models/snowflake.obj");
+    ParticleEmitter ps(200);
+    Model model("models/cube.obj");
     Generator generator(&model);
     generator.Generate();
     //  GeneratorTexture gt(&model, 1000, 1000);

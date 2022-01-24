@@ -14,8 +14,8 @@ void main()
     vec3 norm = normalize(Normals);
     vec3 lightDir = normalize(light_pos - FragPos);
     float diff = max(dot(norm, lightDir), 0.0);
-    vec3 diffuse = diff * vec3(1.0);
-    vec3 result = (vec3(1.0) + diffuse) * vec3(0.451, 0.7255, 0.7725);
+    vec3 diffuse = diff * vec3(0.9255, 0.9255, 0.9255);
+    vec3 result = (vec3(0.6588, 0.6549, 0.6549) + diffuse) * vec3(0.4392, 0.5647, 0.7333);
     // linearly interpolate between both textures (80% container, 20% awesomeface)
     FragColor = vec4(result.xyz, 1.0);
 }

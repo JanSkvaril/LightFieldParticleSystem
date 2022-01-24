@@ -1,6 +1,6 @@
 #include "generator.h"
 
-Generator::Generator(Model *model) : gt(model, 100, 100)
+Generator::Generator(Model *model) : gt(model, 300, 300), t_size(3000)
 {
     this->model = model;
     CreateRenderTexture();
@@ -20,7 +20,7 @@ void Generator::CreateRenderTexture()
     glBindTexture(GL_TEXTURE_2D, renderedTexture);
 
     // Give an empty image to OpenGL ( the last "0" )
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1000, 1000, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, t_size, t_size, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
 
     // Poor filtering. Needed !
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
@@ -29,7 +29,7 @@ void Generator::CreateRenderTexture()
     // The depth buffer
     glGenRenderbuffers(1, &depthrenderbuffer);
     glBindRenderbuffer(GL_RENDERBUFFER, depthrenderbuffer);
-    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, 1000, 1000);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, t_size, t_size);
     glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthrenderbuffer);
 
     // Set "renderedTexture" as our colour attachement #0
@@ -46,8 +46,8 @@ void Generator::Generate()
     glEnable(GL_BLEND);
 
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    glViewport(0, 0, 1000, 1000);
-    glClearColor(1.0f, 1.0f, 1.0f, 0.0f);
+    glViewport(0, 0, t_size, t_size);
+    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     // glDisable(GL_DEPTH_TEST);
 
@@ -57,7 +57,7 @@ void Generator::Generate()
         {
             gt.Generate(glm::vec3(x * 0.05f, y * 0.05f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f));
             glBindFramebuffer(GL_FRAMEBUFFER, FramebufferName);
-            glViewport(0, 0, 1000, 1000);
+            glViewport(0, 0, t_size, t_size);
             gt.BindTexture();
             rectangle.Draw(glm::vec2(x * 2.0f, y * 2.0f), glm::vec2(0.2f, 0.2f));
         }

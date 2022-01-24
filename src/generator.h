@@ -14,6 +14,7 @@ public:
     void Bind();
 
 protected:
+    const GLsizei t_size;
     void CreateRenderTexture();
     Model *model;
     Rectangle rectangle;
