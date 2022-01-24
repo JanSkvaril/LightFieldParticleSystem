@@ -58,8 +58,8 @@ int main()
     }
 
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    ParticleEmitter ps(10);
-    Model model("models/bunny.obj");
+    ParticleEmitter ps(500);
+    Model model("models/snowflake.obj");
     Generator generator(&model);
     generator.Generate();
     //  GeneratorTexture gt(&model, 1000, 1000);
@@ -74,7 +74,8 @@ int main()
         time += 0.04f;
 
         processInput(window);
-        glClearColor(0.2f, 0.2f, 0.3f, 1.0f);
+        // glClearColor(0.2f, 0.2f, 0.3f, 1.0f);
+        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         // model.Draw();
         glViewport(0, 0, 800, 600);
@@ -82,7 +83,7 @@ int main()
         generator.Bind();
         // rec.Draw(glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 1.0f));
         ps.Draw();
-        //   model.Draw(glm::vec3(time, time, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f));
+        // model.Draw(glm::vec3(time, time, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f));
         glfwSwapBuffers(window);
         glfwPollEvents();
     }

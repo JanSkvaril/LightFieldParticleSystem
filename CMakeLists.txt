@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.9)
 project(LIGHT_FIELD_PS)
 set(CMAKE_CXX_STANDARD 17)   
+set(CMAKE_CXX_FLAGS_RELEASE "/MT")
+
 #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP")  
 add_executable(light_field_ps_bp src/main.cpp
     src/shader.h
@@ -20,6 +22,9 @@ add_executable(light_field_ps_bp src/main.cpp
     src/rectangle.h
     src/rectangle.cpp)
 
+if(MSVC)
+    target_compile_options(light_field_ps_bp PRIVATE "/MP")
+endif()
 # open gl
 set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
@@ -41,6 +46,9 @@ add_subdirectory(include/glm)
 target_link_libraries(light_field_ps_bp glm)
 
 add_subdirectory(include/assimp)
+if(MSVC)
+    target_compile_options(assimp PRIVATE "/MP")
+endif()
 target_link_libraries(light_field_ps_bp assimp)
 
 # stb image

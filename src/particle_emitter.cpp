@@ -37,6 +37,8 @@ void ParticleEmitter::Update()
         else
         {
             particle.position += particle.direction * particle.speed;
+            float g = 0.02f;
+            particle.direction = (1.0f - g) * particle.direction + g * glm::vec3(0.0f, 1.0f, 0.0f);
         }
         positions[i] = particle.position;
         i++;
@@ -51,9 +53,9 @@ void ParticleEmitter::ResetParticle(Particle &particle)
     particle.direction = glm::vec3((rand() % 100) - 50, (rand() % 100 - 50), (rand() % 100) - 50);
     // particle.direction = glm::vec3(0.0f, -1.0f, 0.0f);
     particle.direction = glm::normalize(particle.direction);
-    particle.speed = 0.01f;
+    particle.speed = 0.03f;
     particle.time_to_live = 200 + rand() % 250;
-    particle.position = glm::vec3(0.0f, 0.0f, 0.0f);
+    particle.position = glm::vec3(0.0f, -1.0f, 0.0f);
 }
 #include <iostream>
 void ParticleEmitter::Draw()
