@@ -58,8 +58,8 @@ int main()
     }
 
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    ParticleEmitter ps(200);
-    Model model("models/cube.obj");
+    ParticleEmitter ps(400);
+    Model model("models/bird.obj");
     Generator generator(&model);
     generator.Generate();
     //  GeneratorTexture gt(&model, 1000, 1000);
@@ -78,7 +78,7 @@ int main()
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         // model.Draw();
-        glViewport(0, 0, 800, 600);
+        glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         generator.Bind();
         // rec.Draw(glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 1.0f));

@@ -38,7 +38,7 @@ void ParticleEmitter::Update()
         {
             particle.position += particle.direction * particle.speed;
             float g = 0.02f;
-            particle.direction = (1.0f - g) * particle.direction + g * glm::vec3(0.0f, 1.0f, 0.0f);
+            particle.direction = (1.0f - g) * particle.direction + g * glm::vec3(1.0f, 0.0f, 0.0f);
         }
         positions[i] = particle.position;
         i++;
@@ -53,9 +53,9 @@ void ParticleEmitter::ResetParticle(Particle &particle)
     particle.direction = glm::vec3((rand() % 100) - 50, (rand() % 100 - 50), (rand() % 100) - 50);
     // particle.direction = glm::vec3(0.0f, -1.0f, 0.0f);
     particle.direction = glm::normalize(particle.direction);
-    particle.speed = 0.05f;
+    particle.speed = 0.1f;
     particle.time_to_live = 200 + rand() % 250;
-    particle.position = glm::vec3(0.0f, -1.0f, 0.0f);
+    particle.position = glm::vec3(-4.0f, 0.0f, 0.0f);
 }
 #include <iostream>
 void ParticleEmitter::Draw()
@@ -71,7 +71,7 @@ void ParticleEmitter::Draw()
     //  model = glm::rotate(model, glm::radians(0.0f), glm::vec3(1.0f, 0.8f, 0.0f));
     // model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
     // view = glm::translate(view, glm::vec3(cos(time * 0.5f) * 0.2, sin(time * 0.5f) * 0.2, -2.5f));
-    view = glm::translate(view, glm::vec3(0.0f, 0.0f, -4.5f));
+    view = glm::translate(view, glm::vec3(0.0f, 0.0f, -10.5f));
     // view = glm::rotate(view, glm::radians(-time * 4.0f), glm::vec3(0.0f, 0.8f, 0.0f));
     projection = glm::perspective(glm::radians(45.0f), (float)800 / (float)600, 0.1f, 100.0f);
 

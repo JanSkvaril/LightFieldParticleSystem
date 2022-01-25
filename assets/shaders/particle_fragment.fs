@@ -16,7 +16,7 @@ void main()
     float zoom = 5.0;
     vec2 pos = TexCoord;
     pos += 2.0;
-    vec2 m = vec2(Offset.x * 1.5, - Offset.y * 1.5);
+    vec2 m = vec2(Offset.x * 0.5, - Offset.y * 0.5);
     
     vec2 u1 = floor(m);
     
