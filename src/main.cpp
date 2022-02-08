@@ -58,9 +58,9 @@ int main()
     }
 
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    ParticleEmitter ps(400);
+    ParticleEmitter ps(1);
     Model model("models/bird.obj");
-    Generator generator(&model);
+    Generator generator(&model, 11, 1000);
     generator.Generate();
     //  GeneratorTexture gt(&model, 1000, 1000);
 
@@ -83,7 +83,7 @@ int main()
         generator.Bind();
         // rec.Draw(glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 1.0f));
         ps.Draw();
-        // model.Draw(glm::vec3(time, time, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f));
+        //     model.Draw(glm::vec3(time, time, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f));
         glfwSwapBuffers(window);
         glfwPollEvents();
     }

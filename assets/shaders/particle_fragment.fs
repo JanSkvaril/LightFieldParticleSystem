@@ -13,19 +13,22 @@ float bilinear(vec4 w, vec4 q) {
 void main()
 {
     vec4 col = vec4(1.0, 1.0, 1.0, 1.0);
-    float zoom = 5.0;
+    float zoom = 11.0;
     vec2 pos = TexCoord;
-    pos += 2.0;
-    vec2 m = vec2(Offset.x * 0.5, - Offset.y * 0.5);
-    
+    // pos += 5.0;
+    float rot_speed = 1.0;
+    vec2 m = vec2(Offset.x, Offset.y) * (zoom - 0.8);
+    // if (m.x < 0.0)m.x = (zoom - 1.0) + m.x;
+    // if (m.y < 0.0)m.y = (zoom - 1.0) + m.y;
+    m = m - ((zoom - 0.8) * floor(m / (zoom - 0.8)));
     vec2 u1 = floor(m);
     
     pos /= zoom;
-    vec2 first = vec2(pos.x - u1.x / zoom, pos.y - u1.y / zoom);
+    vec2 first = vec2(pos.x + u1.x / zoom, pos.y + u1.y / zoom);
     
     vec2 u2 = u1 + 1.0;
     
-    vec2 second = vec2(pos.x - u2.x / zoom, pos.y - u2.y / zoom);
+    vec2 second = vec2(pos.x + u2.x / zoom, pos.y + u2.y / zoom);
     vec2 xy = m;
     vec4 q11 = texture(u_texture, first);
     vec4 q12 = texture(u_texture, vec2(first.x, second.y));

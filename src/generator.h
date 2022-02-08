@@ -8,12 +8,13 @@
 class Generator
 {
 public:
-    Generator(Model *model);
+    Generator(Model *model, int density, int res);
     void Generate();
     GLuint GetTexture();
     void Bind();
 
 protected:
+    int density;
     const GLsizei t_size;
     void CreateRenderTexture();
     Model *model;

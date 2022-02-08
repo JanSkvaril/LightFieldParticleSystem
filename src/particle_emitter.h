@@ -24,7 +24,7 @@ public:
 protected:
     std::vector<Particle> particles;
     std::vector<glm::vec3> positions;
-    float time = 0.0f;
+    float time = 12145.0f;
     Shader shader;
     void ResetParticle(Particle &particle);
     void DrawParticle(Particle &particle);

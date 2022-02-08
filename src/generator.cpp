@@ -1,7 +1,10 @@
 #include "generator.h"
-
-Generator::Generator(Model *model) : gt(model, 300, 300), t_size(3000)
+#include "glm/glm.hpp"
+#include "glm/gtc/constants.hpp"
+Generator::Generator(Model *model, int density, int res) : gt(model, res / density, res / density),
+                                                           t_size(res)
 {
+    this->density = density;
     this->model = model;
     CreateRenderTexture();
 }
@@ -50,16 +53,18 @@ void Generator::Generate()
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     // glDisable(GL_DEPTH_TEST);
-
-    for (int x = -2; x <= 2; x++)
+    const int range = (density - 1) / 2;
+    const float rec_site = 1.0f / (density);
+    const float rotation = -glm::two_pi<float>() / (density);
+    for (int x = -range; x <= range; x++)
     {
-        for (int y = -2; y <= 2; y++)
+        for (int y = -range; y <= range; y++)
         {
-            gt.Generate(glm::vec3(x * 0.05f, y * 0.05f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f));
+            gt.Generate(glm::vec3(x * rotation, y * rotation, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f));
             glBindFramebuffer(GL_FRAMEBUFFER, FramebufferName);
             glViewport(0, 0, t_size, t_size);
             gt.BindTexture();
-            rectangle.Draw(glm::vec2(x * 2.0f, y * 2.0f), glm::vec2(0.2f, 0.2f));
+            rectangle.Draw(glm::vec2(x * 2.0f, y * 2.0f), glm::vec2(rec_site, rec_site));
         }
     }
 
