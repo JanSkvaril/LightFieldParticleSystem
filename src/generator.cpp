@@ -60,7 +60,7 @@ void Generator::Generate()
     {
         for (int y = -range; y <= range; y++)
         {
-            gt.Generate(glm::vec3(x * rotation, y * rotation, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f));
+            gt.Generate(glm::vec3((x)*rotation, (y)*rotation, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f));
             glBindFramebuffer(GL_FRAMEBUFFER, FramebufferName);
             glViewport(0, 0, t_size, t_size);
             gt.BindTexture();

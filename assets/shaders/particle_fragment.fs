@@ -13,7 +13,7 @@ float bilinear(vec4 w, vec4 q) {
 void main()
 {
     vec4 col = vec4(1.0, 1.0, 1.0, 1.0);
-    float zoom = 41.0;
+    float zoom = 21.0;
     vec2 pos = TexCoord;
     // pos += 5.0;
     float rot_speed = 1.0;

@@ -9,7 +9,7 @@ uniform mat4 model; // emittor rotation
 uniform mat4 view; // emittor position
 uniform mat4 projection;
 uniform vec3 offset;
-uniform vec3 camera_pos;
+uniform vec2 camera_pos;
 void main()
 {
     vec3 camera_position = vec3(view[0][0], view[1][0], view[2][0]);

@@ -59,8 +59,10 @@ int main()
 
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     ParticleEmitter ps(1);
-    Model model("models/bunny.obj");
-    Generator generator(&model, 41, 5000);
+    Model model("models/bird.obj");
+    Camera camera;
+    camera.LookAt(glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
+    Generator generator(&model, 21, 5000);
     generator.Generate();
     //  GeneratorTexture gt(&model, 1000, 1000);
 
@@ -70,6 +72,24 @@ int main()
     glEnable(GL_BLEND);
     while (!glfwWindowShouldClose(window))
     {
+        const float speed = 0.05f;
+        if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
+        {
+            camera.RotateAroundTarget(glm::vec2(speed, 0.0f));
+        }
+        else if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
+        {
+            camera.RotateAroundTarget(glm::vec2(-speed, 0.0f));
+        }
+        else if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
+        {
+            camera.RotateAroundTarget(glm::vec2(0.0f, speed));
+        }
+        else if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
+        {
+            camera.RotateAroundTarget(glm::vec2(0.0f, -speed));
+        }
+
         ps.Update();
         time += 0.04f;
 
@@ -82,7 +102,7 @@ int main()
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         generator.Bind();
         // rec.Draw(glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 1.0f));
-        ps.Draw();
+        ps.Draw(camera);
         //(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f));
         glfwSwapBuffers(window);
         glfwPollEvents();

@@ -13,13 +13,14 @@
 #include "shader.h"
 #include <algorithm>
 #include "texture.h"
+#include "camera.h"
 class ParticleEmitter
 {
 public:
     ParticleEmitter(int particles);
     void Reset();
     void Update();
-    void Draw();
+    void Draw(Camera& camera);
 
 protected:
     std::vector<Particle> particles;

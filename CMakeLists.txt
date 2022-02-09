@@ -20,7 +20,9 @@ add_executable(light_field_ps_bp src/main.cpp
     src/generator_texture.cpp
     src/generator_texture.h
     src/rectangle.h
-    src/rectangle.cpp)
+    src/rectangle.cpp
+    src/camera.h
+    src/camera.cpp)
 
 if(MSVC)
     target_compile_options(light_field_ps_bp PRIVATE "/MP")

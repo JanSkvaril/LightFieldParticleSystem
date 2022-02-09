@@ -3,6 +3,7 @@
 #include <iostream>
 #include <glm/gtx/string_cast.hpp>
 #include <tgmath.h>
+#include "camera.h"
 ParticleEmitter::ParticleEmitter(int particles)
     : amount_of_particles(particles),
       shader("shaders/particle_vertex.vs", "shaders/particle_fragment.fs")
@@ -61,30 +62,19 @@ void ParticleEmitter::ResetParticle(Particle &particle)
     particle.position = glm::vec3(0.0f, 0.0f, 0.0f);
 }
 #include <iostream>
-void ParticleEmitter::Draw()
+void ParticleEmitter::Draw(Camera &camera)
 {
     // texture.Bind();
     //  load shader program
     shader.Use();
-
     // emittor object
     glm::mat4 model = glm::mat4(1.0f);
     glm::mat4 view = glm::mat4(1.0f);
     glm::mat4 projection = glm::mat4(1.0f);
-    //  model = glm::rotate(model, glm::radians(0.0f), glm::vec3(1.0f, 0.8f, 0.0f));
-    // model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
-    // view = glm::translate(view, glm::vec3(cos(time * 0.5f) * 0.2, sin(time * 0.5f) * 0.2, -2.5f));
-    glm::vec3 camera_pos = glm::vec3(0.0f, sin(time) * 2.0f, cos(time) * 2.0f);
-    view = glm::lookAt(camera_pos, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-    // camera_pos = glm::normalize(camera_pos);
 
-    // auto test = glm::vec2((camera_pos.x / (1.0f - camera_pos.z)), camera_pos.y / (1.0f - camera_pos.z));
-    camera_pos = glm::vec3(atan2(camera_pos.z, camera_pos.x), atan2(camera_pos.z, camera_pos.y), 0.0f);
-    // camera_pos = glm::vec3((cos(camera_pos.x) + 1.0f) * 0.5f, (sin(camera_pos.y) + 1.0f) * 0.5f, 0.0f);
-    camera_pos /= glm::pi<float>();
-    camera_pos += 1.0f;
-    //  camera_pos *= 0.5f;
-    std::cout << glm::to_string(camera_pos) << "\n\n";
+    view = camera.GetMatrix();
+    auto angle = camera.GetAngleToTarget();
+    // std::cout << glm::to_string(camera_pos) << "\n\n";
 
     projection = glm::perspective(glm::radians(45.0f), (float)800 / (float)600, 0.1f, 100.0f);
 
@@ -92,7 +82,7 @@ void ParticleEmitter::Draw()
     glUniformMatrix4fv(shader.GetUniformLocation("model"), 1, GL_FALSE, glm::value_ptr(model));
     glUniformMatrix4fv(shader.GetUniformLocation("view"), 1, GL_FALSE, glm::value_ptr(view));
     glUniformMatrix4fv(shader.GetUniformLocation("projection"), 1, GL_FALSE, glm::value_ptr(projection));
-    glUniform3fv(shader.GetUniformLocation("camera_pos"), 1, glm::value_ptr(camera_pos));
+    glUniform2fv(shader.GetUniformLocation("camera_pos"), 1, glm::value_ptr(angle));
 
     // bind VAO
     glBindVertexArray(VAO);
