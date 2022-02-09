@@ -2,6 +2,7 @@
 #include "glm/gtx/fast_square_root.hpp"
 #include <iostream>
 #include <glm/gtx/string_cast.hpp>
+#include <tgmath.h>
 ParticleEmitter::ParticleEmitter(int particles)
     : amount_of_particles(particles),
       shader("shaders/particle_vertex.vs", "shaders/particle_fragment.fs")
@@ -73,12 +74,17 @@ void ParticleEmitter::Draw()
     //  model = glm::rotate(model, glm::radians(0.0f), glm::vec3(1.0f, 0.8f, 0.0f));
     // model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
     // view = glm::translate(view, glm::vec3(cos(time * 0.5f) * 0.2, sin(time * 0.5f) * 0.2, -2.5f));
-    glm::vec3 camera_pos = glm::vec3(sin(time) * 4.0f, cos(time) * 4.0f, 5.0f);
+    glm::vec3 camera_pos = glm::vec3(0.0f, sin(time) * 2.0f, cos(time) * 2.0f);
     view = glm::lookAt(camera_pos, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
     // camera_pos = glm::normalize(camera_pos);
-    camera_pos = glm::vec3(sin(time), cos(time), 0.0f);
-    auto test = glm::vec2((camera_pos.x / (1.0f - camera_pos.z)), camera_pos.y / (1.0f - camera_pos.z));
-    std::cout << glm::to_string((test + 1.0f) * 0.5f) << "\n\n";
+
+    // auto test = glm::vec2((camera_pos.x / (1.0f - camera_pos.z)), camera_pos.y / (1.0f - camera_pos.z));
+    camera_pos = glm::vec3(atan2(camera_pos.z, camera_pos.x), atan2(camera_pos.z, camera_pos.y), 0.0f);
+    // camera_pos = glm::vec3((cos(camera_pos.x) + 1.0f) * 0.5f, (sin(camera_pos.y) + 1.0f) * 0.5f, 0.0f);
+    camera_pos /= glm::pi<float>();
+    camera_pos += 1.0f;
+    //  camera_pos *= 0.5f;
+    std::cout << glm::to_string(camera_pos) << "\n\n";
 
     projection = glm::perspective(glm::radians(45.0f), (float)800 / (float)600, 0.1f, 100.0f);
 

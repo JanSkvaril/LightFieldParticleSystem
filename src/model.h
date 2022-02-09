@@ -14,6 +14,7 @@ public:
     void Draw(glm::vec3 rotation, glm::vec3 position);
 
 protected:
+    float time = 0.0f;
     Shader shader;
     unsigned int VAO, VBO, EBO;
     std::vector<unsigned int> indicies;

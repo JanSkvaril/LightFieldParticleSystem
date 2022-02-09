@@ -32,6 +32,7 @@ void main()
     TexCoord = vec2(aTexCoord.x, aTexCoord.y);
     //camera_position = abs(camera_pos.xyz);
     //camera_position = camera_position - (11.0 * floor(camera_position / 11.0));
-    vec2 plane = vec2((camera_position.x / (1.0 - camera_position.z)), camera_position.y / (1.0 - camera_position.z));
-    Offset = plane;
+    // vec2 plane = vec2((camera_position.x / (1.0 - camera_position.z)), camera_position.y / (1.0 - camera_position.z));
+    // Offset = plane;
+    Offset = camera_pos.xy;
 }
