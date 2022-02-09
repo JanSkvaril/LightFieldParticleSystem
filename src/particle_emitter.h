@@ -20,7 +20,7 @@ public:
     ParticleEmitter(int particles);
     void Reset();
     void Update();
-    void Draw(Camera& camera);
+    void Draw(Camera &camera);
 
 protected:
     std::vector<Particle> particles;
@@ -29,7 +29,7 @@ protected:
     Shader shader;
     void ResetParticle(Particle &particle);
     void DrawParticle(Particle &particle);
-    void SortByDepth();
+    void SortByDepth(Camera &camera);
     void CreateVAO();
     void BindPositionVBO();
     unsigned int VAO, VBO;

@@ -6,12 +6,14 @@
 #include "shader.h"
 #include "model_vertex.h"
 #include <glm/vec3.hpp>
+#include "camera.h"
 class Model
 {
 public:
     Model(std::string path);
     void Draw();
     void Draw(glm::vec3 rotation, glm::vec3 position);
+    void Draw(Camera &camera);
 
 protected:
     float time = 0.0f;

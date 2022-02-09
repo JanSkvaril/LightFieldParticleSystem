@@ -12,7 +12,6 @@ uniform vec3 offset;
 uniform vec2 camera_pos;
 void main()
 {
-    vec3 camera_position = vec3(view[0][0], view[1][0], view[2][0]);
     
     vec3 camera_normal = vec3(view[0][2], view[1][2], view[2][2]);
     camera_normal = - camera_normal;
@@ -34,5 +33,9 @@ void main()
     //camera_position = camera_position - (11.0 * floor(camera_position / 11.0));
     // vec2 plane = vec2((camera_position.x / (1.0 - camera_position.z)), camera_position.y / (1.0 - camera_position.z));
     // Offset = plane;
+    //vec3 camera_dir = camera_pos;
+    // vec2 angle = vec2(atan(camera_dir.z, camera_dir.x), atan(camera_dir.z, camera_dir.y));
+    //angle /= 3.14159265359;
+    //angle += 1.0;
     Offset = camera_pos.xy;
 }

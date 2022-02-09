@@ -13,7 +13,8 @@ glm::mat4 Camera::GetMatrix()
 
 glm::vec3 Camera::GetPosition()
 {
-    auto rotated_position = glm::rotate(camera_position, rotation.y, glm::vec3(1.0f, 0.0f, 0.0f));
+    glm::vec3 rotated_position;
+    rotated_position = glm::rotate(camera_position, rotation.y, glm::vec3(1.0f, 0.0f, 0.0f));
     rotated_position = glm::rotate(rotated_position, rotation.x, glm::vec3(0.0f, 1.0f, 0.0f));
     return rotated_position;
 }
@@ -24,15 +25,27 @@ void Camera::LookAt(glm::vec3 position, glm::vec3 target)
     this->target = target;
 
     auto rotated_position = GetPosition();
-    view = glm::lookAt(rotated_position, target, glm::vec3(0.0f, 1.0f, 0.0f));
+    auto up_vector = GetUpVector();
+    view = glm::lookAt(rotated_position, target, up_vector);
 }
 
 glm::vec2 Camera::GetAngleToTarget()
 {
     auto position = GetPosition();
-    auto angle = glm::vec2(atan2(position.z, position.x), atan2(position.z, position.y));
-    angle /= glm::pi<float>();
-    angle += 1.0f;
+    position = glm::normalize(position);
+
+    auto angle = glm::vec2(atan2(position.x, position.z), acosf(position.y / 1.0f));
+    angle.x /= glm::two_pi<float>();
+    angle.y /= glm::pi<float>();
+    if (angle.x < 0.0)
+    {
+        angle.x = 1.0f + angle.x;
+    }
+
+    if (angle.y < 0.5)
+    {
+        // angle.y = 1.0f - angle.y;
+    }
     return angle;
 }
 
@@ -40,4 +53,12 @@ void Camera::RotateAroundTarget(glm::vec2 amount)
 {
     rotation += amount;
     LookAt(camera_position, target);
+}
+
+glm::vec3 Camera::GetUpVector()
+{
+    glm::vec3 rotated_up;
+    rotated_up = glm::rotate(up_vec, rotation.y, glm::vec3(1.0f, 0.0f, 0.0f));
+    rotated_up = glm::rotate(rotated_up, rotation.x, glm::vec3(0.0f, 1.0f, 0.0f));
+    return rotated_up;
 }

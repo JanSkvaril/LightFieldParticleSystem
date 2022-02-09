@@ -33,7 +33,7 @@ void ParticleEmitter::Update()
     time += 0.01f;
     for (auto &particle : particles)
     {
-        // particle.time_to_live--;
+        particle.time_to_live--;
         if (particle.time_to_live <= 0)
         {
             ResetParticle(particle);
@@ -47,9 +47,6 @@ void ParticleEmitter::Update()
         positions[i] = particle.position;
         i++;
     }
-
-    SortByDepth();
-    BindPositionVBO();
 }
 
 void ParticleEmitter::ResetParticle(Particle &particle)
@@ -57,13 +54,16 @@ void ParticleEmitter::ResetParticle(Particle &particle)
     particle.direction = glm::vec3((rand() % 100) - 50, (rand() % 100 - 50), (rand() % 100) - 50);
     // particle.direction = glm::vec3(0.0f, -1.0f, 0.0f);
     particle.direction = glm::normalize(particle.direction);
-    particle.speed = 0.000f;
+    particle.speed = 0.00f;
     particle.time_to_live = 200 + rand() % 250;
     particle.position = glm::vec3(0.0f, 0.0f, 0.0f);
 }
 #include <iostream>
 void ParticleEmitter::Draw(Camera &camera)
 {
+
+    SortByDepth(camera);
+    BindPositionVBO();
     // texture.Bind();
     //  load shader program
     shader.Use();
@@ -74,7 +74,8 @@ void ParticleEmitter::Draw(Camera &camera)
 
     view = camera.GetMatrix();
     auto angle = camera.GetAngleToTarget();
-    // std::cout << glm::to_string(camera_pos) << "\n\n";
+    std::cout << glm::to_string(camera.GetPosition()) << "\n"
+              << glm::to_string(camera.GetAngleToTarget()) << "\n\n";
 
     projection = glm::perspective(glm::radians(45.0f), (float)800 / (float)600, 0.1f, 100.0f);
 
@@ -134,12 +135,14 @@ void ParticleEmitter::DrawParticle(Particle &particle)
     glDrawArrays(GL_TRIANGLES, 0, GL_UNSIGNED_INT);
 }
 
-void ParticleEmitter::SortByDepth()
+void ParticleEmitter::SortByDepth(Camera &camera)
 {
-    std::sort(positions.begin(), positions.end(), [](glm::vec3 p_a, glm::vec3 p_b)
+    std::sort(positions.begin(), positions.end(), [&camera](glm::vec3 p_a, glm::vec3 p_b)
               { 
-                    glm::vec3 camera = glm::vec3(0.0f, 0.0f, -5.5f);
-                    return p_a.z > p_b.z; });
+                  const auto camera_pos = camera.GetPosition();
+                  auto dist_a = glm::distance(camera_pos, p_a);
+                  auto dist_b = glm::distance(camera_pos, p_b);
+                  return dist_a < dist_b; });
 }
 
 void ParticleEmitter::BindPositionVBO()

@@ -10,6 +10,13 @@ uniform mat4 view; // emittor position
 float bilinear(vec4 w, vec4 q) {
     return q.r * w.r + q.g * w.g + q.b * w.b + q.a * w.a;
 }
+vec2 my_floor(vec2 vec) {
+    if (vec.x < 0.0)vec.x = -floor(abs(vec.x));
+    else vec.x = floor(vec.x);
+    if (vec.y < 0.0)vec.y = -floor(abs(vec.y));
+    else vec.y = floor(vec.y);
+    return vec;
+}
 void main()
 {
     vec4 col = vec4(1.0, 1.0, 1.0, 1.0);
@@ -17,17 +24,16 @@ void main()
     vec2 pos = TexCoord;
     // pos += 5.0;
     float rot_speed = 1.0;
-    vec2 m = vec2(Offset.x, Offset.y) * (zoom - 0.8);
-    // if (m.x < 0.0)m.x = (zoom - 1.0) + m.x;
-    // if (m.y < 0.0)m.y = (zoom - 1.0) + m.y;
-    m = m - ((zoom - 0.8) * floor(m / (zoom - 0.8)));
+    vec2 m = vec2(Offset.x, Offset.y) * (zoom);
+    
     vec2 u1 = floor(m);
     
     pos /= zoom;
     vec2 first = vec2(pos.x + u1.x / zoom, pos.y + u1.y / zoom);
     
     vec2 u2 = u1 + 1.0;
-    
+    if (u2.x > zoom)u2.x = 0.0;
+    if (u2.y > zoom)u2.y = 0.0;
     vec2 second = vec2(pos.x + u2.x / zoom, pos.y + u2.y / zoom);
     vec2 xy = m;
     vec4 q11 = texture(u_texture, first);
