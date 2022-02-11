@@ -47,6 +47,8 @@ glm::vec2 Camera::GetAngleToTarget()
     //     // angle.y = 1.0f - angle.y;
     // }
     glm::vec2 angle = rotation;
+
+    angle /= glm::two_pi<float>();
     return angle;
 }
 
@@ -54,21 +56,21 @@ void Camera::RotateAroundTarget(glm::vec2 amount)
 {
     rotation += amount;
 
-    if (rotation.x > 1.0f)
+    if (rotation.x > glm::two_pi<float>())
     {
-        rotation.x = rotation.x - 1.0f;
+        rotation.x = rotation.x - glm::two_pi<float>();
     }
     else if (rotation.x < 0.0f)
     {
-        rotation.x = 1.0f + rotation.x;
+        rotation.x = glm::two_pi<float>() + rotation.x;
     }
-    if (rotation.y > 1.0f)
+    if (rotation.y > glm::two_pi<float>())
     {
-        rotation.y = rotation.y - 1.0f;
+        rotation.y = rotation.y - glm::two_pi<float>();
     }
     else if (rotation.y < 0.0f)
     {
-        rotation.y = 1.0f + rotation.y;
+        rotation.y = glm::two_pi<float>() + rotation.y;
     }
 
     LookAt(camera_position, target);
