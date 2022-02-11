@@ -34,24 +34,43 @@ glm::vec2 Camera::GetAngleToTarget()
     auto position = GetPosition();
     position = glm::normalize(position);
 
-    auto angle = glm::vec2(atan2(position.x, position.z), acosf(position.y / 1.0f));
-    angle.x /= glm::two_pi<float>();
-    angle.y /= glm::pi<float>();
-    if (angle.x < 0.0)
-    {
-        angle.x = 1.0f + angle.x;
-    }
+    // auto angle = glm::vec2(atan2(position.x, position.z), acosf(position.y / 1.0f));
+    // angle.x /= glm::two_pi<float>();
+    // angle.y /= glm::pi<float>();
+    // if (angle.x < 0.0)
+    // {
+    //     angle.x = 1.0f + angle.x;
+    // }
 
-    if (angle.y < 0.5)
-    {
-        // angle.y = 1.0f - angle.y;
-    }
+    // if (angle.y < 0.5)
+    // {
+    //     // angle.y = 1.0f - angle.y;
+    // }
+    glm::vec2 angle = rotation;
     return angle;
 }
 
 void Camera::RotateAroundTarget(glm::vec2 amount)
 {
     rotation += amount;
+
+    if (rotation.x > 1.0f)
+    {
+        rotation.x = rotation.x - 1.0f;
+    }
+    else if (rotation.x < 0.0f)
+    {
+        rotation.x = 1.0f + rotation.x;
+    }
+    if (rotation.y > 1.0f)
+    {
+        rotation.y = rotation.y - 1.0f;
+    }
+    else if (rotation.y < 0.0f)
+    {
+        rotation.y = 1.0f + rotation.y;
+    }
+
     LookAt(camera_position, target);
 }
 

@@ -20,14 +20,13 @@ vec2 my_floor(vec2 vec) {
 void main()
 {
     vec4 col = vec4(1.0, 1.0, 1.0, 1.0);
-    float zoom = 21.0;
+    float zoom = 11.0;
     vec2 pos = TexCoord;
     // pos += 5.0;
     float rot_speed = 1.0;
     vec2 m = vec2(Offset.x, Offset.y) * (zoom);
     
     vec2 u1 = floor(m);
-    
     pos /= zoom;
     vec2 first = vec2(pos.x + u1.x / zoom, pos.y + u1.y / zoom);
     
