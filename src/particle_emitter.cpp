@@ -59,7 +59,7 @@ void ParticleEmitter::ResetParticle(Particle &particle)
     particle.position = glm::vec3(0.0f, 0.0f, 0.0f);
 }
 #include <iostream>
-void ParticleEmitter::Draw(Camera &camera)
+void ParticleEmitter::Draw(Camera &camera, float texture_density)
 {
 
     SortByDepth(camera);
@@ -84,6 +84,7 @@ void ParticleEmitter::Draw(Camera &camera)
     glUniformMatrix4fv(shader.GetUniformLocation("view"), 1, GL_FALSE, glm::value_ptr(view));
     glUniformMatrix4fv(shader.GetUniformLocation("projection"), 1, GL_FALSE, glm::value_ptr(projection));
     glUniform2fv(shader.GetUniformLocation("camera_pos"), 1, glm::value_ptr(angle));
+    glUniform1f(shader.GetUniformLocation("u_density"), texture_density);
 
     // bind VAO
     glBindVertexArray(VAO);

@@ -61,8 +61,9 @@ int main()
     ParticleEmitter ps(100);
     Model model("models/bird.obj");
     Camera camera;
-    camera.LookAt(glm::vec3(0.0f, 0.0f, -5.0f), glm::vec3(0.0f, 0.0f, 0.0f));
-    Generator generator(&model, 21, 5000);
+    const int density = 21;
+    camera.LookAt(glm::vec3(0.0f, 0.0f, -10.0f), glm::vec3(0.0f, 0.0f, 0.0f));
+    Generator generator(&model, density, 5000);
     generator.Generate();
     //  GeneratorTexture gt(&model, 1000, 1000);
 
@@ -101,7 +102,7 @@ int main()
         glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         generator.Bind();
-        ps.Draw(camera);
+        ps.Draw(camera, density);
         // rec.Draw(glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 1.0f));
         //(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f));
         glfwSwapBuffers(window);

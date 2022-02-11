@@ -12,6 +12,7 @@ public:
     void Generate();
     GLuint GetTexture();
     void Bind();
+    int GetDensity();
 
 protected:
     int density;

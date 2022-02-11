@@ -7,6 +7,7 @@ in vec2 Offset;
 uniform sampler2D u_texture;
 uniform vec3 offset;
 uniform mat4 view; // emittor position
+uniform float u_density;
 float bilinear(vec4 w, vec4 q) {
     return q.r * w.r + q.g * w.g + q.b * w.b + q.a * w.a;
 }
@@ -20,7 +21,7 @@ vec2 my_floor(vec2 vec) {
 void main()
 {
     vec4 col = vec4(1.0, 1.0, 1.0, 1.0);
-    float zoom = 11.0;
+    float zoom = u_density;
     vec2 pos = TexCoord;
     // pos += 5.0;
     float rot_speed = 1.0;

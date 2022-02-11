@@ -20,7 +20,7 @@ public:
     ParticleEmitter(int particles);
     void Reset();
     void Update();
-    void Draw(Camera &camera);
+    void Draw(Camera &camera, float texture_density);
 
 protected:
     std::vector<Particle> particles;
