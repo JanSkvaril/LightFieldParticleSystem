@@ -9,7 +9,8 @@ uniform mat4 model; // emittor rotation
 uniform mat4 view; // emittor position
 uniform mat4 projection;
 uniform vec3 offset;
-uniform vec2 camera_pos;
+uniform vec2 camera_angle;
+uniform vec3 camera_pos;
 void main()
 {
     
@@ -37,5 +38,23 @@ void main()
     // vec2 angle = vec2(atan(camera_dir.z, camera_dir.x), atan(camera_dir.z, camera_dir.y));
     //angle /= 3.14159265359;
     //angle += 1.0;
-    Offset = camera_pos.xy;
+    vec3 dir = camera_pos - offset2;
+    vec2 angle = camera_angle;
+    dir = normalize(dir);
+    angle.y -= dir.y * 0.25;
+    angle.x -= (dir.x + dir.z) * (0.25 * 0.5);
+    if (angle.y < 0.0) {
+        angle.y = 1.0 + angle.y;
+    }
+    else if (angle.y > 1.0) {
+        angle.y = angle.y - 1.0;
+    }
+    
+    if (angle.x < 0.0) {
+        angle.x = 1.0 + angle.x;
+    }
+    else if (angle.x > 1.0) {
+        angle.x = angle.x - 1.0;
+    }
+    Offset = angle.xy;
 }

@@ -58,11 +58,11 @@ int main()
     }
 
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    ParticleEmitter ps(100);
+    ParticleEmitter ps(1);
     Model model("models/bird.obj");
     Camera camera;
     const int density = 21;
-    camera.LookAt(glm::vec3(0.0f, 0.0f, -10.0f), glm::vec3(0.0f, 0.0f, 0.0f));
+    camera.LookAt(glm::vec3(0.0f, 0.0f, -5.0f), glm::vec3(0.0f, 0.0f, 0.0f));
     Generator generator(&model, density, 5000);
     generator.Generate();
     //  GeneratorTexture gt(&model, 1000, 1000);
