@@ -66,11 +66,11 @@ void ParticleEmitter::Update()
 void ParticleEmitter::ResetParticle(Particle &particle)
 {
     //   particle.direction = glm::vec3((rand() % 100) - 50, (rand() % 100 - 50), (rand() % 100) - 50);
-    particle.direction = glm::vec3(1.0f, 0.0f, 0.0f);
+    particle.direction = glm::vec3(-1.0f, 0.0f, 0.0f);
     particle.direction = glm::normalize(particle.direction);
-    particle.speed = 0.00f;
+    particle.speed = 0.01f;
     particle.time_to_live = 400 + rand() % 250;
-    particle.position = glm::vec3(-1.2f, 0.0f, 0.0f);
+    particle.position = glm::vec3(1.0f, 0.0f, 0.0f);
 }
 #include <iostream>
 void ParticleEmitter::Draw(Camera &camera, float texture_density)
