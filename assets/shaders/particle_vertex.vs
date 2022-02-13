@@ -11,6 +11,19 @@ uniform mat4 projection;
 uniform vec3 offset;
 uniform vec2 camera_angle;
 uniform vec3 camera_pos;
+
+#define PI 3.1415926538
+
+// float atan2(float y, float x)
+// {
+    //     bool s = (abs(x) > abs(y));
+    //     return mix(PI / 2.0 - atan(x, y), atan(y, x), s);
+// }
+float ATan2(vec2 dir)
+{
+    float angle = asin(dir.x) > 0 ? acos(dir.y) : -acos(dir.y);
+    return angle;
+}
 void main()
 {
     
@@ -41,20 +54,47 @@ void main()
     vec3 dir = camera_pos - offset2;
     vec2 angle = camera_angle;
     dir = normalize(dir);
-    angle.y -= dir.y * 0.25;
-    angle.x -= (dir.x + dir.z) * (0.25 * 0.5);
-    if (angle.y < 0.0) {
-        angle.y = 1.0 + angle.y;
-    }
-    else if (angle.y > 1.0) {
-        angle.y = angle.y - 1.0;
-    }
     
-    if (angle.x < 0.0) {
-        angle.x = 1.0 + angle.x;
-    }
-    else if (angle.x > 1.0) {
-        angle.x = angle.x - 1.0;
-    }
+    // angle.x = (atan(dir.z, dir.x) + PI) / (PI * 2.0);
+    
+    //angle.x = (atan((dir.z), (dir.x)) + PI) / (PI * 2.0);
+    
+    // if (angle.y < 0.25) {
+        
+    // }
+    // else if (angle.y < 0.75) {
+        //     angle.x = 0.5 + angle.x;
+    // }
+    
+    // if (angle.y < 0.25) {
+        //     angle.y = dir.y * 0.25 + 1.0;
+    // }
+    // else if (angle.y < 0.75)
+    // {
+        //     angle.y = 0.5 - (dir.y * 0.25);
+    // }
+    // else {
+        //     angle.y = abs(dir.y * 0.25);
+    // }
+    
+    // else {
+        //     angle.y = 0.314  (dir.y / 3.14);
+    // }
+    
+    // angle.x -= (dir.x + dir.z) * (0.25 * 0.5);
+    // if (angle.y < 0.0) {
+        //     angle.y = 1.0 + angle.y;
+    // }
+    // else if (angle.y > 1.0) {
+        //     angle.y = angle.y - 1.0;
+    // }
+    
+    // if (angle.x < 0.0) {
+        //     angle.x = 1.0 + angle.x;
+    // }
+    // else if (angle.x > 1.0) {
+        //     angle.x = angle.x - 1.0;
+    // }
+    //   angle.y = 1.0 - angle.y;
     Offset = angle.xy;
 }

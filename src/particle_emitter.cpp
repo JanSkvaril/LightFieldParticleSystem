@@ -4,6 +4,20 @@
 #include <glm/gtx/string_cast.hpp>
 #include <tgmath.h>
 #include "camera.h"
+
+float atan22(float y, float x)
+{
+    bool s = (abs(x) > abs(y));
+    if (s == true)
+    {
+        return glm::pi<float>() / 2.0f - glm::atan(x, y);
+    }
+    else
+    {
+        return glm::atan(y, x);
+    }
+}
+
 ParticleEmitter::ParticleEmitter(int particles)
     : amount_of_particles(particles),
       shader("shaders/particle_vertex.vs", "shaders/particle_fragment.fs")
@@ -54,9 +68,9 @@ void ParticleEmitter::ResetParticle(Particle &particle)
     //   particle.direction = glm::vec3((rand() % 100) - 50, (rand() % 100 - 50), (rand() % 100) - 50);
     particle.direction = glm::vec3(1.0f, 0.0f, 0.0f);
     particle.direction = glm::normalize(particle.direction);
-    particle.speed = 0.01f;
-    particle.time_to_live = 200 + rand() % 250;
-    particle.position = glm::vec3(0.0f, 0.0f, 0.0f);
+    particle.speed = 0.00f;
+    particle.time_to_live = 400 + rand() % 250;
+    particle.position = glm::vec3(-1.2f, 0.0f, 0.0f);
 }
 #include <iostream>
 void ParticleEmitter::Draw(Camera &camera, float texture_density)
@@ -75,15 +89,19 @@ void ParticleEmitter::Draw(Camera &camera, float texture_density)
     view = camera.GetMatrix();
     auto angle = camera.GetAngleToTarget();
     // std::cout << glm::to_string(camera.GetPosition()) << "\n"
-    //           << glm::to_string(camera.GetAngleToTarget()) << "\n\n";
+    //            << glm::to_string(camera.GetAngleToTarget()) << "\n\n";
 
     projection = glm::perspective(glm::radians(45.0f), (float)800 / (float)600, 0.1f, 100.0f);
     auto camera_pos = camera.GetPosition();
-    // auto dir = camera_pos - positions[0];
-    // dir = normalize(dir);
-    // std::cout << glm::to_string(dir) << "\n\n";
+    auto dir = camera_pos - positions[0];
+    dir = normalize(dir);
+    // std::cout << "Camera Angle: " << glm::to_string(camera.GetAngleToTarget()) << "\n";
+    float a = (glm::atan(dir.z, dir.x));
+    float b = (glm::atan(dir.y, dir.x));
+    std::cout << "" << b << " " << a << "  " << glm::to_string(dir) << "\n";
+    // std::cout << "Direction:    " << glm::to_string(dir) << "\n\n";
     //
-    // set emittor object to uniforms
+    //  set emittor object to uniforms
     glUniformMatrix4fv(shader.GetUniformLocation("model"), 1, GL_FALSE, glm::value_ptr(model));
     glUniformMatrix4fv(shader.GetUniformLocation("view"), 1, GL_FALSE, glm::value_ptr(view));
     glUniformMatrix4fv(shader.GetUniformLocation("projection"), 1, GL_FALSE, glm::value_ptr(projection));
