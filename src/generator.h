@@ -3,7 +3,7 @@
 #include "model.h"
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
-#include "rectangle.h"
+#include "text_rectangle.h"
 #include "generator_texture.h"
 class Generator
 {
@@ -19,7 +19,7 @@ protected:
     const GLsizei t_size;
     void CreateRenderTexture();
     Model *model;
-    Rectangle rectangle;
+    TextReactangle rectangle;
     GeneratorTexture gt;
     GLuint FramebufferName = 0;
     GLuint renderedTexture;

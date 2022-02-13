@@ -1,4 +1,4 @@
-#include "rectangle.h"
+#include "text_rectangle.h"
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
@@ -7,12 +7,12 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
-Rectangle::Rectangle() : shader("shaders/basic2D_vertex.vs", "shaders/particle_simple_fragment.fs")
+TextReactangle::TextReactangle() : shader("shaders/basic2D_vertex.vs", "shaders/particle_simple_fragment.fs")
 {
     Setup();
 }
 
-void Rectangle::Draw(glm::vec2 position, glm::vec2 size)
+void TextReactangle::Draw(glm::vec2 position, glm::vec2 size)
 {
     shader.Use();
     glm::mat4 model = glm::mat4(1.0f);
@@ -25,7 +25,7 @@ void Rectangle::Draw(glm::vec2 position, glm::vec2 size)
     glBindVertexArray(0);
 }
 
-void Rectangle::Setup()
+void TextReactangle::Setup()
 {
     float vertices[] = {
         1.0f, 1.0f, 0.0f, 1.0f, 1.0f,

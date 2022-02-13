@@ -15,7 +15,7 @@
 #include "model.h"
 #include "generator.h"
 #include "generator_texture.h"
-#include "rectangle.h"
+#include "text_rectangle.h"
 
 void framebuffer_size_callback(GLFWwindow *window, int width, int height);
 void processInput(GLFWwindow *window);
@@ -68,7 +68,7 @@ int main()
     //  GeneratorTexture gt(&model, 1000, 1000);
 
     float time = 0.0f;
-    Rectangle rec;
+    TextReactangle rec;
 
     glEnable(GL_BLEND);
     while (!glfwWindowShouldClose(window))

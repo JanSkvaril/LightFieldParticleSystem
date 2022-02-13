@@ -3,10 +3,10 @@
 
 #include <glm/vec2.hpp>
 #include "shader.h"
-class Rectangle
+class TextReactangle
 {
 public:
-    Rectangle();
+    TextReactangle();
     void Draw(glm::vec2 position, glm::vec2 size);
 
 protected:

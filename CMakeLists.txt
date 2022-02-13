@@ -19,8 +19,8 @@ add_executable(light_field_ps_bp src/main.cpp
     src/generator.cpp
     src/generator_texture.cpp
     src/generator_texture.h
-    src/rectangle.h
-    src/rectangle.cpp
+    src/text_rectangle.h
+    src/text_rectangle.cpp
     src/camera.h
     src/camera.cpp)
 
