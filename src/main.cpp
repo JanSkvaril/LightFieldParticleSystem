@@ -16,6 +16,7 @@
 #include "generator.h"
 #include "generator_texture.h"
 #include "text_rectangle.h"
+#include <nanogui/nanogui.h>
 
 void framebuffer_size_callback(GLFWwindow *window, int width, int height);
 void processInput(GLFWwindow *window);
@@ -70,7 +71,18 @@ int main()
     float time = 0.0f;
     TextReactangle rec;
 
+    nanogui::Screen *screen = new nanogui::Screen();
+    screen->initialize(window, true);
+    nanogui::FormHelper *gui = new nanogui::FormHelper(screen);
+    nanogui::ref<nanogui::Window> nanoguiWindow = gui->add_window(nanogui::Vector2i(10, 10), "Form helper example");
+    gui->add_group("Basic types");
+    screen->set_visible(true);
+    screen->perform_layout();
+
+    nanoguiWindow->center();
+
     glEnable(GL_BLEND);
+
     while (!glfwWindowShouldClose(window))
     {
         const float speed = 0.05f;
@@ -105,6 +117,9 @@ int main()
         ps.Draw(camera, density);
         // rec.Draw(glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 1.0f));
         //(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f));
+        // Draw nanogui
+        screen->draw_widgets();
+
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
