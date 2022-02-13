@@ -36,7 +36,8 @@ void main()
     mat3 rot = mat3(r, new_up, camera_normal);
     vec3 posi = rot * aPos;
     vec3 new_offset = rot * offset2.xyz;
-    vec4 word_space = (view * model * vec4(posi, 1.0) + vec4(new_offset, 1.0));
+    vec4 word_space = (view * model * (vec4(posi, 1.0)));
+    word_space += (view * model * (vec4(offset2, 1.0)));
     vec4 screen_pos = projection * word_space;
     screen_pos = screen_pos / screen_pos.w;
     
@@ -56,10 +57,12 @@ void main()
     dir = normalize(dir);
     
     vec4 S = (view * vec4(offset2, 1.0));
-    //S /= S.w;
+    S /= S.w;
     // source: https://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.90.6202&rep=rep1&type=pdf
-    angle.x -= 0.1 * ((S.x / (1.0 + S.z)) + 1.0);
-    angle.y -= 0.1 * ((S.y / (1.0 + S.z)) + 1.0);
+    // angle.x -= 0.1 * ((S.x / (1.0 + S.z)) + 1.0);
+    //  angle.y = -angle.y;
+    angle.y += 0.05 * ((S.y / (1.0 + S.z)) + 1.0);
+    angle.y = - angle.y;
     // angle.x = (atan(dir.z, dir.x) + PI) / (PI * 2.0);
     
     //angle.x = (atan((dir.z), (dir.x)) + PI) / (PI * 2.0);

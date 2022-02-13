@@ -58,7 +58,7 @@ int main()
     }
 
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    ParticleEmitter ps(1);
+    ParticleEmitter ps(100);
     Model model("models/bird.obj");
     Camera camera;
     const int density = 21;
@@ -98,7 +98,7 @@ int main()
         // glClearColor(0.2f, 0.2f, 0.3f, 1.0f);
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        // model.Draw(camera);
+        //  model.Draw(camera);
         glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         generator.Bind();

@@ -56,7 +56,7 @@ void ParticleEmitter::Update()
         {
             particle.position += particle.direction * particle.speed;
             float g = 0.05f;
-            // particle.direction = (1.0f - g) * particle.direction + g * glm::vec3(1.0f, 0.0f, 0.0f);
+            particle.direction = (1.0f - g) * particle.direction + g * glm::vec3(0.0f, 1.0f, 0.0f);
         }
         positions[i] = particle.position;
         i++;
@@ -65,12 +65,12 @@ void ParticleEmitter::Update()
 
 void ParticleEmitter::ResetParticle(Particle &particle)
 {
-    //   particle.direction = glm::vec3((rand() % 100) - 50, (rand() % 100 - 50), (rand() % 100) - 50);
-    particle.direction = glm::vec3(-1.0f, 0.0f, 0.0f);
+    particle.direction = glm::vec3((rand() % 100) - 50, (rand() % 100 - 50), (rand() % 100) - 50);
+    // particle.direction = glm::vec3(-1.0f, 0.0f, 0.0f);
     particle.direction = glm::normalize(particle.direction);
-    particle.speed = 0.01f;
-    particle.time_to_live = 400 + rand() % 250;
-    particle.position = glm::vec3(1.0f, 0.0f, 0.0f);
+    particle.speed = 0.1f;
+    particle.time_to_live = 200 + rand() % 250;
+    particle.position = glm::vec3(.2f, -0.8f, 0.0f);
 }
 #include <iostream>
 void ParticleEmitter::Draw(Camera &camera, float texture_density)
@@ -166,7 +166,7 @@ void ParticleEmitter::SortByDepth(Camera &camera)
                   const auto camera_pos = camera.GetPosition();
                   auto dist_a = glm::distance(camera_pos, p_a);
                   auto dist_b = glm::distance(camera_pos, p_b);
-                  return dist_a < dist_b; });
+                  return dist_a > dist_b; });
 }
 
 void ParticleEmitter::BindPositionVBO()

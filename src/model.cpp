@@ -111,7 +111,7 @@ void Model::Draw(Camera &camera)
     glm::mat4 model = glm::mat4(1.0f);
     glm::mat4 view = glm::mat4(1.0f);
     glm::mat4 projection = glm::mat4(1.0f);
-    //   model = glm::translate(model, glm::vec3(0.0f, 0.0f, 5.0f));
+    model = glm::translate(model, glm::vec3(10.0f, 0.0f, 0.0f));
 
     // model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 0.0f, 1.0f));
 
