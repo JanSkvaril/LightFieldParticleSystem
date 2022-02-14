@@ -21,6 +21,7 @@ public:
     void Reset();
     void Update();
     void Draw(Camera &camera, float texture_density);
+    void SetPactilesAmount(int amount);
 
 protected:
     std::vector<Particle> particles;

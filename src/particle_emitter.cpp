@@ -111,7 +111,7 @@ void ParticleEmitter::Draw(Camera &camera, float texture_density)
 
     // bind VAO
     glBindVertexArray(VAO);
-    glDrawArraysInstanced(GL_TRIANGLES, 0, GL_UNSIGNED_INT, amount_of_particles);
+    glDrawArraysInstanced(GL_TRIANGLES, 0, GL_UNSIGNED_INT, particles.size());
     // draw particles
     for (auto &particle : particles)
     {
@@ -161,6 +161,7 @@ void ParticleEmitter::DrawParticle(Particle &particle)
 
 void ParticleEmitter::SortByDepth(Camera &camera)
 {
+    return;
     std::sort(positions.begin(), positions.end(), [&camera](glm::vec3 p_a, glm::vec3 p_b)
               { 
                   const auto camera_pos = camera.GetPosition();
@@ -172,6 +173,15 @@ void ParticleEmitter::SortByDepth(Camera &camera)
 void ParticleEmitter::BindPositionVBO()
 {
     glBindBuffer(GL_ARRAY_BUFFER, position_VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(float) * amount_of_particles * 3, &positions[0], GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(float) * particles.size() * 3, &positions[0], GL_STATIC_DRAW);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
+}
+
+void ParticleEmitter::SetPactilesAmount(int amount)
+{
+    if (amount == particles.size())
+        return;
+    this->particles.resize(amount);
+    this->positions.resize(amount);
+    //  Reset();
 }

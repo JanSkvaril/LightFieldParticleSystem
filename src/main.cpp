@@ -59,7 +59,8 @@ int main()
     }
 
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    ParticleEmitter ps(100);
+    int a = 10;
+    ParticleEmitter ps(a);
     Model model("models/bird.obj");
     Camera camera;
     const int density = 21;
@@ -71,15 +72,72 @@ int main()
     float time = 0.0f;
     TextReactangle rec;
 
-    nanogui::Screen *screen = new nanogui::Screen();
-    screen->initialize(window, true);
-    nanogui::FormHelper *gui = new nanogui::FormHelper(screen);
+    nanogui::Screen screen = nanogui::Screen();
+    screen.initialize(window, true);
+    nanogui::FormHelper *gui = new nanogui::FormHelper(&screen);
     nanogui::ref<nanogui::Window> nanoguiWindow = gui->add_window(nanogui::Vector2i(10, 10), "Form helper example");
     gui->add_group("Basic types");
-    screen->set_visible(true);
-    screen->perform_layout();
+    gui->add_variable("Amount of particles:", a, true);
 
-    nanoguiWindow->center();
+    screen.set_visible(true);
+    screen.perform_layout();
+
+    // nanoguiWindow->center();
+    glfwSetWindowUserPointer(window, &screen);
+    glfwSetCursorPosCallback(window,
+                             [](GLFWwindow *window, double x, double y)
+                             {
+                                 nanogui::Screen *screen = reinterpret_cast<nanogui::Screen *>(glfwGetWindowUserPointer(window));
+                                 screen->cursor_pos_callback_event(x, y);
+                             });
+
+    glfwSetMouseButtonCallback(window,
+                               [](GLFWwindow *window, int button, int action, int modifiers)
+                               {
+                                   nanogui::Screen *screen = reinterpret_cast<nanogui::Screen *>(glfwGetWindowUserPointer(window));
+
+                                   screen->mouse_button_callback_event(button, action, modifiers);
+                               });
+
+    glfwSetKeyCallback(window,
+                       [](GLFWwindow *window, int key, int scancode, int action, int mods)
+                       {
+                           nanogui::Screen *screen = reinterpret_cast<nanogui::Screen *>(glfwGetWindowUserPointer(window));
+
+                           screen->key_callback_event(key, scancode, action, mods);
+                       });
+
+    glfwSetCharCallback(window,
+                        [](GLFWwindow *window, unsigned int codepoint)
+                        {
+                            nanogui::Screen *screen = reinterpret_cast<nanogui::Screen *>(glfwGetWindowUserPointer(window));
+
+                            screen->char_callback_event(codepoint);
+                        });
+
+    glfwSetDropCallback(window,
+                        [](GLFWwindow *window, int count, const char **filenames)
+                        {
+                            nanogui::Screen *screen = reinterpret_cast<nanogui::Screen *>(glfwGetWindowUserPointer(window));
+
+                            screen->drop_callback_event(count, filenames);
+                        });
+
+    glfwSetScrollCallback(window,
+                          [](GLFWwindow *window, double x, double y)
+                          {
+                              nanogui::Screen *screen = reinterpret_cast<nanogui::Screen *>(glfwGetWindowUserPointer(window));
+
+                              screen->scroll_callback_event(x, y);
+                          });
+
+    glfwSetFramebufferSizeCallback(window,
+                                   [](GLFWwindow *window, int width, int height)
+                                   {
+                                       nanogui::Screen *screen = reinterpret_cast<nanogui::Screen *>(glfwGetWindowUserPointer(window));
+
+                                       screen->resize_callback_event(width, height);
+                                   });
 
     glEnable(GL_BLEND);
 
@@ -118,8 +176,8 @@ int main()
         // rec.Draw(glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 1.0f));
         //(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f));
         // Draw nanogui
-        screen->draw_widgets();
-
+        screen.draw_widgets();
+        ps.SetPactilesAmount(a);
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
