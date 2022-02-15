@@ -55,8 +55,8 @@ void ParticleEmitter::Update()
         else
         {
             particle.position += particle.direction * particle.speed;
-            float g = 0.05f;
-            particle.direction = (1.0f - g) * particle.direction + g * glm::vec3(0.0f, 1.0f, 0.0f);
+            float g = gravity_strength;
+            particle.direction = (1.0f - g) * particle.direction + g * gravity_dir;
         }
         positions[i] = particle.position;
         i++;
@@ -108,6 +108,7 @@ void ParticleEmitter::Draw(Camera &camera, float texture_density)
     glUniform2fv(shader.GetUniformLocation("camera_angle"), 1, glm::value_ptr(angle));
     glUniform3fv(shader.GetUniformLocation("camera_pos"), 1, glm::value_ptr(camera_pos));
     glUniform1f(shader.GetUniformLocation("u_density"), texture_density);
+    glUniform1i(shader.GetUniformLocation("show_border"), show_borders);
 
     // bind VAO
     glBindVertexArray(VAO);
@@ -184,4 +185,18 @@ void ParticleEmitter::SetPactilesAmount(int amount)
     this->particles.resize(amount);
     this->positions.resize(amount);
     //  Reset();
+}
+
+void ParticleEmitter::SetGravity(float strength, glm::vec3 direction)
+{
+    this->gravity_strength = strength;
+    this->gravity_dir = direction;
+}
+
+void ParticleEmitter::ShouldShowBorders(bool show_borders)
+{
+    if (show_borders)
+        this->show_borders = 1;
+    else
+        this->show_borders = 0;
 }

@@ -48,7 +48,10 @@ add_executable(light_field_ps_bp src/main.cpp
     src/text_rectangle.h
     src/text_rectangle.cpp
     src/camera.h
-    src/camera.cpp)
+    src/camera.cpp
+    src/ui_manager.h
+    src/ui_manager.cpp
+    src/ui_settings.h)
 
 
 

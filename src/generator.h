@@ -13,8 +13,11 @@ public:
     GLuint GetTexture();
     void Bind();
     int GetDensity();
+    void SetModelRotation(glm::vec3 rotation);
 
 protected:
+    glm::vec3 default_rotation = glm::vec3(0.0f, 0.0f, 0.0f);
+
     int density;
     const GLsizei t_size;
     void CreateRenderTexture();

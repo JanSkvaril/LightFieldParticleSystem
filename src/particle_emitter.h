@@ -22,8 +22,11 @@ public:
     void Update();
     void Draw(Camera &camera, float texture_density);
     void SetPactilesAmount(int amount);
+    void SetGravity(float strength, glm::vec3 direction);
+    void ShouldShowBorders(bool show_borders);
 
 protected:
+    int show_borders = 0;
     std::vector<Particle> particles;
     std::vector<glm::vec3> positions;
     float time = 12145.0f;
@@ -36,6 +39,9 @@ protected:
     unsigned int VAO, VBO;
     unsigned int position_VBO;
     const int amount_of_particles;
+
+    float gravity_strength = 0.0f;
+    glm::vec3 gravity_dir = glm::vec3(0.0f, 1.0f, 0.0f);
 };
 
 #endif

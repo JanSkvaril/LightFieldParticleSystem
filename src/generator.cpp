@@ -1,6 +1,7 @@
 #include "generator.h"
 #include "glm/glm.hpp"
 #include "glm/gtc/constants.hpp"
+#include "glm/gtc/epsilon.hpp"
 Generator::Generator(Model *model, int density, int res) : gt(model, res / density, res / density),
                                                            t_size(res)
 {
@@ -60,7 +61,9 @@ void Generator::Generate()
     {
         for (int y = -range; y <= range; y++)
         {
-            gt.Generate(glm::vec3((x + range) * rotation, (y + range) * rotation, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f));
+            auto rot = glm::vec3((x + range) * rotation, (y + range) * rotation, 0.0f);
+            rot += default_rotation;
+            gt.Generate(rot, glm::vec3(0.0f, 0.0f, 0.0f));
             glBindFramebuffer(GL_FRAMEBUFFER, FramebufferName);
             glViewport(0, 0, t_size, t_size);
             gt.BindTexture();
@@ -86,4 +89,14 @@ void Generator::Bind()
 int Generator::GetDensity()
 {
     return density;
+}
+
+void Generator::SetModelRotation(glm::vec3 rotation)
+{
+    auto e = glm::epsilonEqual(rotation, default_rotation, 0.01f);
+    if (!e.x || !e.y || !e.z)
+    {
+        this->default_rotation = rotation;
+        Generate();
+    };
 }
