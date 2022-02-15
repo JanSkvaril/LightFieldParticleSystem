@@ -14,6 +14,9 @@ UiManager::UiManager(GLFWwindow *window)
     gui->add_variable("Gravity direction", config.gravity_direction);
     gui->add_group("Visual");
     gui->add_variable("Show borders", config.show_border);
+    gui->add_variable("Show Lightfield", config.show_light_field);
+    gui->add_variable("Lightfield density", config.density);
+    gui->add_variable("Resolution", config.resolution);
 
     nanogui::ref<nanogui::Window> nanoguiWindow2 = gui->add_window(nanogui::Vector2i(250, 10), "Model");
     nanoguiWindow2->set_width(200);

@@ -14,12 +14,15 @@ public:
     void Bind();
     int GetDensity();
     void SetModelRotation(glm::vec3 rotation);
+    void ChangeDensity(int density);
+    void ChangeResolution(int res);
 
 protected:
+    void Delete();
     glm::vec3 default_rotation = glm::vec3(0.0f, 0.0f, 0.0f);
 
     int density;
-    const GLsizei t_size;
+    GLsizei t_size;
     void CreateRenderTexture();
     Model *model;
     TextReactangle rectangle;

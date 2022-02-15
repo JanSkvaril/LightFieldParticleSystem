@@ -100,3 +100,32 @@ void Generator::SetModelRotation(glm::vec3 rotation)
         Generate();
     };
 }
+
+void Generator::ChangeDensity(int density)
+{
+    if (this->density != density)
+    {
+        this->density = density;
+        gt.Resize(t_size / density, t_size / density);
+        Generate();
+    }
+}
+
+void Generator::Delete()
+{
+    glDeleteFramebuffers(1, &FramebufferName);
+    glDeleteTextures(1, &renderedTexture);
+    glDeleteRenderbuffers(1, &depthrenderbuffer);
+}
+
+void Generator::ChangeResolution(int res)
+{
+    if (this->t_size != res)
+    {
+        this->t_size = res;
+        Delete();
+        CreateRenderTexture();
+        gt.Resize(t_size / density, t_size / density);
+        Generate();
+    }
+}

@@ -68,3 +68,11 @@ void GeneratorTexture::Delete()
     glDeleteTextures(1, &renderedTexture);
     glDeleteRenderbuffers(1, &depthrenderbuffer);
 }
+
+void GeneratorTexture::Resize(GLsizei width, GLsizei height)
+{
+    Delete();
+    this->width = width;
+    this->height = height;
+    Setup();
+}

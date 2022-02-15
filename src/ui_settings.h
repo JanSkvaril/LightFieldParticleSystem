@@ -11,6 +11,9 @@ struct UiSettings
     // glm::vec3 starting_direction = glm::vec3(1.0f, 0.0f, 0.0f);
 
     bool show_border = false;
+    bool show_light_field = false;
+    int density = 21;
+    int resolution = 1000;
 
     glm::vec3 model_rotation = glm::vec3(0.0f, 0.0f, 0.0f);
 };

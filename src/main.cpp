@@ -63,7 +63,7 @@ int main()
     ParticleEmitter ps(10);
     Model model("models/bird.obj");
     Camera camera;
-    const int density = 21;
+    int density = 21;
     camera.LookAt(glm::vec3(0.0f, 0.0f, -5.0f), glm::vec3(0.0f, 0.0f, 0.0f));
     Generator generator(&model, density, 5000);
     generator.Generate();
@@ -107,8 +107,14 @@ int main()
         glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         generator.Bind();
-        ps.Draw(camera, density);
-        // rec.Draw(glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 1.0f));
+        if (!ui.config.show_light_field)
+        {
+            ps.Draw(camera, ui.config.density);
+        }
+        else
+        {
+            rec.Draw(glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 1.0f));
+        }
         //(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f));
         // Draw nanogui
         ui.Draw();
@@ -116,6 +122,8 @@ int main()
         ps.SetGravity(ui.config.gravity_strength, glm::vec3(0.0f, ui.config.gravity_direction, 0.0f));
         ps.ShouldShowBorders(ui.config.show_border);
         generator.SetModelRotation(ui.config.model_rotation);
+        generator.ChangeDensity(ui.config.density);
+        generator.ChangeResolution(ui.config.resolution);
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
