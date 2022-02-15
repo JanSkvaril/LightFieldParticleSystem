@@ -24,6 +24,8 @@ public:
     void SetPactilesAmount(int amount);
     void SetGravity(float strength, glm::vec3 direction);
     void ShouldShowBorders(bool show_borders);
+    void SetSpeed(float speed);
+    void SetTimeToLive(int starting, int dispersion);
 
 protected:
     int show_borders = 0;
@@ -42,6 +44,9 @@ protected:
 
     float gravity_strength = 0.0f;
     glm::vec3 gravity_dir = glm::vec3(0.0f, 1.0f, 0.0f);
+    float speed = 0.1f;
+    int starting_ttl = 250;
+    int ttl_dispersion = 100;
 };
 
 #endif

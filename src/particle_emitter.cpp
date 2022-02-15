@@ -68,8 +68,8 @@ void ParticleEmitter::ResetParticle(Particle &particle)
     particle.direction = glm::vec3((rand() % 100) - 50, (rand() % 100 - 50), (rand() % 100) - 50);
     // particle.direction = glm::vec3(-1.0f, 0.0f, 0.0f);
     particle.direction = glm::normalize(particle.direction);
-    particle.speed = 0.1f;
-    particle.time_to_live = 200 + rand() % 250;
+    particle.speed = this->speed;
+    particle.time_to_live = starting_ttl + rand() % ttl_dispersion;
     particle.position = glm::vec3(.2f, -0.8f, 0.0f);
 }
 #include <iostream>
@@ -98,7 +98,7 @@ void ParticleEmitter::Draw(Camera &camera, float texture_density)
     // std::cout << "Camera Angle: " << glm::to_string(camera.GetAngleToTarget()) << "\n";
     float a = (glm::atan(dir.z, dir.x));
     float b = (glm::atan(dir.y, dir.x));
-    std::cout << "" << b << " " << a << "  " << glm::to_string(dir) << "\n";
+    // std::cout << "" << b << " " << a << "  " << glm::to_string(dir) << "\n";
     // std::cout << "Direction:    " << glm::to_string(dir) << "\n\n";
     //
     //  set emittor object to uniforms
@@ -199,4 +199,15 @@ void ParticleEmitter::ShouldShowBorders(bool show_borders)
         this->show_borders = 1;
     else
         this->show_borders = 0;
+}
+
+void ParticleEmitter::SetSpeed(float speed)
+{
+    this->speed = speed;
+}
+
+void ParticleEmitter::SetTimeToLive(int starting, int dispersion)
+{
+    starting_ttl = starting;
+    ttl_dispersion = dispersion;
 }
