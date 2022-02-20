@@ -2,6 +2,7 @@
 #define GENERATOR_TEXTURE_CLASS_DEF
 #include "model.h"
 #include <glad/glad.h>
+#define GLFW_INCLUDE_GLEXT
 #include <GLFW/glfw3.h>
 #include <glm/vec3.hpp>
 class GeneratorTexture
@@ -14,6 +15,7 @@ public:
     void Resize(GLsizei width, GLsizei height);
 
 protected:
+    GLuint64 texture_handle;
     void Setup();
     Model *model;
     GLsizei width;

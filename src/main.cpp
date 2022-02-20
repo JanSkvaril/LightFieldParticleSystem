@@ -1,4 +1,5 @@
 #define STB_IMAGE_IMPLEMENTATION
+#define GLFW_INCLUDE_GLEXT
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
@@ -31,8 +32,8 @@ int main()
     // glfw: initialize and configure
     // ------------------------------
     glfwInit();
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 #ifdef __APPLE__
@@ -67,13 +68,14 @@ int main()
     camera.LookAt(glm::vec3(0.0f, 0.0f, -5.0f), glm::vec3(0.0f, 0.0f, 0.0f));
     Generator generator(&model, density, 5000);
     generator.Generate();
+
     //  GeneratorTexture gt(&model, 1000, 1000);
 
     float time = 0.0f;
     TextReactangle rec;
     UiManager ui(window);
     // nanoguiWindow->center();
-
+    std::cout << glGetString(GL_VERSION) << "\n";
     glEnable(GL_BLEND);
 
     while (!glfwWindowShouldClose(window))

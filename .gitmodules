@@ -3,4 +3,4 @@
 	url = https://github.com/assimp/assimp
 [submodule "include/nanogui"]
 	path = include/nanogui
-	url = https://github.com/mitsuba-renderer/nanogui
+	url = https://github.com/JanSkvaril/nanogui
