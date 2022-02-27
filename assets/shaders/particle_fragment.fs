@@ -1,14 +1,16 @@
-#version 330 core
+#version 450
+#extension GL_NV_bindless_texture : require
+#extension GL_NV_gpu_shader5 : require
 out vec4 FragColor;
 
 in vec2 TexCoord;
 in vec2 Offset;
 
-uniform sampler2D u_texture;
 uniform vec3 offset;
 uniform mat4 view; // emittor position
 uniform float u_density;
 uniform int show_border;
+uniform uint64_t allTheSamplers;
 float bilinear(vec4 w, vec4 q) {
     return q.r * w.r + q.g * w.g + q.b * w.b + q.a * w.a;
 }
@@ -21,6 +23,7 @@ vec2 my_floor(vec2 vec) {
 }
 void main()
 {
+    sampler2D u_texture = sampler2D(allTheSamplers);
     vec4 col = vec4(1.0, 1.0, 1.0, 1.0);
     float zoom = u_density;
     vec2 pos = TexCoord;

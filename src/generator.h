@@ -16,11 +16,13 @@ public:
     void SetModelRotation(glm::vec3 rotation);
     void ChangeDensity(int density);
     void ChangeResolution(int res);
+    GLuint64 CreateHandle();
+    GLuint64 GetHandle();
 
 protected:
     void Delete();
     glm::vec3 default_rotation = glm::vec3(0.0f, 0.0f, 0.0f);
-
+    GLuint64 texture_handle;
     int density;
     GLsizei t_size;
     void CreateRenderTexture();

@@ -129,3 +129,16 @@ void Generator::ChangeResolution(int res)
         Generate();
     }
 }
+
+GLuint64 Generator::CreateHandle()
+{
+    Bind();
+    texture_handle = glGetTextureHandleARB(renderedTexture);
+    glMakeTextureHandleResidentARB(texture_handle);
+    return texture_handle;
+}
+
+GLuint64 Generator::GetHandle()
+{
+    return texture_handle;
+}

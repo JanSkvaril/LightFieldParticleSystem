@@ -26,6 +26,7 @@ public:
     void ShouldShowBorders(bool show_borders);
     void SetSpeed(float speed);
     void SetTimeToLive(int starting, int dispersion);
+    GLuint64 texture_handle;
 
 protected:
     int show_borders = 0;
