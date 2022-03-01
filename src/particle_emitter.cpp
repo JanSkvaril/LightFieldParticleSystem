@@ -109,7 +109,7 @@ void ParticleEmitter::Draw(Camera &camera, float texture_density)
     glUniform3fv(shader.GetUniformLocation("camera_pos"), 1, glm::value_ptr(camera_pos));
     glUniform1f(shader.GetUniformLocation("u_density"), texture_density);
     glUniform1i(shader.GetUniformLocation("show_border"), show_borders);
-    glUniformHandleui64ARB(shader.GetUniformLocation("allTheSamplers"), texture_handle);
+    glUniformHandleui64vARB(shader.GetUniformLocation("allTheSamplers"), texture_handles.size(), &texture_handles[0]);
 
     // bind VAO
     glBindVertexArray(VAO);
@@ -211,4 +211,9 @@ void ParticleEmitter::SetTimeToLive(int starting, int dispersion)
 {
     starting_ttl = starting;
     ttl_dispersion = dispersion;
+}
+
+void ParticleEmitter::AddTextureHandle(GLuint64 handle)
+{
+    texture_handles.push_back(handle);
 }

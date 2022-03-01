@@ -10,7 +10,7 @@ uniform vec3 offset;
 uniform mat4 view; // emittor position
 uniform float u_density;
 uniform int show_border;
-uniform uint64_t allTheSamplers;
+uniform uint64_t allTheSamplers[5];
 float bilinear(vec4 w, vec4 q) {
     return q.r * w.r + q.g * w.g + q.b * w.b + q.a * w.a;
 }
@@ -23,7 +23,7 @@ vec2 my_floor(vec2 vec) {
 }
 void main()
 {
-    sampler2D u_texture = sampler2D(allTheSamplers);
+    sampler2D u_texture = sampler2D(allTheSamplers[0]);
     vec4 col = vec4(1.0, 1.0, 1.0, 1.0);
     float zoom = u_density;
     vec2 pos = TexCoord;

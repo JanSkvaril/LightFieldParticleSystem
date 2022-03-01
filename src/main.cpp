@@ -68,7 +68,7 @@ int main()
     camera.LookAt(glm::vec3(0.0f, 0.0f, -5.0f), glm::vec3(0.0f, 0.0f, 0.0f));
     Generator generator(&model, density, 5000);
     generator.Generate();
-    ps.texture_handle = generator.CreateHandle();
+    ps.AddTextureHandle(generator.CreateHandle());
     //  GeneratorTexture gt(&model, 1000, 1000);
 
     float time = 0.0f;

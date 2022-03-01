@@ -26,9 +26,10 @@ public:
     void ShouldShowBorders(bool show_borders);
     void SetSpeed(float speed);
     void SetTimeToLive(int starting, int dispersion);
-    GLuint64 texture_handle;
+    void AddTextureHandle(GLuint64 handle);
 
 protected:
+    std::vector<GLuint64> texture_handles;
     int show_borders = 0;
     std::vector<Particle> particles;
     std::vector<glm::vec3> positions;
