@@ -25,10 +25,6 @@ ParticleEmitter::ParticleEmitter(int particles)
     this->particles.resize(particles);
     this->positions.resize(amount_of_particles);
     Reset();
-    for (size_t i = 0; i < 1000; i++)
-    {
-        // Update();
-    }
 
     CreateVAO();
 }
@@ -37,6 +33,7 @@ void ParticleEmitter::Reset()
 {
     for (auto &particle : particles)
     {
+        particle.SetParticleParameters(&particle_parameters);
         ResetParticle(particle);
     }
 }
@@ -47,30 +44,15 @@ void ParticleEmitter::Update()
     time += 0.01f;
     for (auto &particle : particles)
     {
-        particle.time_to_live--;
-        if (particle.time_to_live <= 0)
-        {
-            ResetParticle(particle);
-        }
-        else
-        {
-            particle.position += particle.direction * particle.speed;
-            float g = gravity_strength;
-            particle.direction = (1.0f - g) * particle.direction + g * gravity_dir;
-        }
-        positions[i] = particle.position;
+        particle.Update();
+        positions[i] = particle.GetPosition();
         i++;
     }
 }
 
 void ParticleEmitter::ResetParticle(Particle &particle)
 {
-    particle.direction = glm::vec3((rand() % 100) - 50, (rand() % 100 - 50), (rand() % 100) - 50);
-    // particle.direction = glm::vec3(-1.0f, 0.0f, 0.0f);
-    particle.direction = glm::normalize(particle.direction);
-    particle.speed = this->speed;
-    particle.time_to_live = starting_ttl + rand() % ttl_dispersion;
-    particle.position = glm::vec3(.2f, -0.8f, 0.0f);
+    particle.Reset();
 }
 #include <iostream>
 void ParticleEmitter::Draw(Camera &camera, float texture_density)
@@ -156,7 +138,7 @@ void ParticleEmitter::CreateVAO()
 
 void ParticleEmitter::DrawParticle(Particle &particle)
 {
-    const auto p_pos = particle.position;
+    const auto p_pos = particle.GetPosition();
     glUniform3f(shader.GetUniformLocation("offset"), p_pos.x, p_pos.y, p_pos.z);
     glDrawArrays(GL_TRIANGLES, 0, GL_UNSIGNED_INT);
 }
@@ -185,13 +167,13 @@ void ParticleEmitter::SetPactilesAmount(int amount)
         return;
     this->particles.resize(amount);
     this->positions.resize(amount);
-    //  Reset();
+    Reset();
 }
 
 void ParticleEmitter::SetGravity(float strength, glm::vec3 direction)
 {
-    this->gravity_strength = strength;
-    this->gravity_dir = direction;
+    particle_parameters.gravity_strength = strength;
+    particle_parameters.gravity_direction = direction;
 }
 
 void ParticleEmitter::ShouldShowBorders(bool show_borders)
@@ -204,13 +186,13 @@ void ParticleEmitter::ShouldShowBorders(bool show_borders)
 
 void ParticleEmitter::SetSpeed(float speed)
 {
-    this->speed = speed;
+    particle_parameters.particle_speed = speed;
 }
 
 void ParticleEmitter::SetTimeToLive(int starting, int dispersion)
 {
-    starting_ttl = starting;
-    ttl_dispersion = dispersion;
+    particle_parameters.starting_time_to_live = starting;
+    particle_parameters.time_to_live_dispersion = dispersion;
 }
 
 void ParticleEmitter::AddTextureHandle(GLuint64 handle)

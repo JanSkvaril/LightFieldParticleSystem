@@ -14,6 +14,7 @@
 #include <algorithm>
 #include "texture.h"
 #include "camera.h"
+#include "particle_params.h"
 class ParticleEmitter
 {
 public:
@@ -44,11 +45,7 @@ protected:
     unsigned int position_VBO;
     const int amount_of_particles;
 
-    float gravity_strength = 0.0f;
-    glm::vec3 gravity_dir = glm::vec3(0.0f, 1.0f, 0.0f);
-    float speed = 0.1f;
-    int starting_ttl = 250;
-    int ttl_dispersion = 100;
+    ParticleParameters particle_parameters;
 };
 
 #endif

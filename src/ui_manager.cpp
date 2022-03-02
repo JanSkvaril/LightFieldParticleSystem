@@ -11,7 +11,7 @@ UiManager::UiManager(GLFWwindow *window)
     gui->add_group("Simulation");
     gui->add_variable("Amount of particles", config.amount_of_pacticles);
     gui->add_variable("Gravity strength", config.gravity_strength);
-    gui->add_variable("Gravity direction", config.gravity_direction);
+    gui->add_variable("Gravity direction", config.gravity_direction.y);
     gui->add_variable("Particle speed", config.particle_speed);
     gui->add_variable("Starting time to live", config.starting_time_to_live);
     gui->add_variable("Time to live dispersion", config.time_to_live_dispersion);

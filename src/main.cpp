@@ -121,7 +121,7 @@ int main()
         // Draw nanogui
         ui.Draw();
         ps.SetPactilesAmount(ui.config.amount_of_pacticles);
-        ps.SetGravity(ui.config.gravity_strength, glm::vec3(0.0f, ui.config.gravity_direction, 0.0f));
+        ps.SetGravity(ui.config.gravity_strength, ui.config.gravity_direction);
         ps.ShouldShowBorders(ui.config.show_border);
         ps.SetSpeed(ui.config.particle_speed);
         ps.SetTimeToLive(ui.config.starting_time_to_live, ui.config.time_to_live_dispersion);

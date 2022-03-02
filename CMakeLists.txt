@@ -37,6 +37,7 @@ add_executable(light_field_ps_bp src/main.cpp
     src/shader.h
     src/shader.cpp
     src/particle.h
+    src/particle.cpp
     src/particle_emitter.h
     src/particle_emitter.cpp
     src/texture.h
@@ -54,7 +55,8 @@ add_executable(light_field_ps_bp src/main.cpp
     src/camera.cpp
     src/ui_manager.h
     src/ui_manager.cpp
-    src/ui_settings.h)
+    src/ui_settings.h
+    src/particle_params)
 
 
 
