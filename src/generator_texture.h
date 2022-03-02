@@ -5,11 +5,12 @@
 #define GLFW_INCLUDE_GLEXT
 #include <GLFW/glfw3.h>
 #include <glm/vec3.hpp>
+#include "generator_params.h"
 class GeneratorTexture
 {
 public:
     GeneratorTexture(Model *model, GLsizei width, GLsizei height);
-    GLuint Generate(glm::vec3 rotation, glm::vec3 position);
+    GLuint Generate(glm::vec3 rotation, glm::vec3 position, GeneratorParameters &generator_params);
     void BindTexture();
     void Delete();
     void Resize(GLsizei width, GLsizei height);

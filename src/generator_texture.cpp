@@ -6,7 +6,7 @@ GeneratorTexture::GeneratorTexture(Model *model, GLsizei width, GLsizei height) 
     Setup();
 }
 
-GLuint GeneratorTexture::Generate(glm::vec3 rotation, glm::vec3 position)
+GLuint GeneratorTexture::Generate(glm::vec3 rotation, glm::vec3 position, GeneratorParameters &generator_params)
 {
     glBindFramebuffer(GL_FRAMEBUFFER, FramebufferName);
     glEnable(GL_DEPTH_TEST);
@@ -17,7 +17,7 @@ GLuint GeneratorTexture::Generate(glm::vec3 rotation, glm::vec3 position)
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    model->Draw(rotation, position);
+    model->Draw(rotation, position, generator_params);
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     return renderedTexture;
 }

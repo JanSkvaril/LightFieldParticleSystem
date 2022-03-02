@@ -44,7 +44,7 @@ Model::Model(std::string path) : shader("shaders/basic_vertex.vs", "shaders/basi
     Setup();
 }
 
-void Model::Draw(glm::vec3 rotation, glm::vec3 position)
+void Model::Draw(glm::vec3 rotation, glm::vec3 position, GeneratorParameters &generator_params)
 {
 
     shader.Use();
@@ -53,9 +53,12 @@ void Model::Draw(glm::vec3 rotation, glm::vec3 position)
     glm::mat4 view = glm::mat4(1.0f);
     glm::mat4 projection = glm::mat4(1.0f);
     model = glm::translate(model, position);
+
     model = glm::rotate(model, rotation.y, glm::vec3(1.0f, 0.0f, 0.0f));
     model = glm::rotate(model, rotation.x, glm::vec3(0.0f, 1.0f, 0.0f));
     // model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+    model = glm::rotate(model, generator_params.model_rotation.y, glm::vec3(1.0f, 0.0f, 0.0f));
+    model = glm::rotate(model, generator_params.model_rotation.x, glm::vec3(0.0f, 1.0f, 0.0f));
 
     view = glm::translate(view, glm::vec3(0.0f, 0.0f, -5.5f));
     projection = glm::perspective(glm::radians(45.0f), (float)10000 / (float)10000, 0.1f, 100.0f);
@@ -101,7 +104,8 @@ void Model::Setup()
 
 void Model::Draw()
 {
-    Draw(glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
+    GeneratorParameters params{};
+    Draw(glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(0.0f, 0.0f, 0.0f), params);
 }
 
 void Model::Draw(Camera &camera)

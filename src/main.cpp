@@ -108,13 +108,13 @@ int main()
         //  model.Draw(camera);
         glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        // generator.Bind();
         if (!ui.config.show_light_field)
         {
             ps.Draw(camera, ui.config.density);
         }
         else
         {
+            generator.Bind();
             rec.Draw(glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 1.0f));
         }
         //(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f));
@@ -125,8 +125,8 @@ int main()
         ps.ShouldShowBorders(ui.config.show_border);
         ps.SetSpeed(ui.config.particle_speed);
         ps.SetTimeToLive(ui.config.starting_time_to_live, ui.config.time_to_live_dispersion);
-        // generator.SetModelRotation(ui.config.model_rotation);
-        // generator.ChangeDensity(ui.config.density);
+        generator.SetModelRotation(ui.config.model_rotation);
+        generator.ChangeDensity(ui.config.density);
         // generator.ChangeResolution(ui.config.resolution);
         glfwSwapBuffers(window);
         glfwPollEvents();

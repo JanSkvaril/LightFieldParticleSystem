@@ -5,6 +5,7 @@
 #include <GLFW/glfw3.h>
 #include "text_rectangle.h"
 #include "generator_texture.h"
+#include "generator_params.h"
 class Generator
 {
 public:
@@ -20,8 +21,11 @@ public:
     GLuint64 GetHandle();
 
 protected:
+    void MakeResident();
+    void MakeNonResident();
     void Delete();
-    glm::vec3 default_rotation = glm::vec3(0.0f, 0.0f, 0.0f);
+    void Regenerate();
+    GeneratorParameters generator_params;
     GLuint64 texture_handle;
     int density;
     GLsizei t_size;

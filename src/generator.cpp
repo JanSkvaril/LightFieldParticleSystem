@@ -62,8 +62,8 @@ void Generator::Generate()
         for (int y = -range; y <= range; y++)
         {
             auto rot = glm::vec3((x + range) * rotation, (y + range) * rotation, 0.0f);
-            rot += default_rotation;
-            gt.Generate(rot, glm::vec3(0.0f, 0.0f, 0.0f));
+            // rot += generator_params.model_rotation;
+            gt.Generate(rot, glm::vec3(0.0f, 0.0f, 0.0f), generator_params);
             glBindFramebuffer(GL_FRAMEBUFFER, FramebufferName);
             glViewport(0, 0, t_size, t_size);
             gt.BindTexture();
@@ -93,11 +93,11 @@ int Generator::GetDensity()
 
 void Generator::SetModelRotation(glm::vec3 rotation)
 {
-    auto e = glm::epsilonEqual(rotation, default_rotation, 0.01f);
+    auto e = glm::epsilonEqual(rotation, generator_params.model_rotation, 0.01f);
     if (!e.x || !e.y || !e.z)
     {
-        this->default_rotation = rotation;
-        Generate();
+        generator_params.model_rotation = rotation;
+        Regenerate();
     };
 }
 
@@ -107,7 +107,7 @@ void Generator::ChangeDensity(int density)
     {
         this->density = density;
         gt.Resize(t_size / density, t_size / density);
-        Generate();
+        Regenerate();
     }
 }
 
@@ -134,11 +134,28 @@ GLuint64 Generator::CreateHandle()
 {
     Bind();
     texture_handle = glGetTextureHandleARB(renderedTexture);
-    glMakeTextureHandleResidentARB(texture_handle);
+    MakeResident();
     return texture_handle;
 }
 
 GLuint64 Generator::GetHandle()
 {
     return texture_handle;
+}
+
+void Generator::MakeResident()
+{
+    glMakeTextureHandleResidentARB(texture_handle);
+}
+
+void Generator::MakeNonResident()
+{
+    glMakeTextureHandleNonResidentARB(texture_handle);
+}
+
+void Generator::Regenerate()
+{
+    MakeNonResident();
+    Generate();
+    MakeResident();
 }

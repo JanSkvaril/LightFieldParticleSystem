@@ -1,6 +1,6 @@
 #ifndef PARTICLE_CONFIG_CLASS_DEF
 #define PARTICLE_CONFIG_CLASS_DEF
-
+#include <glm/vec3.hpp>
 struct ParticleParameters
 {
     float particle_speed = 0.1f;
