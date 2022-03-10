@@ -8,6 +8,7 @@
 #include <glm/vec3.hpp>
 #include "camera.h"
 #include "generator_params.h"
+
 class Model
 {
 public:

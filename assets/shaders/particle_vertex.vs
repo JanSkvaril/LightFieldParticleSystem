@@ -59,7 +59,7 @@ void main()
     vec4 S = (view * vec4(offset2, 1.0));
     S /= S.w;
     // source: https://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.90.6202&rep=rep1&type=pdf
-    // angle.x -= 0.1 * ((S.x / (1.0 + S.z)) + 1.0);
+    angle.x -= 0.1 * ((S.x / (1.0 + S.z)) + 1.0);
     //  angle.y = -angle.y;
     angle.y += 0.05 * ((S.y / (1.0 + S.z)) + 1.0);
     angle.y = - angle.y;

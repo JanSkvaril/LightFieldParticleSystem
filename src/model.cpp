@@ -62,12 +62,12 @@ void Model::Draw(glm::vec3 rotation, glm::vec3 position, GeneratorParameters &ge
 
     view = glm::translate(view, glm::vec3(0.0f, 0.0f, -5.5f));
     projection = glm::perspective(glm::radians(45.0f), (float)10000 / (float)10000, 0.1f, 100.0f);
-
+    auto color = generator_params.model_light_color;
     // set emittor object to uniforms
     glUniformMatrix4fv(shader.GetUniformLocation("model"), 1, GL_FALSE, glm::value_ptr(model));
     glUniformMatrix4fv(shader.GetUniformLocation("view"), 1, GL_FALSE, glm::value_ptr(view));
     glUniformMatrix4fv(shader.GetUniformLocation("projection"), 1, GL_FALSE, glm::value_ptr(projection));
-
+    glUniform3fv(shader.GetUniformLocation("light_color"), 1, glm::value_ptr(color));
     glBindVertexArray(VAO);
     glDrawElements(GL_TRIANGLES, indicies.size(), GL_UNSIGNED_INT, 0);
     // glDrawArrays(GL_TRIANGLES, 0, GL_UNSIGNED_INT);
