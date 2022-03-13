@@ -184,7 +184,7 @@ void Generator::ResetCache()
     cache_table.resize(density);
     for (auto &col : cache_table)
     {
-        col.resize(density, false);
+        col.resize(density, true);
     }
     ClearTexture();
 }
@@ -202,4 +202,9 @@ void Generator::ClearTexture()
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     MakeResident();
+}
+
+std::vector<std::vector<bool>> &Generator::GetCacheTable()
+{
+    return cache_table;
 }

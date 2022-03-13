@@ -22,6 +22,7 @@ public:
     void ResetCache();
     void NotifyChangeAtAngle(glm::ivec2 position);
     void Regenerate();
+    std::vector<std::vector<bool>> &GetCacheTable();
 
 protected:
     bool has_handle = false;

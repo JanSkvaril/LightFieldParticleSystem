@@ -10,8 +10,8 @@ struct ParticleParameters
     glm::vec3 gravity_direction = glm::vec3(0.0f, -1.0f, 0.0f);
     // float starting_direction_randomnes = 0.0f;
     // glm::vec3 starting_direction = glm::vec3(1.0f, 0.0f, 0.0f);
-    int starting_time_to_live = 110;
-    int time_to_live_dispersion = 100;
+    int starting_time_to_live = 60;
+    int time_to_live_dispersion = 50;
 };
 
 #endif

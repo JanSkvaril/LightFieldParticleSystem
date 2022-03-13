@@ -28,6 +28,7 @@ public:
     void SetSpeed(float speed);
     void SetTimeToLive(int starting, int dispersion);
     void AddTextureHandle(GLuint64 handle);
+    void GetRequiredAngles(std::vector<std::vector<bool>> &angles, Camera &camera, float texture_density);
 
 protected:
     std::vector<GLuint64> texture_handles;
