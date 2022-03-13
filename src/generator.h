@@ -19,12 +19,16 @@ public:
     void ChangeResolution(int res);
     GLuint64 CreateHandle();
     GLuint64 GetHandle();
+    void ResetCache();
+    void NotifyChangeAtAngle(glm::ivec2 position);
+    void Regenerate();
 
 protected:
+    // true when image at xy should rerender
+    std::vector<std::vector<bool>> cache_table;
     void MakeResident();
     void MakeNonResident();
     void Delete();
-    void Regenerate();
     GeneratorParameters generator_params;
     GLuint64 texture_handle;
     int density;

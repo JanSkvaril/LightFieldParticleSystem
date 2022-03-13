@@ -2,12 +2,14 @@
 #include "glm/glm.hpp"
 #include "glm/gtc/constants.hpp"
 #include "glm/gtc/epsilon.hpp"
+#include <iostream>
 Generator::Generator(Model *model, int density, int res) : gt(model, res / density, res / density),
                                                            t_size(res)
 {
     this->density = density;
     this->model = model;
     CreateRenderTexture();
+    ResetCache();
 }
 
 void Generator::CreateRenderTexture()
@@ -57,20 +59,30 @@ void Generator::Generate()
     const int range = (density - 1) / 2;
     const float rec_site = 1.0f / (density);
     const float rotation = -glm::two_pi<float>() / (density);
-    for (int x = -range; x <= range; x++)
+    bool generated = false;
+    for (int x = 0; x < density; x++)
     {
-        for (int y = -range; y <= range; y++)
+        for (int y = 0; y < density; y++)
         {
-            auto rot = glm::vec3((x + range) * rotation, (y + range) * rotation, 0.0f);
+            if (cache_table[x][y] == true)
+                continue; // skip rendering, already cached
+            int real_x = x - range;
+            int real_y = y - range;
+            auto rot = glm::vec3((real_x + range) * rotation, (real_y + range) * rotation, 0.0f);
             // rot += generator_params.model_rotation;
             gt.Generate(rot, glm::vec3(0.0f, 0.0f, 0.0f), generator_params);
             glBindFramebuffer(GL_FRAMEBUFFER, FramebufferName);
             glViewport(0, 0, t_size, t_size);
             gt.BindTexture();
-            rectangle.Draw(glm::vec2(x * 2.0f, y * 2.0f), glm::vec2(rec_site, rec_site));
+            rectangle.Draw(glm::vec2(real_x * 2.0f, real_y * 2.0f), glm::vec2(rec_site, rec_site));
+            cache_table[x][y] = true;
+            generated = true;
         }
     }
-
+    if (generated)
+    {
+        std::cout << "Generating!\n";
+    }
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
@@ -107,6 +119,7 @@ void Generator::ChangeDensity(int density)
     {
         this->density = density;
         gt.Resize(t_size / density, t_size / density);
+        ResetCache();
         Regenerate();
     }
 }
@@ -126,6 +139,7 @@ void Generator::ChangeResolution(int res)
         Delete();
         CreateRenderTexture();
         gt.Resize(t_size / density, t_size / density);
+        ResetCache();
         Generate();
     }
 }
@@ -158,4 +172,19 @@ void Generator::Regenerate()
     MakeNonResident();
     Generate();
     MakeResident();
+}
+
+void Generator::ResetCache()
+{
+    cache_table.clear();
+    cache_table.resize(density);
+    for (auto &col : cache_table)
+    {
+        col.resize(density, false);
+    }
+}
+
+void Generator::NotifyChangeAtAngle(glm::ivec2 position)
+{
+    cache_table[position.x][position.y] = false;
 }
