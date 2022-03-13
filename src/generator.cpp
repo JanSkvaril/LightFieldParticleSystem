@@ -53,8 +53,7 @@ void Generator::Generate()
 
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glViewport(0, 0, t_size, t_size);
-    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
     // glDisable(GL_DEPTH_TEST);
     const int range = (density - 1) / 2;
     const float rec_site = 1.0f / (density);
@@ -182,9 +181,20 @@ void Generator::ResetCache()
     {
         col.resize(density, false);
     }
+    ClearTexture();
 }
 
 void Generator::NotifyChangeAtAngle(glm::ivec2 position)
 {
     cache_table[position.x][position.y] = false;
+}
+
+void Generator::ClearTexture()
+{
+    MakeNonResident();
+    glBindFramebuffer(GL_FRAMEBUFFER, FramebufferName);
+    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    MakeResident();
 }

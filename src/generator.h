@@ -27,6 +27,7 @@ protected:
     // true when image at xy should rerender
     std::vector<std::vector<bool>> cache_table;
     void MakeResident();
+    void ClearTexture();
     void MakeNonResident();
     void Delete();
     GeneratorParameters generator_params;
