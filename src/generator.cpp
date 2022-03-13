@@ -145,6 +145,7 @@ void Generator::ChangeResolution(int res)
 
 GLuint64 Generator::CreateHandle()
 {
+    has_handle = true;
     Bind();
     texture_handle = glGetTextureHandleARB(renderedTexture);
     MakeResident();
@@ -158,11 +159,15 @@ GLuint64 Generator::GetHandle()
 
 void Generator::MakeResident()
 {
+    if (!has_handle)
+        return;
     glMakeTextureHandleResidentARB(texture_handle);
 }
 
 void Generator::MakeNonResident()
 {
+    if (!has_handle)
+        return;
     glMakeTextureHandleNonResidentARB(texture_handle);
 }
 

@@ -24,6 +24,7 @@ public:
     void Regenerate();
 
 protected:
+    bool has_handle = false;
     // true when image at xy should rerender
     std::vector<std::vector<bool>> cache_table;
     void MakeResident();
