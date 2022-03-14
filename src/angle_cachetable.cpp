@@ -21,10 +21,10 @@ void AngleCacheTable::ClearCache()
 
 void AngleCacheTable::Activate(int u, int v)
 {
-
-    for (int i = -1; i <= 1; i++)
+    const int range = 1;
+    for (int i = -range; i <= range; i++)
     {
-        for (int j = -1; j <= 1; j++)
+        for (int j = -range; j <= range; j++)
         {
             int n_u = GetTablePosition(u + i);
             int n_v = GetTablePosition(v + j);

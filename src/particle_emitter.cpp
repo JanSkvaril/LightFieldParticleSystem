@@ -203,18 +203,19 @@ void ParticleEmitter::AddTextureHandle(GLuint64 handle)
 void ParticleEmitter::GetRequiredAngles(AngleCacheTable &angles, Camera &camera, float texture_density)
 {
     auto camera_position = camera.GetPosition();
-    const float pi = glm::pi<float>();
+    const float pi = 3.1415926538;
     for (auto &particle : particles)
     {
         auto dir = (camera_position * 2.0f) - particle.GetPosition();
-        float u = 0.5 + atan2(dir.z, dir.x) / (2.0f * pi);
-        float v = 0.5 + (asin(dir.y) / pi);
+        dir = glm::fastNormalize(dir);
+        float u = 0.5f + atan2(dir.z, dir.x) / (2.0f * pi);
+        float v = 0.5f + (asin(dir.y) / pi);
         //  u = glm::clamp(u, 0.0f, 0.9999f);
         //  v = glm::clamp(v, 0.0f, 0.9999f);
         u *= texture_density;
         v *= texture_density;
-        if (isnan(u) || isnan(v))
-            continue;
+        // if (isnan(u) || isnan(v))
+        //     continue;
         angles.Activate((int)u, (int)v);
     }
 }

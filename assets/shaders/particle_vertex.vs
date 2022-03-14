@@ -56,7 +56,7 @@ void main()
     vec2 angle = camera_angle;
     dir = normalize(dir);
     
-    angle.x = 0.5 + atan(dir.z, dir.x) / (2 * PI);
+    angle.x = 0.5 + atan(dir.z, dir.x) / (2.0 * PI);
     angle.y = 0.5 + (asin(dir.y) / PI);
     // vec4 S = (view * vec4(offset2, 1.0));
     // S /= S.w;
