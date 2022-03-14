@@ -14,13 +14,7 @@ uniform uint64_t allTheSamplers[5];
 float bilinear(vec4 w, vec4 q) {
     return q.r * w.r + q.g * w.g + q.b * w.b + q.a * w.a;
 }
-vec2 my_floor(vec2 vec) {
-    if (vec.x < 0.0)vec.x = -floor(abs(vec.x));
-    else vec.x = floor(vec.x);
-    if (vec.y < 0.0)vec.y = -floor(abs(vec.y));
-    else vec.y = floor(vec.y);
-    return vec;
-}
+
 void main()
 {
     sampler2D u_texture = sampler2D(allTheSamplers[0]);

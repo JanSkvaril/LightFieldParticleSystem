@@ -79,10 +79,10 @@ void Generator::Generate()
             generated++;
         }
     }
-    if (generated != 0)
-    {
-        std::cout << "Generating: " << generated << "\n";
-    }
+    // if (generated != 0)
+    // {
+    //     std::cout << "Generating: " << generated << "\n";
+    // }
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
@@ -109,7 +109,7 @@ void Generator::SetModelRotation(glm::vec3 rotation)
     if (!e.x || !e.y || !e.z)
     {
         generator_params.model_rotation = rotation;
-        Regenerate();
+        ResetCache();
     };
 }
 
@@ -120,7 +120,6 @@ void Generator::ChangeDensity(int density)
         this->density = density;
         gt.Resize(t_size / density, t_size / density);
         ResetCache();
-        Regenerate();
     }
 }
 
@@ -183,6 +182,7 @@ void Generator::ResetCache()
 {
 
     cache_table.Resize(density);
+    cache_table.ClearCache();
     ClearTexture();
 }
 

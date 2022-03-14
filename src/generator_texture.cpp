@@ -19,6 +19,7 @@ GLuint GeneratorTexture::Generate(glm::vec3 rotation, glm::vec3 position, Genera
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     model->Draw(rotation, position, generator_params);
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    glDisable(GL_DEPTH_TEST);
     return renderedTexture;
 }
 
