@@ -200,7 +200,7 @@ void ParticleEmitter::AddTextureHandle(GLuint64 handle)
     texture_handles.push_back(handle);
 }
 
-void ParticleEmitter::GetRequiredAngles(std::vector<std::vector<bool>> &angles, Camera &camera, float texture_density)
+void ParticleEmitter::GetRequiredAngles(AngleCacheTable &angles, Camera &camera, float texture_density)
 {
     auto camera_position = camera.GetPosition();
     const float pi = glm::pi<float>();
@@ -209,14 +209,12 @@ void ParticleEmitter::GetRequiredAngles(std::vector<std::vector<bool>> &angles, 
         auto dir = (camera_position * 2.0f) - particle.GetPosition();
         float u = 0.5 + atan2(dir.z, dir.x) / (2.0f * pi);
         float v = 0.5 + (asin(dir.y) / pi);
-        u = glm::clamp(u, 0.0f, 0.9999f);
-        v = glm::clamp(v, 0.0f, 0.9999f);
+        //  u = glm::clamp(u, 0.0f, 0.9999f);
+        //  v = glm::clamp(v, 0.0f, 0.9999f);
         u *= texture_density;
         v *= texture_density;
         if (isnan(u) || isnan(v))
             continue;
-        ;
-        // std::cout << u << " " << v << " " << angles.size() << "\n ";
-        angles[(int)u][(int)v] = false;
+        angles.Activate((int)u, (int)v);
     }
 }

@@ -58,13 +58,14 @@ void Generator::Generate()
     const int range = (density - 1) / 2;
     const float rec_site = 1.0f / (density);
     const float rotation = -glm::two_pi<float>() / (density);
-    bool generated = false;
+    int generated = 0;
+
     for (int x = 0; x < density; x++)
     {
         for (int y = 0; y < density; y++)
         {
-            if (cache_table[x][y] == true)
-                continue; // skip rendering, already cached
+            if (!cache_table.IsActivated(x, y))
+                continue; // skip rendering, already cached or not used
             int real_x = x - range;
             int real_y = y - range;
             auto rot = glm::vec3((real_x + range) * rotation, (real_y + range) * rotation, 0.0f);
@@ -74,13 +75,13 @@ void Generator::Generate()
             glViewport(0, 0, t_size, t_size);
             gt.BindTexture();
             rectangle.Draw(glm::vec2(real_x * 2.0f, real_y * 2.0f), glm::vec2(rec_site, rec_site));
-            cache_table[x][y] = true;
-            generated = true;
+            cache_table.MarkCached(x, y);
+            generated++;
         }
     }
-    if (generated)
+    if (generated != 0)
     {
-        std::cout << "Generating!\n";
+        std::cout << "Generating: " << generated << "\n";
     }
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
@@ -180,18 +181,14 @@ void Generator::Regenerate()
 
 void Generator::ResetCache()
 {
-    cache_table.clear();
-    cache_table.resize(density);
-    for (auto &col : cache_table)
-    {
-        col.resize(density, true);
-    }
+
+    cache_table.Resize(density);
     ClearTexture();
 }
 
 void Generator::NotifyChangeAtAngle(glm::ivec2 position)
 {
-    cache_table[position.x][position.y] = false;
+    // cache_table[position.x][position.y] = false;
 }
 
 void Generator::ClearTexture()
@@ -204,7 +201,7 @@ void Generator::ClearTexture()
     MakeResident();
 }
 
-std::vector<std::vector<bool>> &Generator::GetCacheTable()
+AngleCacheTable &Generator::GetCacheTable()
 {
     return cache_table;
 }

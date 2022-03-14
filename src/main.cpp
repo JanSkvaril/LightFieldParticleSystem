@@ -129,7 +129,7 @@ int main()
         generator.ChangeDensity(ui.config.density);
         // generator.ChangeResolution(ui.config.resolution);
         ps.GetRequiredAngles(generator.GetCacheTable(), camera, ui.config.density);
-        // generator.Generate();
+        generator.Generate();
         glfwSwapBuffers(window);
         glfwPollEvents();
     }

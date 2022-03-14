@@ -57,7 +57,9 @@ add_executable(light_field_ps_bp src/main.cpp
     src/ui_manager.cpp
     src/ui_settings.h
     src/particle_params.h
-    src/generator_params.h)
+    src/generator_params.h
+    src/angle_cachetable.h
+    src/angle_cachetable.cpp)
 
 
 

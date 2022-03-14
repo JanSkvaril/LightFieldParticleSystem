@@ -6,6 +6,7 @@
 #include "text_rectangle.h"
 #include "generator_texture.h"
 #include "generator_params.h"
+#include "angle_cachetable.h"
 class Generator
 {
 public:
@@ -22,12 +23,12 @@ public:
     void ResetCache();
     void NotifyChangeAtAngle(glm::ivec2 position);
     void Regenerate();
-    std::vector<std::vector<bool>> &GetCacheTable();
+    AngleCacheTable &GetCacheTable();
 
 protected:
     bool has_handle = false;
     // true when image at xy should rerender
-    std::vector<std::vector<bool>> cache_table;
+    AngleCacheTable cache_table;
     void MakeResident();
     void ClearTexture();
     void MakeNonResident();
