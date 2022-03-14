@@ -1,4 +1,3 @@
-#define STB_IMAGE_IMPLEMENTATION
 #define GLFW_INCLUDE_GLEXT
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
@@ -20,13 +19,15 @@
 #include <nanogui/nanogui.h>
 
 #include "ui_manager.h"
+#include <vector>
+#include <string>
+#include "skybox.h"
 void framebuffer_size_callback(GLFWwindow *window, int width, int height);
 void processInput(GLFWwindow *window);
 
 // settings
 const unsigned int SCR_WIDTH = 1200;
 const unsigned int SCR_HEIGHT = 800;
-
 int main()
 {
     // glfw: initialize and configure
@@ -69,8 +70,7 @@ int main()
     Generator generator(&model, density, 5000);
     generator.Generate();
     ps.AddTextureHandle(generator.CreateHandle());
-    //  GeneratorTexture gt(&model, 1000, 1000);
-
+    Skybox skybox;
     float time = 0.0f;
     TextReactangle rec;
     UiManager ui(window);
@@ -108,6 +108,10 @@ int main()
         //  model.Draw(camera);
         glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        if (ui.config.show_skybox)
+        {
+            skybox.Draw(camera);
+        }
         if (!ui.config.show_light_field)
         {
             ps.Draw(camera, ui.config.density);
@@ -130,6 +134,7 @@ int main()
         // generator.ChangeResolution(ui.config.resolution);
         ps.GetRequiredAngles(generator.GetCacheTable(), camera, ui.config.density);
         generator.Generate();
+
         glfwSwapBuffers(window);
         glfwPollEvents();
     }

@@ -12,7 +12,7 @@
 #include <cmath>
 #include "shader.h"
 #include <algorithm>
-#include "texture.h"
+
 #include "camera.h"
 #include "particle_params.h"
 #include "angle_cachetable.h"

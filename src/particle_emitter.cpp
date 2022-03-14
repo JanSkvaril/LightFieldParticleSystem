@@ -145,7 +145,6 @@ void ParticleEmitter::DrawParticle(Particle &particle)
 
 void ParticleEmitter::SortByDepth(Camera &camera)
 {
-    return;
     std::sort(positions.begin(), positions.end(), [&camera](glm::vec3 p_a, glm::vec3 p_b)
               { 
                   const auto camera_pos = camera.GetPosition();

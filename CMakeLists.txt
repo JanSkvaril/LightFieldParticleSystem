@@ -59,7 +59,9 @@ add_executable(light_field_ps_bp src/main.cpp
     src/particle_params.h
     src/generator_params.h
     src/angle_cachetable.h
-    src/angle_cachetable.cpp)
+    src/angle_cachetable.cpp
+    src/skybox.h
+    src/skybox.cpp)
 
 
 

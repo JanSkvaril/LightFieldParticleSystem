@@ -32,6 +32,7 @@ UiManager::UiManager(GLFWwindow *window)
     nanogui::ref<nanogui::Window> nanoguiWindow3 = gui->add_window(nanogui::Vector2i(500, 10), "Scene");
     nanoguiWindow3->set_width(200);
     gui->add_group("Skybox");
+    gui->add_variable("Show", config.show_skybox);
     gui->add_group("Scene preset");
     gui->add_group("Light");
 
