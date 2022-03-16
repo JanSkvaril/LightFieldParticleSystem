@@ -4,7 +4,7 @@
 #include <glm/gtx/string_cast.hpp>
 #include <tgmath.h>
 #include "camera.h"
-
+#include "glm/gtx/rotate_vector.hpp"
 float atan22(float y, float x)
 {
     bool s = (abs(x) > abs(y));
@@ -24,6 +24,7 @@ ParticleEmitter::ParticleEmitter(int particles)
 {
     this->particles.resize(particles);
     this->positions.resize(amount_of_particles);
+    this->uvs.resize(particles);
     Reset();
 
     CreateVAO();
@@ -44,8 +45,9 @@ void ParticleEmitter::Update()
     time += 0.01f;
     for (auto &particle : particles)
     {
-        particle.Update();
+        particle.Update(time);
         positions[i] = particle.GetPosition();
+        uvs[i] = particle.GetUV();
         i++;
     }
 }
@@ -60,6 +62,7 @@ void ParticleEmitter::Draw(Camera &camera, float texture_density)
 
     SortByDepth(camera);
     BindPositionVBO();
+    BindUVVBO();
     // texture.Bind();
     //  load shader program
     shader.Use();
@@ -108,6 +111,9 @@ void ParticleEmitter::CreateVAO()
     glGenBuffers(1, &position_VBO);
     BindPositionVBO();
 
+    glGenBuffers(1, &uv_VBO);
+    BindUVVBO();
+
     float vertices[] = {
         1.0f, 1.0f, 0.0f, 1.0f, 1.0f,
         1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
@@ -132,6 +138,11 @@ void ParticleEmitter::CreateVAO()
     glBindBuffer(GL_ARRAY_BUFFER, position_VBO);
     glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *)0);
     glVertexAttribDivisor(2, 1);
+    // particle UV
+    glEnableVertexAttribArray(3);
+    glBindBuffer(GL_ARRAY_BUFFER, uv_VBO);
+    glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void *)0);
+    glVertexAttribDivisor(3, 1);
     // reset
     glBindVertexArray(0);
 }
@@ -145,11 +156,12 @@ void ParticleEmitter::DrawParticle(Particle &particle)
 
 void ParticleEmitter::SortByDepth(Camera &camera)
 {
+    return;
     std::sort(positions.begin(), positions.end(), [&camera](glm::vec3 p_a, glm::vec3 p_b)
               { 
                   const auto camera_pos = camera.GetPosition();
-                  auto dist_a = glm::distance(camera_pos, p_a);
-                  auto dist_b = glm::distance(camera_pos, p_b);
+                  auto dist_a = glm::fastDistance(camera_pos, p_a);
+                  auto dist_b = glm::fastDistance(camera_pos, p_b);
                   return dist_a > dist_b; });
 }
 
@@ -166,6 +178,7 @@ void ParticleEmitter::SetPactilesAmount(int amount)
         return;
     this->particles.resize(amount);
     this->positions.resize(amount);
+    this->uvs.resize(amount);
     Reset();
 }
 
@@ -201,20 +214,35 @@ void ParticleEmitter::AddTextureHandle(GLuint64 handle)
 
 void ParticleEmitter::GetRequiredAngles(AngleCacheTable &angles, Camera &camera, float texture_density)
 {
-    auto camera_position = camera.GetPosition();
     const float pi = 3.1415926538;
+    int i = 0;
+    auto camera_position = camera.GetPosition();
     for (auto &particle : particles)
     {
+        auto rot = particle.GetRotation();
+
         auto dir = (camera_position * 2.0f) - particle.GetPosition();
         dir = glm::fastNormalize(dir);
+
         float u = 0.5f + atan2(dir.z, dir.x) / (2.0f * pi);
-        float v = 0.5f + (asin(dir.y) / pi);
-        //  u = glm::clamp(u, 0.0f, 0.9999f);
-        //  v = glm::clamp(v, 0.0f, 0.9999f);
+        float v = 0.5f + (asin(dir.y) / (2.0f * pi));
+        if (isnan(u) || isnan(v))
+            continue;
+        u += rot.x;
+        particle.SetUV({u, v});
+        auto corrected = particle.GetUV();
+        uvs[i++] = corrected;
+        u = corrected.x;
+        v = corrected.y;
         u *= texture_density;
         v *= texture_density;
-        // if (isnan(u) || isnan(v))
-        //     continue;
         angles.Activate((int)u, (int)v);
     }
+}
+
+void ParticleEmitter::BindUVVBO()
+{
+    glBindBuffer(GL_ARRAY_BUFFER, uv_VBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(float) * particles.size() * 2, &uvs[0], GL_STATIC_DRAW);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
 }

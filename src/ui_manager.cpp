@@ -15,6 +15,7 @@ UiManager::UiManager(GLFWwindow *window)
     gui->add_variable("Particle speed", config.particle_speed);
     gui->add_variable("Starting time to live", config.starting_time_to_live);
     gui->add_variable("Time to live dispersion", config.time_to_live_dispersion);
+    gui->add_variable("Random X rotation", config.random_x_rotation);
     gui->add_group("Visual");
     gui->add_variable("Show borders", config.show_border);
     gui->add_variable("Show Lightfield", config.show_light_field);

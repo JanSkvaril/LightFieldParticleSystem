@@ -10,6 +10,7 @@ public:
     void RotateAroundTarget(glm::vec2 amount);
     glm::mat4 GetMatrix();
     glm::vec3 GetPosition();
+    glm::vec3 GetPosition(glm::vec2 additional_rotation);
     glm::vec2 GetAngleToTarget();
     glm::vec3 GetUpVector();
 

@@ -21,7 +21,7 @@ Skybox::Skybox() : shader("shaders/skybox_vertex.vs", "shaders/skybox_fragment.f
     std::vector<std::string> faces = {
         "imgs/skybox/right.jpg",
         "imgs/skybox/left.jpg",
-        "imgs/skybox/posy.jpg",
+        "imgs/skybox/top.jpg",
         "imgs/skybox/bottom.jpg",
         "imgs/skybox/front.jpg",
         "imgs/skybox/back.jpg"};

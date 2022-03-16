@@ -2,6 +2,7 @@
 layout(location = 0)in vec3 aPos;
 layout(location = 1)in vec2 aTexCoord;
 layout(location = 2)in vec3 offset2;
+layout(location = 3)in vec2 particle_uv;
 out vec2 TexCoord;
 out vec2 Offset;
 
@@ -35,12 +36,12 @@ void main()
     
     TexCoord = vec2(aTexCoord.x, aTexCoord.y);
     
-    vec3 dir = +(camera_pos * 2.00) - offset2;
-    vec2 angle = camera_angle;
-    dir = normalize(dir);
+    //vec3 dir = +(camera_pos * 2.00) - offset2;
+    vec2 angle = particle_uv;
+    //dir = normalize(dir);
     
-    angle.x = 0.5 + atan(dir.z, dir.x) / (2.0 * PI);
-    angle.y = 0.5 + (asin(dir.y) / PI);
+    // angle.x = 0.5 + atan(dir.z, dir.x) / (2.0 * PI);
+    // angle.y = 0.5 + (asin(dir.y) / PI);
     
     Offset = angle.xy;
 }

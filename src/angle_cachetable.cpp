@@ -21,7 +21,7 @@ void AngleCacheTable::ClearCache()
 
 void AngleCacheTable::Activate(int u, int v)
 {
-    const int range = 1;
+    const int range = 3;
     for (int i = -range; i <= range; i++)
     {
         for (int j = -range; j <= range; j++)
@@ -55,17 +55,24 @@ int AngleCacheTable::GetTablePosition(int coordinate) const
 {
     const int size = cache_table.size();
     int result;
-    if (coordinate >= size)
+    bool gut = false;
+    while (!gut)
     {
-        result = coordinate - size;
-    }
-    else if (coordinate < 0)
-    {
-        result = size + coordinate;
-    }
-    else
-    {
-        result = coordinate;
+        if (coordinate >= size)
+        {
+            coordinate = coordinate - size;
+            gut = false;
+        }
+        else if (coordinate < 0)
+        {
+            coordinate = size + coordinate;
+            gut = false;
+        }
+        else
+        {
+            result = coordinate;
+            gut = true;
+        }
     }
     return result;
 }

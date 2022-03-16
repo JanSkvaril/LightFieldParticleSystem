@@ -83,3 +83,11 @@ glm::vec3 Camera::GetUpVector()
     rotated_up = glm::rotate(rotated_up, rotation.x, glm::vec3(0.0f, 1.0f, 0.0f));
     return rotated_up;
 }
+
+glm::vec3 Camera::GetPosition(glm::vec2 additional_rotation)
+{
+    glm::vec3 rotated_position;
+    rotated_position = glm::rotate(camera_position, rotation.y + additional_rotation.x, glm::vec3(1.0f, 0.0f, 0.0f));
+    rotated_position = glm::rotate(rotated_position, rotation.x + additional_rotation.y, glm::vec3(0.0f, 1.0f, 0.0f));
+    return rotated_position;
+}

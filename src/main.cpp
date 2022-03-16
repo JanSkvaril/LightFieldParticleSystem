@@ -63,7 +63,7 @@ int main()
 
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     ParticleEmitter ps(10);
-    Model model("models/bird.obj");
+    Model model("models/leaf.obj");
     Camera camera;
     int density = 21;
     camera.LookAt(glm::vec3(0.0f, 0.0f, -5.0f), glm::vec3(0.0f, 0.0f, 0.0f));
@@ -99,6 +99,7 @@ int main()
         }
 
         ps.Update();
+        ps.GetRequiredAngles(generator.GetCacheTable(), camera, ui.config.density);
         time += 0.04f;
 
         processInput(window);
@@ -132,7 +133,6 @@ int main()
         generator.SetModelRotation(ui.config.model_rotation);
         generator.ChangeDensity(ui.config.density);
         // generator.ChangeResolution(ui.config.resolution);
-        ps.GetRequiredAngles(generator.GetCacheTable(), camera, ui.config.density);
         generator.Generate();
 
         glfwSwapBuffers(window);

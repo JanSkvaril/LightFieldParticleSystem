@@ -36,6 +36,7 @@ protected:
     int show_borders = 0;
     std::vector<Particle> particles;
     std::vector<glm::vec3> positions;
+    std::vector<glm::vec2> uvs;
     float time = 12145.0f;
     Shader shader;
     void ResetParticle(Particle &particle);
@@ -43,9 +44,11 @@ protected:
     void SortByDepth(Camera &camera);
     void CreateVAO();
     void BindPositionVBO();
+    void BindUVVBO();
     unsigned int VAO, VBO;
     unsigned int position_VBO;
-    const int amount_of_particles;
+    unsigned int uv_VBO;
+    int amount_of_particles;
 
     ParticleParameters particle_parameters;
 };
