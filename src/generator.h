@@ -24,6 +24,7 @@ public:
     void NotifyChangeAtAngle(glm::ivec2 position);
     void Regenerate();
     AngleCacheTable &GetCacheTable();
+    void SetParams(GeneratorParameters params);
 
 protected:
     bool has_handle = false;

@@ -146,7 +146,7 @@ void Generator::ChangeResolution(int res)
 GLuint64 Generator::CreateHandle()
 {
     has_handle = true;
-    Bind();
+    //   Bind();
     texture_handle = glGetTextureHandleARB(renderedTexture);
     MakeResident();
     return texture_handle;
@@ -204,4 +204,9 @@ void Generator::ClearTexture()
 AngleCacheTable &Generator::GetCacheTable()
 {
     return cache_table;
+}
+
+void Generator::SetParams(GeneratorParameters params)
+{
+    this->generator_params = params;
 }
