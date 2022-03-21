@@ -61,7 +61,9 @@ add_executable(light_field_ps_bp src/main.cpp
     src/angle_cachetable.h
     src/angle_cachetable.cpp
     src/skybox.h
-    src/skybox.cpp)
+    src/skybox.cpp
+    src/generator_store.h
+    src/generator_store.cpp)
 
 
 

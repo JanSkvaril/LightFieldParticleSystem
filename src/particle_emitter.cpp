@@ -246,3 +246,20 @@ void ParticleEmitter::BindUVVBO()
     glBufferData(GL_ARRAY_BUFFER, sizeof(float) * particles.size() * 2, &uvs[0], GL_STATIC_DRAW);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
+
+void ParticleEmitter::AddTextureHandle(GeneratorStore &store)
+{
+    for (const auto &generator : store.Generators)
+    {
+        AddTextureHandle(generator->CreateHandle());
+    }
+}
+
+void ParticleEmitter::GetRequiredAngles(GeneratorStore &store, Camera &camera, float texture_density)
+{
+    for (const auto &generator : store.Generators)
+    {
+        GetRequiredAngles(generator->GetCacheTable(), camera, texture_density);
+        std::cout << "a\n";
+    }
+}

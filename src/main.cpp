@@ -22,6 +22,8 @@
 #include <vector>
 #include <string>
 #include "skybox.h"
+#include "generator_store.h"
+#include "memory"
 void framebuffer_size_callback(GLFWwindow *window, int width, int height);
 void processInput(GLFWwindow *window);
 
@@ -67,9 +69,9 @@ int main()
     Camera camera;
     int density = 21;
     camera.LookAt(glm::vec3(0.0f, 0.0f, -5.0f), glm::vec3(0.0f, 0.0f, 0.0f));
-    Generator generator(&model, density, 5000);
-    generator.Generate();
-    ps.AddTextureHandle(generator.CreateHandle());
+    GeneratorStore gen_store;
+    gen_store.AddGenerator(std::make_shared<Generator>(&model, density, 5000));
+    ps.AddTextureHandle(gen_store);
     Skybox skybox;
     float time = 0.0f;
     TextReactangle rec;
@@ -99,7 +101,7 @@ int main()
         }
 
         ps.Update();
-        ps.GetRequiredAngles(generator.GetCacheTable(), camera, ui.config.density);
+        ps.GetRequiredAngles(gen_store, camera, ui.config.density);
         time += 0.04f;
 
         processInput(window);
@@ -119,7 +121,7 @@ int main()
         }
         else
         {
-            generator.Bind();
+            gen_store.Generators.front()->Bind();
             rec.Draw(glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 1.0f));
         }
         //(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f));
@@ -130,10 +132,10 @@ int main()
         ps.ShouldShowBorders(ui.config.show_border);
         ps.SetSpeed(ui.config.particle_speed);
         ps.SetTimeToLive(ui.config.starting_time_to_live, ui.config.time_to_live_dispersion);
-        generator.SetModelRotation(ui.config.model_rotation);
-        generator.ChangeDensity(ui.config.density);
-        // generator.ChangeResolution(ui.config.resolution);
-        generator.Generate();
+        // generator.SetModelRotation(ui.config.model_rotation);
+        // generator.ChangeDensity(ui.config.density);
+        // // generator.ChangeResolution(ui.config.resolution);
+        gen_store.AllGenerate();
 
         glfwSwapBuffers(window);
         glfwPollEvents();

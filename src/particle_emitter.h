@@ -16,6 +16,7 @@
 #include "camera.h"
 #include "particle_params.h"
 #include "angle_cachetable.h"
+#include "generator_store.h"
 class ParticleEmitter
 {
 public:
@@ -29,7 +30,9 @@ public:
     void SetSpeed(float speed);
     void SetTimeToLive(int starting, int dispersion);
     void AddTextureHandle(GLuint64 handle);
+    void AddTextureHandle(GeneratorStore &store);
     void GetRequiredAngles(AngleCacheTable &angles, Camera &camera, float texture_density);
+    void GetRequiredAngles(GeneratorStore &store, Camera &camera, float texture_density);
 
 protected:
     std::vector<GLuint64> texture_handles;
