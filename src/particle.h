@@ -4,22 +4,25 @@
 #include "glm/vec2.hpp"
 #include <glm/geometric.hpp>
 #include "particle_params.h"
-
+#include "memory"
 class Particle
 {
 public:
     Particle(ParticleParameters *params);
     Particle();
     Particle(const Particle &rhs);
-    void Reset();
-    void Update(float time);
+    virtual void Reset();
+    virtual void Update(float time);
     glm::vec3 GetPosition();
     glm::vec2 GetRotation();
     void SetParticleParameters(ParticleParameters *params);
     glm::vec2 GetUV();
     void SetUV(glm::vec2 uv);
+    virtual std::unique_ptr<Particle> clone();
 
 protected:
+    virtual void SimulateMovement(float time);
+    virtual void UpdatePhysics(float time);
     ParticleParameters *params;
     glm::vec3 position;
     glm::vec3 direction;

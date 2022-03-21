@@ -32,8 +32,8 @@ void ParticleEmitter::Reset()
 {
     for (auto &particle : particles)
     {
-        particle.SetParticleParameters(&particle_parameters);
-        ResetParticle(particle);
+        particle->SetParticleParameters(&particle_parameters);
+        ResetParticle(*particle);
     }
 }
 
@@ -43,9 +43,9 @@ void ParticleEmitter::Update()
     time += 0.01f;
     for (auto &particle : particles)
     {
-        particle.Update(time);
-        positions[i] = particle.GetPosition();
-        uvs[i] = particle.GetUV();
+        particle->Update(time);
+        positions[i] = particle->GetPosition();
+        uvs[i] = particle->GetUV();
         i++;
     }
 }
@@ -174,7 +174,12 @@ void ParticleEmitter::SetPactilesAmount(int amount)
 {
     if (amount == particles.size())
         return;
-    this->particles.resize(amount, *particle_prototype);
+    this->particles.resize(amount);
+    for (size_t i = 0; i < amount; i++)
+    {
+        this->particles[i] = particle_prototype->clone();
+    }
+
     this->positions.resize(amount);
     this->uvs.resize(amount);
     Reset();
@@ -217,9 +222,9 @@ void ParticleEmitter::GetRequiredAngles(AngleCacheTable &angles, Camera &camera,
     auto camera_position = camera.GetPosition();
     for (auto &particle : particles)
     {
-        auto rot = particle.GetRotation();
+        auto rot = particle->GetRotation();
 
-        auto dir = (camera_position * 2.0f) - particle.GetPosition();
+        auto dir = (camera_position * 2.0f) - particle->GetPosition();
         dir = glm::fastNormalize(dir);
 
         float u = 0.5f + atan2(dir.z, dir.x) / (2.0f * pi);
@@ -227,8 +232,8 @@ void ParticleEmitter::GetRequiredAngles(AngleCacheTable &angles, Camera &camera,
         if (isnan(u) || isnan(v))
             continue;
         u += rot.x;
-        particle.SetUV({u, v});
-        auto corrected = particle.GetUV();
+        particle->SetUV({u, v});
+        auto corrected = particle->GetUV();
         uvs[i++] = corrected;
         u = corrected.x;
         v = corrected.y;

@@ -24,6 +24,7 @@
 #include "skybox.h"
 #include "generator_store.h"
 #include "memory"
+#include "particle_leaf.h"
 void framebuffer_size_callback(GLFWwindow *window, int width, int height);
 void processInput(GLFWwindow *window);
 
@@ -64,8 +65,8 @@ int main()
     }
 
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    ParticleEmitter ps(10);
-    Model model("models/leaf.obj");
+    ParticleEmitter ps(10, std::make_unique<ParticleLeaf>());
+    Model model("models/bird.obj");
     Camera camera;
     int density = 21;
     camera.LookAt(glm::vec3(0.0f, 0.0f, -5.0f), glm::vec3(0.0f, 0.0f, 0.0f));

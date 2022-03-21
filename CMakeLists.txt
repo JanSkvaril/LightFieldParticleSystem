@@ -63,7 +63,9 @@ add_executable(light_field_ps_bp src/main.cpp
     src/skybox.h
     src/skybox.cpp
     src/generator_store.h
-    src/generator_store.cpp)
+    src/generator_store.cpp
+    src/particle_leaf.h
+    src/particle_leaf.cpp)
 
 
 

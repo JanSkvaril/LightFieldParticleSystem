@@ -42,7 +42,7 @@ protected:
     std::unique_ptr<Particle> particle_prototype;
     std::vector<GLuint64> texture_handles;
     int show_borders = 0;
-    std::vector<Particle> particles;
+    std::vector<std::unique_ptr<Particle>> particles;
     std::vector<glm::vec3> positions;
     std::vector<glm::vec2> uvs;
     float time = 12145.0f;

@@ -28,7 +28,6 @@ void Particle::Reset()
 
 void Particle::Update(float time)
 {
-    time += random_time_offset;
     time_to_live--;
     if (time_to_live <= 0)
     {
@@ -36,13 +35,7 @@ void Particle::Update(float time)
     }
     else
     {
-        position += direction * speed;
-        float g = params->gravity_strength;
-        auto gravity_dir = params->gravity_direction;
-        gravity_dir.x = sin(time * 0.1) * 0.5;
-        gravity_dir.z = sin((time + 41) * 0.15) * 0.2;
-        direction = (1.0f - g) * direction + g * gravity_dir;
-        rotation.x += (x_rotation_speed + params->x_rotation_speed) * params->rotation_multiplier;
+        UpdatePhysics(time + random_time_offset);
     }
 }
 
@@ -102,4 +95,23 @@ void Particle::SetUV(glm::vec2 uv)
 
 Particle::Particle(const Particle &rhs)
 {
+}
+
+void Particle::UpdatePhysics(float time)
+{
+    SimulateMovement(time);
+}
+
+void Particle::SimulateMovement(float time)
+{
+    position += direction * speed;
+    float g = params->gravity_strength;
+    auto gravity_dir = params->gravity_direction;
+    direction = (1.0f - g) * direction + g * gravity_dir;
+    rotation.x += (x_rotation_speed + params->x_rotation_speed) * params->rotation_multiplier;
+}
+
+std::unique_ptr<Particle> Particle::clone()
+{
+    return std::make_unique<Particle>();
 }
