@@ -99,3 +99,7 @@ void Particle::SetUV(glm::vec2 uv)
 
     this->uv = uv;
 }
+
+Particle::Particle(const Particle &rhs)
+{
+}

@@ -22,11 +22,9 @@ ParticleEmitter::ParticleEmitter(int particles)
     : amount_of_particles(particles),
       shader("shaders/particle_vertex.vs", "shaders/particle_fragment.fs")
 {
-    this->particles.resize(particles);
-    this->positions.resize(amount_of_particles);
-    this->uvs.resize(particles);
+    particle_prototype = std::make_unique<Particle>();
+    SetPactilesAmount(particles);
     Reset();
-
     CreateVAO();
 }
 
@@ -176,7 +174,7 @@ void ParticleEmitter::SetPactilesAmount(int amount)
 {
     if (amount == particles.size())
         return;
-    this->particles.resize(amount);
+    this->particles.resize(amount, *particle_prototype);
     this->positions.resize(amount);
     this->uvs.resize(amount);
     Reset();
@@ -260,6 +258,16 @@ void ParticleEmitter::GetRequiredAngles(GeneratorStore &store, Camera &camera, f
     for (const auto &generator : store.Generators)
     {
         GetRequiredAngles(generator->GetCacheTable(), camera, texture_density);
-        std::cout << "a\n";
     }
+}
+
+void ParticleEmitter::SetParticleProtype(std::unique_ptr<Particle> prototype_ptr)
+{
+    this->particle_prototype = std::move(prototype_ptr);
+}
+
+ParticleEmitter::ParticleEmitter(int particles, std::unique_ptr<Particle> particle_prototype_ptr)
+    : ParticleEmitter::ParticleEmitter(particles)
+{
+    SetParticleProtype(std::move(particle_prototype_ptr));
 }

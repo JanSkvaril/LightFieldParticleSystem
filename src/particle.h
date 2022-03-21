@@ -10,6 +10,7 @@ class Particle
 public:
     Particle(ParticleParameters *params);
     Particle();
+    Particle(const Particle &rhs);
     void Reset();
     void Update(float time);
     glm::vec3 GetPosition();

@@ -17,10 +17,13 @@
 #include "particle_params.h"
 #include "angle_cachetable.h"
 #include "generator_store.h"
+
+#include <memory>
 class ParticleEmitter
 {
 public:
     ParticleEmitter(int particles);
+    ParticleEmitter(int particles, std::unique_ptr<Particle> particle_prototype_ptr);
     void Reset();
     void Update();
     void Draw(Camera &camera, float texture_density);
@@ -33,8 +36,10 @@ public:
     void AddTextureHandle(GeneratorStore &store);
     void GetRequiredAngles(AngleCacheTable &angles, Camera &camera, float texture_density);
     void GetRequiredAngles(GeneratorStore &store, Camera &camera, float texture_density);
+    void SetParticleProtype(std::unique_ptr<Particle> prototype_ptr);
 
 protected:
+    std::unique_ptr<Particle> particle_prototype;
     std::vector<GLuint64> texture_handles;
     int show_borders = 0;
     std::vector<Particle> particles;
