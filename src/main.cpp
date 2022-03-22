@@ -25,6 +25,7 @@
 #include "generator_store.h"
 #include "memory"
 #include "particle_leaf.h"
+#include "lightfield_ps_demo.h"
 void framebuffer_size_callback(GLFWwindow *window, int width, int height);
 void processInput(GLFWwindow *window);
 
@@ -65,44 +66,20 @@ int main()
     }
 
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    ParticleEmitter ps(10, std::make_unique<ParticleLeaf>());
-    Model model("models/bird.obj");
-    Camera camera;
-    int density = 21;
-    camera.LookAt(glm::vec3(0.0f, 0.0f, -5.0f), glm::vec3(0.0f, 0.0f, 0.0f));
-    GeneratorStore gen_store;
-    gen_store.AddGenerator(std::make_shared<Generator>(&model, density, 5000));
-    ps.AddTextureHandle(gen_store);
+
     Skybox skybox;
     float time = 0.0f;
-    TextReactangle rec;
+    LightFieldPsDemo lfps;
+    lfps.SetPresetBasic();
     UiManager ui(window);
-    // nanoguiWindow->center();
+
     std::cout << glGetString(GL_VERSION) << "\n";
     glEnable(GL_BLEND);
 
     while (!glfwWindowShouldClose(window))
     {
-        const float speed = 0.05f;
-        if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
-        {
-            camera.RotateAroundTarget(glm::vec2(speed, 0.0f));
-        }
-        else if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
-        {
-            camera.RotateAroundTarget(glm::vec2(-speed, 0.0f));
-        }
-        else if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
-        {
-            camera.RotateAroundTarget(glm::vec2(0.0f, speed));
-        }
-        else if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
-        {
-            camera.RotateAroundTarget(glm::vec2(0.0f, -speed));
-        }
-
-        ps.Update();
-        ps.GetRequiredAngles(gen_store, camera, ui.config.density);
+        ui.HandleCameraControls(lfps.camera);
+        lfps.Update();
         time += 0.04f;
 
         processInput(window);
@@ -114,29 +91,30 @@ int main()
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         if (ui.config.show_skybox)
         {
-            skybox.Draw(camera);
+            skybox.Draw(lfps.camera);
         }
         if (!ui.config.show_light_field)
         {
-            ps.Draw(camera, ui.config.density);
+            lfps.Draw();
         }
         else
         {
-            gen_store.Generators.front()->Bind();
-            rec.Draw(glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 1.0f));
+            // gen_store.Generators.front()->Bind();
+            // rec.Draw(glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 1.0f));
         }
+        ui.Draw();
+        lfps.Generate();
         //(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f));
         // Draw nanogui
-        ui.Draw();
-        ps.SetPactilesAmount(ui.config.amount_of_pacticles);
-        ps.SetGravity(ui.config.gravity_strength, ui.config.gravity_direction);
-        ps.ShouldShowBorders(ui.config.show_border);
-        ps.SetSpeed(ui.config.particle_speed);
-        ps.SetTimeToLive(ui.config.starting_time_to_live, ui.config.time_to_live_dispersion);
+        // ps.SetPactilesAmount(ui.config.amount_of_pacticles);
+        // ps.SetGravity(ui.config.gravity_strength, ui.config.gravity_direction);
+        // ps.ShouldShowBorders(ui.config.show_border);
+        // ps.SetSpeed(ui.config.particle_speed);
+        // ps.SetTimeToLive(ui.config.starting_time_to_live, ui.config.time_to_live_dispersion);
         // generator.SetModelRotation(ui.config.model_rotation);
         // generator.ChangeDensity(ui.config.density);
         // // generator.ChangeResolution(ui.config.resolution);
-        gen_store.AllGenerate();
+        // gen_store.AllGenerate();
 
         glfwSwapBuffers(window);
         glfwPollEvents();

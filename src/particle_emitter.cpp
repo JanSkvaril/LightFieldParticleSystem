@@ -252,6 +252,7 @@ void ParticleEmitter::BindUVVBO()
 
 void ParticleEmitter::AddTextureHandle(GeneratorStore &store)
 {
+    texture_handles.clear();
     for (const auto &generator : store.Generators)
     {
         AddTextureHandle(generator->CreateHandle());

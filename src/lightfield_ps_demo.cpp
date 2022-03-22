@@ -1,0 +1,35 @@
+#include "lightfield_ps_demo.h"
+
+LightFieldPsDemo::LightFieldPsDemo() : particles(100)
+{
+}
+
+void LightFieldPsDemo::Update()
+{
+    // ui.HandleCameraControls(camera);
+    particles.Update();
+    particles.GetRequiredAngles(generator_store, camera, 21);
+}
+
+void LightFieldPsDemo::Draw()
+{
+    particles.Draw(camera, 21);
+}
+
+void LightFieldPsDemo::SetPresetBasic()
+{
+    particles.SetParticleProtype(std::make_unique<Particle>());
+    generator_store.Clear();
+    camera.LookAt(glm::vec3(0.0f, 0.0f, -5.0f), glm::vec3(0.0f, 0.0f, 0.0f));
+
+    loaded_models.push_front(Model("models/bird.obj"));
+
+    int density = 21;
+    generator_store.AddGenerator(std::make_shared<Generator>(&loaded_models.front(), density, 5000));
+    particles.AddTextureHandle(generator_store);
+}
+
+void LightFieldPsDemo::Generate()
+{
+    generator_store.AllGenerate();
+}

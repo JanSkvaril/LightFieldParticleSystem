@@ -9,6 +9,7 @@ public:
     GeneratorStore();
     void AddGenerator(std::shared_ptr<Generator> generator_ptr);
     void AllGenerate();
+    void Clear();
     const std::list<std::shared_ptr<Generator>> &Generators;
 
 protected:

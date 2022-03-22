@@ -16,3 +16,8 @@ void GeneratorStore::AllGenerate()
         generator->Generate();
     }
 }
+
+void GeneratorStore::Clear()
+{
+    generators.clear();
+}

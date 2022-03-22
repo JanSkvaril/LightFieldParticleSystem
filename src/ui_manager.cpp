@@ -110,3 +110,24 @@ void UiManager::Draw()
 {
     screen->draw_widgets();
 }
+
+void UiManager::HandleCameraControls(Camera &camera)
+{
+    const float speed = 0.05f;
+    if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
+    {
+        camera.RotateAroundTarget(glm::vec2(speed, 0.0f));
+    }
+    else if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
+    {
+        camera.RotateAroundTarget(glm::vec2(-speed, 0.0f));
+    }
+    else if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
+    {
+        camera.RotateAroundTarget(glm::vec2(0.0f, speed));
+    }
+    else if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
+    {
+        camera.RotateAroundTarget(glm::vec2(0.0f, -speed));
+    }
+}

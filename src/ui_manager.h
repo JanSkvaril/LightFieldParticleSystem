@@ -3,12 +3,13 @@
 #include <GLFW/glfw3.h>
 #include <nanogui/nanogui.h>
 #include "ui_settings.h"
+#include "camera.h"
 class UiManager
 {
 public:
     UiManager(GLFWwindow *window);
     void Draw();
-
+    void HandleCameraControls(Camera &camera);
     UiSettings config;
 
 protected:
