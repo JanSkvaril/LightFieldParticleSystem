@@ -20,7 +20,8 @@ float atan22(float y, float x)
 
 ParticleEmitter::ParticleEmitter(int particles)
     : amount_of_particles(particles),
-      shader("shaders/particle_vertex.vs", "shaders/particle_fragment.fs")
+      shader("shaders/particle_vertex.vs", "shaders/particle_fragment.fs"),
+      Parameters(particle_parameters)
 {
     particle_prototype = std::make_unique<Particle>();
     SetPactilesAmount(particles);
@@ -276,4 +277,25 @@ ParticleEmitter::ParticleEmitter(int particles, std::unique_ptr<Particle> partic
     : ParticleEmitter::ParticleEmitter(particles)
 {
     SetParticleProtype(std::move(particle_prototype_ptr));
+}
+
+bool ParticleEmitter::ShouldShowBorders()
+{
+    return show_borders;
+}
+
+void ParticleEmitter::ParticleRotationSpeed(float amount)
+{
+    particle_parameters.rotation_multiplier = amount;
+}
+
+bool ParticleEmitter::ShouldParticlesRotate(bool rotate)
+{
+    particle_parameters.random_x_rotation = rotate;
+    return rotate;
+}
+
+bool ParticleEmitter::ShouldParticlesRotate()
+{
+    return particle_parameters.random_x_rotation;
 }

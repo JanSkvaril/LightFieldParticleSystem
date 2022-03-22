@@ -30,6 +30,10 @@ public:
     void SetPactilesAmount(int amount);
     void SetGravity(float strength, glm::vec3 direction);
     void ShouldShowBorders(bool show_borders);
+    bool ShouldShowBorders();
+    bool ShouldParticlesRotate();
+    bool ShouldParticlesRotate(bool rotate);
+    void ParticleRotationSpeed(float amount);
     void SetSpeed(float speed);
     void SetTimeToLive(int starting, int dispersion);
     void AddTextureHandle(GLuint64 handle);
@@ -37,8 +41,10 @@ public:
     void GetRequiredAngles(AngleCacheTable &angles, Camera &camera, float texture_density);
     void GetRequiredAngles(GeneratorStore &store, Camera &camera, float texture_density);
     void SetParticleProtype(std::unique_ptr<Particle> prototype_ptr);
+    const ParticleParameters &Parameters;
 
 protected:
+    ParticleParameters particle_parameters;
     std::unique_ptr<Particle> particle_prototype;
     std::vector<GLuint64> texture_handles;
     int show_borders = 0;
@@ -57,8 +63,6 @@ protected:
     unsigned int position_VBO;
     unsigned int uv_VBO;
     int amount_of_particles;
-
-    ParticleParameters particle_parameters;
 };
 
 #endif

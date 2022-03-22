@@ -17,10 +17,11 @@ public:
 
     Camera camera;
 
+    ParticleEmitter particles;
+    GeneratorStore generator_store;
+
 private:
     std::list<Model> loaded_models;
-    GeneratorStore generator_store;
-    ParticleEmitter particles;
 
     TextReactangle texture_rectangle;
 };

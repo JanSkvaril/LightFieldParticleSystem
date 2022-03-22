@@ -7,43 +7,26 @@ UiManager::UiManager(GLFWwindow *window)
     this->window = window;
     screen->initialize(window, true);
 
-    nanogui::ref<nanogui::Window> nanoguiWindow = gui->add_window(nanogui::Vector2i(10, 10), "Particle system");
-    gui->add_group("Simulation");
-    gui->add_variable("Amount of particles", config.amount_of_pacticles);
-    gui->add_variable("Gravity strength", config.gravity_strength);
-    gui->add_variable("Gravity direction", config.gravity_direction.y);
-    gui->add_variable("Particle speed", config.particle_speed);
-    gui->add_variable("Starting time to live", config.starting_time_to_live);
-    gui->add_variable("Time to live dispersion", config.time_to_live_dispersion);
-    gui->add_variable("Random X rotation", config.random_x_rotation);
-    gui->add_group("Visual");
-    gui->add_variable("Show borders", config.show_border);
-    gui->add_variable("Show Lightfield", config.show_light_field);
-    gui->add_variable("Lightfield density", config.density);
-    gui->add_variable("Resolution", config.resolution);
+    // nanogui::ref<nanogui::Window> nanoguiWindow2 = gui->add_window(nanogui::Vector2i(250, 10), "Model");
+    // nanoguiWindow2->set_width(200);
+    // gui->add_group("Position");
+    // gui->add_variable("Rotation x", config.model_rotation.x);
+    // gui->add_variable("Rotation y", config.model_rotation.y);
+    // gui->add_variable("Rotation z", config.model_rotation.z);
+    // gui->add_group("Light");
 
-    nanogui::ref<nanogui::Window> nanoguiWindow2 = gui->add_window(nanogui::Vector2i(250, 10), "Model");
-    nanoguiWindow2->set_width(200);
-    gui->add_group("Position");
-    gui->add_variable("Rotation x", config.model_rotation.x);
-    gui->add_variable("Rotation y", config.model_rotation.y);
-    gui->add_variable("Rotation z", config.model_rotation.z);
-    gui->add_group("Light");
+    // nanogui::ref<nanogui::Window> nanoguiWindow3 = gui->add_window(nanogui::Vector2i(500, 10), "Scene");
+    // nanoguiWindow3->set_width(200);
+    // gui->add_group("Skybox");
+    // gui->add_variable("Show", config.show_skybox);
+    // gui->add_group("Scene preset");
+    // gui->add_group("Light");
 
-    nanogui::ref<nanogui::Window> nanoguiWindow3 = gui->add_window(nanogui::Vector2i(500, 10), "Scene");
-    nanoguiWindow3->set_width(200);
-    gui->add_group("Skybox");
-    gui->add_variable("Show", config.show_skybox);
-    gui->add_group("Scene preset");
-    gui->add_group("Light");
-
-    nanogui::ref<nanogui::Window> nanoguiWindow4 = gui->add_window(nanogui::Vector2i(750, 10), "Presets");
-    nanoguiWindow4->set_width(200);
-    gui->add_group("Avaiable presets");
-    gui->add_group("Settings");
-
+    // nanogui::ref<nanogui::Window> nanoguiWindow4 = gui->add_window(nanogui::Vector2i(750, 10), "Presets");
+    // nanoguiWindow4->set_width(200);
+    // gui->add_group("Avaiable presets");
+    // gui->add_group("Settings");
     screen->set_visible(true);
-    screen->perform_layout();
     InitEvents();
 }
 
@@ -130,4 +113,85 @@ void UiManager::HandleCameraControls(Camera &camera)
     {
         camera.RotateAroundTarget(glm::vec2(0.0f, -speed));
     }
+}
+
+void UiManager::AddLFPS(LightFieldPsDemo *lfps)
+{
+    this->lfps = lfps;
+    ParticleEmitter *ps = &lfps->particles;
+    GeneratorStore *gs = &lfps->generator_store;
+
+    nanogui::ref<nanogui::Window> nanoguiWindow = gui->add_window(nanogui::Vector2i(10, 10), "Particle system");
+    gui->add_group("Simulation");
+    gui->add_variable<int>(
+        "Amount of particles",
+        [ps](int value)
+        { ps->SetPactilesAmount(value); },
+        [ps]()
+        { return ps->Parameters.amount_of_pacticles; });
+
+    gui->add_variable<float>(
+        "Gravity strength",
+        [ps](float value)
+        { ps->SetGravity(value, ps->Parameters.gravity_direction); },
+        [ps]()
+        { return ps->Parameters.gravity_strength; });
+
+    gui->add_variable<float>(
+        "Gravity dicection",
+        [ps](float value)
+        { ps->SetGravity(ps->Parameters.gravity_strength, {0, value, 0}); },
+        [ps]()
+        { return ps->Parameters.gravity_direction.y; });
+    gui->add_variable<float>(
+        "Particle speed",
+        [ps](float value)
+        { ps->SetSpeed(value); },
+        [ps]()
+        { return ps->Parameters.particle_speed; });
+    gui->add_variable<int>(
+        "Particle speed",
+        [ps](int value)
+        { ps->SetTimeToLive(value, ps->Parameters.time_to_live_dispersion); },
+        [ps]()
+        { return ps->Parameters.starting_time_to_live; });
+    gui->add_variable<int>(
+        "Time to live dispersion",
+        [ps](int value)
+        { ps->SetTimeToLive(ps->Parameters.starting_time_to_live, value); },
+        [ps]()
+        { return ps->Parameters.time_to_live_dispersion; });
+    gui->add_variable<bool>(
+        "Random starting rotation",
+        [ps](bool value)
+        { ps->ShouldParticlesRotate(value); },
+        [ps]()
+        { return ps->Parameters.random_x_rotation; });
+    gui->add_variable<float>(
+        "Rotation speed",
+        [ps](float value)
+        { ps->ParticleRotationSpeed(value); },
+        [ps]()
+        { return ps->Parameters.rotation_multiplier; });
+    gui->add_group("Visual");
+    gui->add_variable<bool>(
+        "Show borders",
+        [ps](bool value)
+        { ps->ShouldShowBorders(value); },
+        [ps]()
+        { return ps->ShouldShowBorders(); });
+    gui->add_variable("Show Lightfield", config.show_light_field);
+    gui->add_variable<int>(
+        "Lightfield density",
+        [gs](int value)
+        { gs->SetDensity(value); },
+        [gs]()
+        { return gs->GetDensity(); });
+    // gui->add_variable<int>(
+    //     "Resolution",
+    //     [gs](int value)
+    //     { gs->SetResolution(value); },
+    //     [gs]()
+    //     { return gs->GetRelution(); });
+    screen->perform_layout();
 }

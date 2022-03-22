@@ -8,12 +8,12 @@ void LightFieldPsDemo::Update()
 {
     // ui.HandleCameraControls(camera);
     particles.Update();
-    particles.GetRequiredAngles(generator_store, camera, 21);
+    particles.GetRequiredAngles(generator_store, camera, generator_store.GetDensity());
 }
 
 void LightFieldPsDemo::Draw()
 {
-    particles.Draw(camera, 21);
+    particles.Draw(camera, generator_store.GetDensity());
 }
 
 void LightFieldPsDemo::SetPresetBasic()

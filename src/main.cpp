@@ -72,10 +72,10 @@ int main()
     LightFieldPsDemo lfps;
     lfps.SetPresetBasic();
     UiManager ui(window);
-
+    ui.AddLFPS(&lfps);
     std::cout << glGetString(GL_VERSION) << "\n";
     glEnable(GL_BLEND);
-
+    TextReactangle rec;
     while (!glfwWindowShouldClose(window))
     {
         ui.HandleCameraControls(lfps.camera);
@@ -83,12 +83,11 @@ int main()
         time += 0.04f;
 
         processInput(window);
-        // glClearColor(0.2f, 0.2f, 0.3f, 1.0f);
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        //  model.Draw(camera);
         glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
         if (ui.config.show_skybox)
         {
             skybox.Draw(lfps.camera);
@@ -99,8 +98,8 @@ int main()
         }
         else
         {
-            // gen_store.Generators.front()->Bind();
-            // rec.Draw(glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 1.0f));
+            lfps.generator_store.Generators.front()->Bind();
+            rec.Draw(glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 1.0f));
         }
         ui.Draw();
         lfps.Generate();
