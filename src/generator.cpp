@@ -4,7 +4,8 @@
 #include "glm/gtc/epsilon.hpp"
 #include <iostream>
 Generator::Generator(Model *model, int density, int res) : gt(model, res / density, res / density),
-                                                           t_size(res)
+                                                           t_size(res),
+                                                           Parameters(generator_params)
 {
     this->density = density;
     this->model = model;

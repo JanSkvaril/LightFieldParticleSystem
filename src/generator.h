@@ -25,6 +25,7 @@ public:
     void Regenerate();
     AngleCacheTable &GetCacheTable();
     void SetParams(GeneratorParameters params);
+    const GeneratorParameters &Parameters;
 
 protected:
     bool has_handle = false;

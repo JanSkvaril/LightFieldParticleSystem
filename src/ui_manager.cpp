@@ -15,17 +15,17 @@ UiManager::UiManager(GLFWwindow *window)
     // gui->add_variable("Rotation z", config.model_rotation.z);
     // gui->add_group("Light");
 
-    // nanogui::ref<nanogui::Window> nanoguiWindow3 = gui->add_window(nanogui::Vector2i(500, 10), "Scene");
-    // nanoguiWindow3->set_width(200);
-    // gui->add_group("Skybox");
-    // gui->add_variable("Show", config.show_skybox);
-    // gui->add_group("Scene preset");
-    // gui->add_group("Light");
+    nanogui::ref<nanogui::Window> nanoguiWindow3 = gui->add_window(nanogui::Vector2i(500, 10), "Scene");
+    nanoguiWindow3->set_width(200);
+    gui->add_group("Skybox");
+    gui->add_variable("Show", config.show_skybox);
+    gui->add_group("Scene preset");
+    gui->add_group("Light");
 
-    // nanogui::ref<nanogui::Window> nanoguiWindow4 = gui->add_window(nanogui::Vector2i(750, 10), "Presets");
-    // nanoguiWindow4->set_width(200);
-    // gui->add_group("Avaiable presets");
-    // gui->add_group("Settings");
+    nanogui::ref<nanogui::Window> nanoguiWindow4 = gui->add_window(nanogui::Vector2i(750, 10), "Presets");
+    nanoguiWindow4->set_width(200);
+    gui->add_group("Avaiable presets");
+    gui->add_group("Settings");
     screen->set_visible(true);
     InitEvents();
 }
@@ -193,5 +193,43 @@ void UiManager::AddLFPS(LightFieldPsDemo *lfps)
     //     { gs->SetResolution(value); },
     //     [gs]()
     //     { return gs->GetRelution(); });
+
+    // model
+    for (auto &generator : gs->Generators)
+    {
+        nanogui::ref<nanogui::Window> nanoguiWindow2 = gui->add_window(nanogui::Vector2i(250, 10), "Model");
+        //  nanoguiWindow2->set_width(200);
+
+        gui->add_group("Position");
+        gui->add_variable<float>(
+            "Rotation x",
+            [generator](float value)
+            {
+                auto r = generator->Parameters.model_rotation;
+                generator->SetModelRotation({value, r.y, r.z});
+            },
+            [generator]()
+            { return generator->Parameters.model_rotation.x; });
+        gui->add_variable<float>(
+            "Rotation y",
+            [generator](float value)
+            {
+                auto r = generator->Parameters.model_rotation;
+                generator->SetModelRotation({r.x, value, r.z});
+            },
+            [generator]()
+            { return generator->Parameters.model_rotation.y; });
+        gui->add_variable<float>(
+            "Rotation z",
+            [generator](float value)
+            {
+                auto r = generator->Parameters.model_rotation;
+                generator->SetModelRotation({r.x, r.y, value});
+            },
+            [generator]()
+            { return generator->Parameters.model_rotation.z; });
+        gui->add_group("Light");
+    }
+
     screen->perform_layout();
 }
