@@ -65,6 +65,7 @@ void ParticleEmitter::Draw(Camera &camera, float texture_density)
     BindPositionVBO();
     BindUVVBO();
     BindTextureVBO();
+    std::cout << particle_texture_handle[1] << " " << particle_texture_handle[2] << "\n";
     // texture.Bind();
     //  load shader program
     shader.Use();
@@ -151,7 +152,7 @@ void ParticleEmitter::CreateVAO()
     glEnableVertexAttribArray(4);
     glBindBuffer(GL_ARRAY_BUFFER, texture_VBO);
     glVertexAttribIPointer(4, 1, GL_INT, sizeof(int) * 1, (void *)0);
-    // glVertexAttribDivisor(4, 1);
+    glVertexAttribDivisor(4, 1);
     // reset
     glBindVertexArray(0);
 }
@@ -183,8 +184,6 @@ void ParticleEmitter::BindPositionVBO()
 
 void ParticleEmitter::SetPactilesAmount(int amount)
 {
-    if (amount == particles.size())
-        return;
     this->particles.resize(amount);
     for (size_t i = 0; i < amount; i++)
     {
@@ -225,6 +224,7 @@ void ParticleEmitter::SetTimeToLive(int starting, int dispersion)
 void ParticleEmitter::AddTextureHandle(GLuint64 handle)
 {
     texture_handles.push_back(handle);
+    particle_parameters.textures_avaiable = texture_handles.size();
 }
 
 void ParticleEmitter::GetRequiredAngles(AngleCacheTable &angles, Camera &camera, float texture_density)
@@ -268,6 +268,7 @@ void ParticleEmitter::GetRequiredAngles(GeneratorStore &store, Camera &camera, f
 void ParticleEmitter::SetParticleProtype(std::unique_ptr<Particle> prototype_ptr)
 {
     this->particle_prototype = std::move(prototype_ptr);
+    SetPactilesAmount(particles.size()); // clear
 }
 
 ParticleEmitter::ParticleEmitter(int particles, std::unique_ptr<Particle> particle_prototype_ptr)
@@ -324,6 +325,6 @@ void ParticleEmitter::CalculateUVs(Camera &camera)
 void ParticleEmitter::BindTextureVBO()
 {
     glBindBuffer(GL_ARRAY_BUFFER, texture_VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(int) * particles.size() * 1, particle_texture_handle.data(), GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(int) * particle_texture_handle.size() * 1, &particle_texture_handle[0], GL_STATIC_DRAW);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 }

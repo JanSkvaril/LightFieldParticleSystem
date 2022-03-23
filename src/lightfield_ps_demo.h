@@ -2,6 +2,7 @@
 #define LIGHTFIELD_PS_DEMO_CLASS_DEF
 #include "generator_store.h"
 #include "particle_emitter.h"
+
 #include "model.h"
 
 #include <list>

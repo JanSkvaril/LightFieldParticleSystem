@@ -19,7 +19,7 @@ float bilinear(vec4 w, vec4 q) {
 
 void main()
 {
-    sampler2D u_texture = sampler2D(allTheSamplers[ParticleTexture%2]);
+    sampler2D u_texture = sampler2D(allTheSamplers[ParticleTexture]);
     vec4 col = vec4(1.0, 1.0, 1.0, 1.0);
     
     vec4 q11 = texture(u_texture, firstsecond.xy);

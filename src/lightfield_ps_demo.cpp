@@ -1,5 +1,6 @@
 #include "lightfield_ps_demo.h"
-
+#include "particle_random_model.h"
+#include "particle_leaf.h"
 LightFieldPsDemo::LightFieldPsDemo() : particles(100)
 {
 }
@@ -36,7 +37,7 @@ void LightFieldPsDemo::Generate()
 
 void LightFieldPsDemo::SetPresetBalloons()
 {
-    particles.SetParticleProtype(std::make_unique<Particle>());
+    particles.SetParticleProtype(std::make_unique<ParticleRandomModel>());
     generator_store.Clear();
     camera.LookAt(glm::vec3(0.0f, 0.0f, -5.0f), glm::vec3(0.0f, 0.0f, 0.0f));
 
