@@ -24,6 +24,7 @@ public:
     void NotifyChangeAtAngle(glm::ivec2 position);
     void Regenerate();
     void SetLightColor(glm::vec3 color);
+    void ShouldUseLight(bool use_light);
     AngleCacheTable &GetCacheTable();
     void SetParams(GeneratorParameters params);
     const GeneratorParameters &Parameters;

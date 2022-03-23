@@ -217,3 +217,9 @@ void Generator::SetLightColor(glm::vec3 color)
     this->generator_params.model_light_color = color;
     ResetCache();
 }
+
+void Generator::ShouldUseLight(bool use_light)
+{
+    this->generator_params.use_light = use_light;
+    ResetCache();
+}

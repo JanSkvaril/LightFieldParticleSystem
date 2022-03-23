@@ -229,6 +229,16 @@ void UiManager::AddLFPS(LightFieldPsDemo *lfps)
             [generator]()
             { return generator->Parameters.model_rotation.z; });
         gui->add_group("Light");
+        gui->add_variable<bool>(
+            "Use baked-in light",
+            [generator](bool value)
+            {
+                generator->ShouldUseLight(value);
+            },
+            [generator]()
+            {
+                return generator->Parameters.use_light;
+            });
         gui->add_variable<nanogui::Color>(
             "Color",
             [generator](nanogui::Color value)
