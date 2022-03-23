@@ -44,6 +44,7 @@ public:
     const ParticleParameters &Parameters;
 
 protected:
+    void CalculateUVs(Camera& camera);
     ParticleParameters particle_parameters;
     std::unique_ptr<Particle> particle_prototype;
     std::vector<GLuint64> texture_handles;

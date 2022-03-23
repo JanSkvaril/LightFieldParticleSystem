@@ -218,29 +218,10 @@ void ParticleEmitter::AddTextureHandle(GLuint64 handle)
 
 void ParticleEmitter::GetRequiredAngles(AngleCacheTable &angles, Camera &camera, float texture_density)
 {
-    const float pi = 3.1415926538;
-    int i = 0;
-    auto camera_position = camera.GetPosition();
-    for (auto &particle : particles)
+    CalculateUVs(camera);
+    for (auto &uv : uvs)
     {
-        auto rot = particle->GetRotation();
-
-        auto dir = (camera_position * 2.0f) - particle->GetPosition();
-        dir = glm::fastNormalize(dir);
-
-        float u = 0.5f + atan2(dir.z, dir.x) / (2.0f * pi);
-        float v = 0.5f + (asin(dir.y) / (2.0f * pi));
-        if (isnan(u) || isnan(v))
-            continue;
-        u += rot.x;
-        particle->SetUV({u, v});
-        auto corrected = particle->GetUV();
-        uvs[i++] = corrected;
-        u = corrected.x;
-        v = corrected.y;
-        u *= texture_density;
-        v *= texture_density;
-        angles.Activate((int)u, (int)v);
+        angles.Activate(uv.x * texture_density, uv.y * texture_density);
     }
 }
 
@@ -262,9 +243,14 @@ void ParticleEmitter::AddTextureHandle(GeneratorStore &store)
 
 void ParticleEmitter::GetRequiredAngles(GeneratorStore &store, Camera &camera, float texture_density)
 {
+    CalculateUVs(camera);
     for (const auto &generator : store.Generators)
     {
-        GetRequiredAngles(generator->GetCacheTable(), camera, texture_density);
+        auto &cache_table = generator->GetCacheTable();
+        for (auto &uv : uvs)
+        {
+            cache_table.Activate(uv.x * texture_density, uv.y * texture_density);
+        }
     }
 }
 
@@ -298,4 +284,27 @@ bool ParticleEmitter::ShouldParticlesRotate(bool rotate)
 bool ParticleEmitter::ShouldParticlesRotate()
 {
     return particle_parameters.random_x_rotation;
+}
+
+void ParticleEmitter::CalculateUVs(Camera &camera)
+{
+    const float pi = 3.1415926538;
+    int i = 0;
+    auto camera_position = camera.GetPosition();
+    for (auto &particle : particles)
+    {
+        auto rot = particle->GetRotation();
+
+        auto dir = (camera_position * 2.0f) - particle->GetPosition();
+        dir = glm::fastNormalize(dir);
+
+        float u = 0.5f + atan2(dir.z, dir.x) / (2.0f * pi);
+        float v = 0.5f + (asin(dir.y) / (2.0f * pi));
+        if (isnan(u) || isnan(v))
+            continue;
+        u += rot.x;
+        particle->SetUV({u, v});
+        auto corrected = particle->GetUV();
+        uvs[i++] = corrected;
+    }
 }
