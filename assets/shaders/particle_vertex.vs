@@ -4,15 +4,15 @@ layout(location = 1)in vec2 aTexCoord;
 layout(location = 2)in vec3 offset2;
 layout(location = 3)in vec2 particle_uv;
 out vec2 TexCoord;
-out vec2 Offset;
+out vec4 firstsecond;
+out vec4 weights;
 
 uniform mat4 model; // emittor rotation
 uniform mat4 view; // emittor position
 uniform mat4 projection;
-uniform vec3 offset;
 uniform vec2 camera_angle;
 uniform vec3 camera_pos;
-
+uniform float u_density;
 #define PI 3.1415926538
 
 void main()
@@ -43,5 +43,23 @@ void main()
     // angle.x = 0.5 + atan(dir.z, dir.x) / (2.0 * PI);
     // angle.y = 0.5 + (asin(dir.y) / PI);
     
-    Offset = angle.xy;
+    float zoom = u_density;
+    vec2 pos = aTexCoord.xy;
+    vec2 m = vec2(angle.x, angle.y) * (zoom);
+    
+    vec2 u1 = floor(m);
+    pos /= zoom;
+    vec2 first = vec2(pos.x + u1.x / zoom, pos.y + u1.y / zoom);
+    
+    vec2 u2 = u1 + 1.0;
+    vec2 second = vec2(pos.x + u2.x / zoom, pos.y + u2.y / zoom);
+    firstsecond = vec4(first.xy, second.xy);
+    vec2 xy = m;
+    float x = xy.x;
+    float y = xy.y;
+    float w1 = (u2.x - x) * (u2.y - y) / (u2.x - u1.x) * (u2.y - u1.y);
+    float w2 = (u2.x - x) * (y - u1.y) / (u2.x - u1.x) * (u2.y - u1.y);
+    float w3 = (x - u1.x) * (u2.y - y) / (u2.x - u1.x) * (u2.y - u1.y);
+    float w4 = (x - u1.x) * (y - u1.y) / (u2.x - u1.x) * (u2.y - u1.y);
+    weights = vec4(w1, w2, w3, w4);
 }

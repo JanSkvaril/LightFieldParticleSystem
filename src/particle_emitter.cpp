@@ -5,6 +5,7 @@
 #include <tgmath.h>
 #include "camera.h"
 #include "glm/gtx/rotate_vector.hpp"
+
 float atan22(float y, float x)
 {
     bool s = (abs(x) > abs(y));
@@ -291,6 +292,7 @@ void ParticleEmitter::CalculateUVs(Camera &camera)
     const float pi = 3.1415926538;
     int i = 0;
     auto camera_position = camera.GetPosition();
+
     for (auto &particle : particles)
     {
         auto rot = particle->GetRotation();
