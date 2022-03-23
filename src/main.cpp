@@ -69,7 +69,7 @@ int main()
     Skybox skybox;
     float time = 0.0f;
     LightFieldPsDemo lfps;
-    lfps.SetPresetBasic();
+    lfps.SetPresetBalloons();
     UiManager ui(window);
     ui.AddLFPS(&lfps);
     std::cout << glGetString(GL_VERSION) << "\n";
@@ -104,17 +104,6 @@ int main()
             rec.Draw(glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 1.0f));
         }
         ui.Draw();
-        //(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f));
-        // Draw nanogui
-        // ps.SetPactilesAmount(ui.config.amount_of_pacticles);
-        // ps.SetGravity(ui.config.gravity_strength, ui.config.gravity_direction);
-        // ps.ShouldShowBorders(ui.config.show_border);
-        // ps.SetSpeed(ui.config.particle_speed);
-        // ps.SetTimeToLive(ui.config.starting_time_to_live, ui.config.time_to_live_dispersion);
-        // generator.SetModelRotation(ui.config.model_rotation);
-        // generator.ChangeDensity(ui.config.density);
-        // // generator.ChangeResolution(ui.config.resolution);
-        // gen_store.AllGenerate();
 
         glfwSwapBuffers(window);
         glfwPollEvents();

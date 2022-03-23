@@ -19,8 +19,10 @@ public:
     glm::vec2 GetUV();
     void SetUV(glm::vec2 uv);
     virtual std::unique_ptr<Particle> clone();
+    int GetTextureID();
 
 protected:
+    int texture_id = 0;
     virtual void SimulateMovement(float time);
     virtual void UpdatePhysics(float time);
     ParticleParameters *params;

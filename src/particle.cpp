@@ -115,3 +115,8 @@ std::unique_ptr<Particle> Particle::clone()
 {
     return std::make_unique<Particle>();
 }
+
+int Particle::GetTextureID()
+{
+    return texture_id;
+}

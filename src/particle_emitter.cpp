@@ -48,6 +48,7 @@ void ParticleEmitter::Update()
         particle->Update(time);
         positions[i] = particle->GetPosition();
         uvs[i] = particle->GetUV();
+        particle_texture_handle[i] = particle->GetTextureID();
         i++;
     }
 }
@@ -63,6 +64,7 @@ void ParticleEmitter::Draw(Camera &camera, float texture_density)
     SortByDepth(camera);
     BindPositionVBO();
     BindUVVBO();
+    BindTextureVBO();
     // texture.Bind();
     //  load shader program
     shader.Use();
@@ -114,6 +116,8 @@ void ParticleEmitter::CreateVAO()
     glGenBuffers(1, &uv_VBO);
     BindUVVBO();
 
+    glGenBuffers(1, &texture_VBO);
+    BindTextureVBO();
     float vertices[] = {
         1.0f, 1.0f, 0.0f, 1.0f, 1.0f,
         1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
@@ -143,6 +147,11 @@ void ParticleEmitter::CreateVAO()
     glBindBuffer(GL_ARRAY_BUFFER, uv_VBO);
     glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void *)0);
     glVertexAttribDivisor(3, 1);
+    // particle texture handle
+    glEnableVertexAttribArray(4);
+    glBindBuffer(GL_ARRAY_BUFFER, texture_VBO);
+    glVertexAttribIPointer(4, 1, GL_INT, sizeof(int) * 1, (void *)0);
+    // glVertexAttribDivisor(4, 1);
     // reset
     glBindVertexArray(0);
 }
@@ -184,6 +193,7 @@ void ParticleEmitter::SetPactilesAmount(int amount)
 
     this->positions.resize(amount);
     this->uvs.resize(amount);
+    this->particle_texture_handle.resize(amount);
     Reset();
 }
 
@@ -309,4 +319,11 @@ void ParticleEmitter::CalculateUVs(Camera &camera)
         auto corrected = particle->GetUV();
         uvs[i++] = corrected;
     }
+}
+
+void ParticleEmitter::BindTextureVBO()
+{
+    glBindBuffer(GL_ARRAY_BUFFER, texture_VBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(int) * particles.size() * 1, particle_texture_handle.data(), GL_STATIC_DRAW);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
 }

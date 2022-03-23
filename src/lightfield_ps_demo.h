@@ -14,7 +14,7 @@ public:
     void Draw();
     void Generate();
     void SetPresetBasic();
-
+    void SetPresetBalloons();
     Camera camera;
 
     ParticleEmitter particles;

@@ -44,7 +44,7 @@ public:
     const ParticleParameters &Parameters;
 
 protected:
-    void CalculateUVs(Camera& camera);
+    void CalculateUVs(Camera &camera);
     ParticleParameters particle_parameters;
     std::unique_ptr<Particle> particle_prototype;
     std::vector<GLuint64> texture_handles;
@@ -52,6 +52,7 @@ protected:
     std::vector<std::unique_ptr<Particle>> particles;
     std::vector<glm::vec3> positions;
     std::vector<glm::vec2> uvs;
+    std::vector<int> particle_texture_handle;
     float time = 12145.0f;
     Shader shader;
     void ResetParticle(Particle &particle);
@@ -60,9 +61,11 @@ protected:
     void CreateVAO();
     void BindPositionVBO();
     void BindUVVBO();
+    void BindTextureVBO();
     unsigned int VAO, VBO;
     unsigned int position_VBO;
     unsigned int uv_VBO;
+    unsigned int texture_VBO;
     int amount_of_particles;
 };
 

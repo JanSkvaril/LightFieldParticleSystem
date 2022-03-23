@@ -17,6 +17,8 @@ struct ParticleParameters
     bool random_rotation_speed = false;
     float rotation_multiplier = 0.00f;
     float x_rotation_speed = 0.00f;
+
+    int textures_avaiable = 1;
 };
 
 #endif

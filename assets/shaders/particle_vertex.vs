@@ -3,9 +3,11 @@ layout(location = 0)in vec3 aPos;
 layout(location = 1)in vec2 aTexCoord;
 layout(location = 2)in vec3 offset2;
 layout(location = 3)in vec2 particle_uv;
+layout(location = 4)in int particle_texture;
 out vec2 TexCoord;
 out vec4 firstsecond;
 out vec4 weights;
+flat out int ParticleTexture;
 
 uniform mat4 model; // emittor rotation
 uniform mat4 view; // emittor position
@@ -17,7 +19,7 @@ uniform float u_density;
 
 void main()
 {
-    
+    ParticleTexture = particle_texture;
     vec3 camera_normal = vec3(view[0][2], view[1][2], view[2][2]);
     camera_normal = - camera_normal;
     vec3 up = vec3(view[0][1], view[1][1], view[2][1]);

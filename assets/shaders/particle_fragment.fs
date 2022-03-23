@@ -6,6 +6,7 @@ out vec4 FragColor;
 in vec2 TexCoord;
 in vec4 firstsecond;
 in vec4 weights;
+flat in int ParticleTexture;
 
 uniform vec3 offset;
 uniform mat4 view; // emittor position
@@ -18,7 +19,7 @@ float bilinear(vec4 w, vec4 q) {
 
 void main()
 {
-    sampler2D u_texture = sampler2D(allTheSamplers[0]);
+    sampler2D u_texture = sampler2D(allTheSamplers[ParticleTexture%2]);
     vec4 col = vec4(1.0, 1.0, 1.0, 1.0);
     
     vec4 q11 = texture(u_texture, firstsecond.xy);
