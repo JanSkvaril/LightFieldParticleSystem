@@ -211,3 +211,9 @@ void Generator::SetParams(GeneratorParameters params)
 {
     this->generator_params = params;
 }
+
+void Generator::SetLightColor(glm::vec3 color)
+{
+    this->generator_params.model_light_color = color;
+    ResetCache();
+}

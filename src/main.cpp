@@ -83,11 +83,14 @@ int main()
         time += 0.04f;
 
         processInput(window);
+        glEnable(GL_BLEND);
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+        lfps.Generate();
+        glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
         if (ui.config.show_skybox)
         {
             skybox.Draw(lfps.camera);
@@ -102,7 +105,6 @@ int main()
             rec.Draw(glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 1.0f));
         }
         ui.Draw();
-        lfps.Generate();
         //(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f));
         // Draw nanogui
         // ps.SetPactilesAmount(ui.config.amount_of_pacticles);

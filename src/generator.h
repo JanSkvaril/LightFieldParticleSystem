@@ -23,6 +23,7 @@ public:
     void ResetCache();
     void NotifyChangeAtAngle(glm::ivec2 position);
     void Regenerate();
+    void SetLightColor(glm::vec3 color);
     AngleCacheTable &GetCacheTable();
     void SetParams(GeneratorParameters params);
     const GeneratorParameters &Parameters;

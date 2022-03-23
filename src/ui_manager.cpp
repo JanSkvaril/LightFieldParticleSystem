@@ -229,6 +229,18 @@ void UiManager::AddLFPS(LightFieldPsDemo *lfps)
             [generator]()
             { return generator->Parameters.model_rotation.z; });
         gui->add_group("Light");
+        gui->add_variable<nanogui::Color>(
+            "Color",
+            [generator](nanogui::Color value)
+            {
+                glm::vec3 col = glm::vec3(value.r(), value.g(), value.b());
+                generator->SetLightColor(col);
+            },
+            [generator]()
+            {
+                glm::vec3 col = generator->Parameters.model_light_color;
+                return nanogui::Color{col.r, col.g, col.b, 1.0f};
+            });
     }
 
     screen->perform_layout();
