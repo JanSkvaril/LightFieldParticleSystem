@@ -78,6 +78,7 @@ int main()
     while (!glfwWindowShouldClose(window))
     {
         ui.HandleCameraControls(lfps.camera);
+
         lfps.Update();
         time += 0.04f;
 
@@ -103,6 +104,7 @@ int main()
             lfps.generator_store.Generators.front()->Bind();
             rec.Draw(glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 1.0f));
         }
+
         ui.Draw();
 
         glfwSwapBuffers(window);

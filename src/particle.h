@@ -20,6 +20,7 @@ public:
     void SetUV(glm::vec2 uv);
     virtual std::unique_ptr<Particle> clone();
     int GetTextureID();
+    float distance;
 
 protected:
     int texture_id = 0;

@@ -9,6 +9,8 @@ void LightFieldPsDemo::Update()
 {
     // ui.HandleCameraControls(camera);
     particles.Update();
+    particles.SortByDepth(camera);
+    particles.UpdateBuffers();
     particles.GetRequiredAngles(generator_store, camera, generator_store.GetDensity());
 }
 
@@ -41,11 +43,13 @@ void LightFieldPsDemo::SetPresetBalloons()
     generator_store.Clear();
     camera.LookAt(glm::vec3(0.0f, 0.0f, -5.0f), glm::vec3(0.0f, 0.0f, 0.0f));
 
-    loaded_models.push_front(Model("models/baloon.obj"));
+    loaded_models.push_front(Model("models/leaf.obj"));
 
     int density = 21;
     generator_store.AddGenerator(std::make_shared<Generator>(&loaded_models.front(), density, 5000));
     generator_store.AddGenerator(std::make_shared<Generator>(&loaded_models.front(), density, 5000));
     generator_store.Generators.back()->SetLightColor(glm::vec3(1.0, 0.0, 0.0));
+    generator_store.AddGenerator(std::make_shared<Generator>(&loaded_models.front(), density, 5000));
+    generator_store.Generators.back()->SetLightColor(glm::vec3(0.0, 0.5, 0.5));
     particles.AddTextureHandle(generator_store);
 }

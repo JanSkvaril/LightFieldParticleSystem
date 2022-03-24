@@ -42,6 +42,8 @@ public:
     void GetRequiredAngles(GeneratorStore &store, Camera &camera, float texture_density);
     void SetParticleProtype(std::unique_ptr<Particle> prototype_ptr);
     const ParticleParameters &Parameters;
+    void SortByDepth(Camera &camera);
+    void UpdateBuffers();
 
 protected:
     void CalculateUVs(Camera &camera);
@@ -57,7 +59,6 @@ protected:
     Shader shader;
     void ResetParticle(Particle &particle);
     void DrawParticle(Particle &particle);
-    void SortByDepth(Camera &camera);
     void CreateVAO();
     void BindPositionVBO();
     void BindUVVBO();

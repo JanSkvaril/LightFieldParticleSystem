@@ -15,5 +15,5 @@ ParticleRandomModel::ParticleRandomModel(const Particle &rhs)
 void ParticleRandomModel::Reset()
 {
     Particle::Reset();
-    texture_id = rand() % 2;
+    texture_id = rand() % params->textures_avaiable;
 }

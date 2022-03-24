@@ -5,7 +5,8 @@
 #include <tgmath.h>
 #include "camera.h"
 #include "glm/gtx/rotate_vector.hpp"
-
+#include <execution>
+#include <algorithm>
 float atan22(float y, float x)
 {
     bool s = (abs(x) > abs(y));
@@ -43,14 +44,8 @@ void ParticleEmitter::Update()
 {
     int i = 0;
     time += 0.01f;
-    for (auto &particle : particles)
-    {
-        particle->Update(time);
-        positions[i] = particle->GetPosition();
-        uvs[i] = particle->GetUV();
-        particle_texture_handle[i] = particle->GetTextureID();
-        i++;
-    }
+    std::for_each(std::execution::par, particles.begin(), particles.end(), [&](auto &particle)
+                  { particle->Update(time); });
 }
 
 void ParticleEmitter::ResetParticle(Particle &particle)
@@ -61,11 +56,9 @@ void ParticleEmitter::ResetParticle(Particle &particle)
 void ParticleEmitter::Draw(Camera &camera, float texture_density)
 {
 
-    SortByDepth(camera);
     BindPositionVBO();
     BindUVVBO();
     BindTextureVBO();
-    std::cout << particle_texture_handle[1] << " " << particle_texture_handle[2] << "\n";
     // texture.Bind();
     //  load shader program
     shader.Use();
@@ -101,8 +94,10 @@ void ParticleEmitter::Draw(Camera &camera, float texture_density)
 
     // bind VAO
     glBindVertexArray(VAO);
+    //  glEnable(GL_DEPTH_TEST);
     glDrawArraysInstanced(GL_TRIANGLES, 0, GL_UNSIGNED_INT, particles.size());
-    // draw particles
+    // glDisable(GL_DEPTH_TEST);
+    //  draw particles
     for (auto &particle : particles)
     {
         // DrawParticle(particle);
@@ -166,12 +161,13 @@ void ParticleEmitter::DrawParticle(Particle &particle)
 
 void ParticleEmitter::SortByDepth(Camera &camera)
 {
-    return;
-    std::sort(positions.begin(), positions.end(), [&camera](glm::vec3 p_a, glm::vec3 p_b)
+    const auto camera_pos = camera.GetPosition();
+    std::for_each(std::execution::par, particles.begin(), particles.end(), [&camera_pos](auto &p_a)
+                  { p_a->distance = glm::fastDistance(camera_pos, p_a->GetPosition()); });
+    std::sort(std::execution::par, particles.begin(), particles.end(), [](auto &p_a, auto &p_b)
               { 
-                  const auto camera_pos = camera.GetPosition();
-                  auto dist_a = glm::fastDistance(camera_pos, p_a);
-                  auto dist_b = glm::fastDistance(camera_pos, p_b);
+                  const auto dist_a = p_a->distance;
+                  const auto dist_b = p_b->distance;
                   return dist_a > dist_b; });
 }
 
@@ -303,9 +299,8 @@ void ParticleEmitter::CalculateUVs(Camera &camera)
     const float pi = 3.1415926538;
     int i = 0;
     auto camera_position = camera.GetPosition();
-
-    for (auto &particle : particles)
-    {
+    std::for_each(std::execution::par, particles.begin(), particles.end(), [&camera_position, pi](auto &particle)
+                  {
         auto rot = particle->GetRotation();
 
         auto dir = (camera_position * 2.0f) - particle->GetPosition();
@@ -313,12 +308,14 @@ void ParticleEmitter::CalculateUVs(Camera &camera)
 
         float u = 0.5f + atan2(dir.z, dir.x) / (2.0f * pi);
         float v = 0.5f + (asin(dir.y) / (2.0f * pi));
-        if (isnan(u) || isnan(v))
-            continue;
+       // if (isnan(u) || isnan(v))
+            
         u += rot.x;
         particle->SetUV({u, v});
-        auto corrected = particle->GetUV();
-        uvs[i++] = corrected;
+        auto corrected = particle->GetUV(); });
+    for (size_t i = 0; i < uvs.size(); i++)
+    {
+        uvs[i] = particles[i]->GetUV();
     }
 }
 
@@ -327,4 +324,17 @@ void ParticleEmitter::BindTextureVBO()
     glBindBuffer(GL_ARRAY_BUFFER, texture_VBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(int) * particle_texture_handle.size() * 1, &particle_texture_handle[0], GL_STATIC_DRAW);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
+}
+
+void ParticleEmitter::UpdateBuffers()
+{
+    int i = 0;
+    time += 0.01f;
+    for (auto &particle : particles)
+    {
+        positions[i] = particle->GetPosition();
+        uvs[i] = particle->GetUV();
+        particle_texture_handle[i] = particle->GetTextureID();
+        i++;
+    }
 }
