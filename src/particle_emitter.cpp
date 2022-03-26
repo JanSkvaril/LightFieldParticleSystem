@@ -26,27 +26,20 @@ ParticleEmitter::ParticleEmitter(int particles)
       real_light_shader("shaders/particle_vertex.vs", "shaders/particle_fragment_light.fs"),
       Parameters(particle_parameters)
 {
-    particle_prototype = std::make_unique<Particle>();
     SetPactilesAmount(particles);
+
     Reset();
     CreateVAO();
 }
 
 void ParticleEmitter::Reset()
 {
-    for (auto &particle : particles)
-    {
-        particle->SetParticleParameters(&particle_parameters);
-        ResetParticle(*particle);
-    }
+    simulator.Reset(&particle_parameters);
 }
 
 void ParticleEmitter::Update()
 {
-    int i = 0;
-    time += 0.01f;
-    std::for_each(std::execution::par, particles.begin(), particles.end(), [&](auto &particle)
-                  { particle->Update(time); });
+    simulator.Update();
 }
 
 void ParticleEmitter::ResetParticle(Particle &particle)
@@ -97,13 +90,9 @@ void ParticleEmitter::Draw(Camera &camera, float texture_density)
     // bind VAO
     glBindVertexArray(VAO);
     //  glEnable(GL_DEPTH_TEST);
-    glDrawArraysInstanced(GL_TRIANGLES, 0, GL_UNSIGNED_INT, particles.size());
+    glDrawArraysInstanced(GL_TRIANGLES, 0, GL_UNSIGNED_INT, simulator.Particles.size());
     // glDisable(GL_DEPTH_TEST);
     //  draw particles
-    for (auto &particle : particles)
-    {
-        // DrawParticle(particle);
-    }
 }
 
 void ParticleEmitter::CreateVAO()
@@ -164,10 +153,10 @@ void ParticleEmitter::DrawParticle(Particle &particle)
 void ParticleEmitter::SortByDepth(Camera &camera)
 {
     const auto camera_pos = camera.GetPosition();
-    std::for_each(std::execution::par, particles.begin(), particles.end(), [&camera_pos](auto &p_a)
+    std::for_each(std::execution::par, simulator.Particles.begin(), simulator.Particles.end(), [&camera_pos](auto &p_a)
                   { p_a->distance = glm::fastDistance(camera_pos, p_a->GetPosition()); });
-    std::sort(std::execution::par, particles.begin(), particles.end(), [](auto &p_a, auto &p_b)
-              { 
+    std::sort(std::execution::par, simulator.Particles.begin(), simulator.Particles.end(), [](auto &p_a, auto &p_b)
+              {
                   const auto dist_a = p_a->distance;
                   const auto dist_b = p_b->distance;
                   return dist_a > dist_b; });
@@ -176,18 +165,14 @@ void ParticleEmitter::SortByDepth(Camera &camera)
 void ParticleEmitter::BindPositionVBO()
 {
     glBindBuffer(GL_ARRAY_BUFFER, position_VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(float) * particles.size() * 3, &positions[0], GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(float) * simulator.Particles.size() * 3, &positions[0], GL_STATIC_DRAW);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
 void ParticleEmitter::SetPactilesAmount(int amount)
 {
-    this->particles.resize(amount);
-    for (size_t i = 0; i < amount; i++)
-    {
-        this->particles[i] = particle_prototype->clone();
-    }
-
+    simulator.Resize(amount);
+    simulator.Reset(&particle_parameters);
     this->positions.resize(amount);
     this->uvs.resize(amount);
     this->particle_texture_handle.resize(amount);
@@ -237,7 +222,7 @@ void ParticleEmitter::GetRequiredAngles(AngleCacheTable &angles, Camera &camera,
 void ParticleEmitter::BindUVVBO()
 {
     glBindBuffer(GL_ARRAY_BUFFER, uv_VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(float) * particles.size() * 2, &uvs[0], GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(float) * simulator.Particles.size() * 2, &uvs[0], GL_STATIC_DRAW);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
@@ -265,8 +250,8 @@ void ParticleEmitter::GetRequiredAngles(GeneratorStore &store, Camera &camera, f
 
 void ParticleEmitter::SetParticleProtype(std::unique_ptr<Particle> prototype_ptr)
 {
-    this->particle_prototype = std::move(prototype_ptr);
-    SetPactilesAmount(particles.size()); // clear
+    simulator.SetParticlePrototype(std::move(prototype_ptr));
+    simulator.Reset(&particle_parameters);
 }
 
 ParticleEmitter::ParticleEmitter(int particles, std::unique_ptr<Particle> particle_prototype_ptr)
@@ -301,7 +286,8 @@ void ParticleEmitter::CalculateUVs(Camera &camera)
     const float pi = 3.1415926538;
     int i = 0;
     auto camera_position = camera.GetPosition();
-    std::for_each(std::execution::par, particles.begin(), particles.end(), [&camera_position, pi](auto &particle)
+
+    std::for_each(std::execution::par, simulator.Particles.begin(), simulator.Particles.end(), [&camera_position, pi](auto &particle)
                   {
         auto rot = particle->GetRotation();
 
@@ -310,14 +296,14 @@ void ParticleEmitter::CalculateUVs(Camera &camera)
 
         float u = 0.5f + atan2(dir.z, dir.x) / (2.0f * pi);
         float v = 0.5f + (asin(dir.y) / (2.0f * pi));
-       // if (isnan(u) || isnan(v))
-            
+     
+
         u += rot.x;
         particle->SetUV({u, v});
         auto corrected = particle->GetUV(); });
     for (size_t i = 0; i < uvs.size(); i++)
     {
-        uvs[i] = particles[i]->GetUV();
+        uvs[i] = simulator.Particles[i]->GetUV();
     }
 }
 
@@ -332,7 +318,7 @@ void ParticleEmitter::UpdateBuffers()
 {
     int i = 0;
     time += 0.01f;
-    for (auto &particle : particles)
+    for (auto &particle : simulator.Particles)
     {
         positions[i] = particle->GetPosition();
         uvs[i] = particle->GetUV();

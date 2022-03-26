@@ -17,7 +17,7 @@
 #include "particle_params.h"
 #include "angle_cachetable.h"
 #include "generator_store.h"
-
+#include "particle_simulator.h"
 #include <memory>
 class ParticleEmitter
 {
@@ -49,6 +49,7 @@ public:
     void UseRealLightShader();
 
 protected:
+    ParticleSimulator simulator;
     enum class ParticleShaderType
     {
         Basic,
@@ -58,10 +59,10 @@ protected:
     Shader &GetActiveShader();
     void CalculateUVs(Camera &camera);
     ParticleParameters particle_parameters;
-    std::unique_ptr<Particle> particle_prototype;
+
     std::vector<GLuint64> texture_handles;
     int show_borders = 0;
-    std::vector<std::unique_ptr<Particle>> particles;
+
     std::vector<glm::vec3> positions;
     std::vector<glm::vec2> uvs;
     std::vector<int> particle_texture_handle;
