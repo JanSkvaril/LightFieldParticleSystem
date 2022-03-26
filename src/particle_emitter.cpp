@@ -238,6 +238,7 @@ void ParticleEmitter::AddTextureHandle(GeneratorStore &store)
 void ParticleEmitter::GetRequiredAngles(GeneratorStore &store, Camera &camera, float texture_density)
 {
     CalculateUVs(camera);
+
     for (const auto &generator : store.Generators)
     {
         auto &cache_table = generator->GetCacheTable();
@@ -283,6 +284,7 @@ bool ParticleEmitter::ShouldParticlesRotate()
 
 void ParticleEmitter::CalculateUVs(Camera &camera)
 {
+
     const float pi = 3.1415926538;
     int i = 0;
     auto camera_position = camera.GetPosition();
