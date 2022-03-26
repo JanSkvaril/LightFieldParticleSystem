@@ -187,12 +187,15 @@ void UiManager::AddLFPS(LightFieldPsDemo *lfps)
         { gs->SetDensity(value); },
         [gs]()
         { return gs->GetDensity(); });
-    // gui->add_variable<int>(
-    //     "Resolution",
-    //     [gs](int value)
-    //     { gs->SetResolution(value); },
-    //     [gs]()
-    //     { return gs->GetRelution(); });
+    gui->add_variable<int>(
+        "Resolution",
+        [gs, ps](int value)
+        {
+            gs->SetResolution(value);
+            ps->AddTextureHandle(gs);
+        },
+        [gs]()
+        { return gs->GetRelution(); });
 
     // model
     for (auto &generator : gs->Generators)

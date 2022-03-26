@@ -38,6 +38,7 @@ public:
     void SetTimeToLive(int starting, int dispersion);
     void AddTextureHandle(GLuint64 handle);
     void AddTextureHandle(GeneratorStore &store);
+    void AddTextureHandle(GeneratorStore *store);
     void GetRequiredAngles(AngleCacheTable &angles, Camera &camera, float texture_density);
     void GetRequiredAngles(GeneratorStore &store, Camera &camera, float texture_density);
     void SetParticleProtype(std::unique_ptr<Particle> prototype_ptr);
