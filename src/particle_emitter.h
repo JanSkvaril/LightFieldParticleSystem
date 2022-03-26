@@ -44,8 +44,18 @@ public:
     const ParticleParameters &Parameters;
     void SortByDepth(Camera &camera);
     void UpdateBuffers();
+    void SimulateSteps(int steps);
+    void UseBasicShader();
+    void UseRealLightShader();
 
 protected:
+    enum class ParticleShaderType
+    {
+        Basic,
+        RealLight,
+    };
+    ParticleShaderType active_shader = ParticleShaderType::Basic;
+    Shader &GetActiveShader();
     void CalculateUVs(Camera &camera);
     ParticleParameters particle_parameters;
     std::unique_ptr<Particle> particle_prototype;
@@ -57,6 +67,7 @@ protected:
     std::vector<int> particle_texture_handle;
     float time = 12145.0f;
     Shader shader;
+    Shader real_light_shader;
     void ResetParticle(Particle &particle);
     void DrawParticle(Particle &particle);
     void CreateVAO();

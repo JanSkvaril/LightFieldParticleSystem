@@ -69,7 +69,7 @@ int main()
     Skybox skybox;
     float time = 0.0f;
     LightFieldPsDemo lfps;
-    lfps.SetPresetBalloons();
+    lfps.SetPresetBasic();
     UiManager ui(window);
     ui.AddLFPS(&lfps);
     std::cout << glGetString(GL_VERSION) << "\n";

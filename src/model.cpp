@@ -13,41 +13,17 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
-Model::Model(std::string path) : shader("shaders/basic_vertex.vs", "shaders/basic_fragment.fs")
+Model::Model(std::string path)
 {
-    Assimp::Importer import;
-    const aiScene *scene = import.ReadFile(path, 0);
-    if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
-    {
-        std::cout << "ERROR::ASSIMP::" << import.GetErrorString() << std::endl;
-        exit(69);
-    }
-    auto mesh = scene->mMeshes[0];
-    for (unsigned int i = 0; i < mesh->mNumFaces; i++)
-    {
-        aiFace face = mesh->mFaces[i];
-        for (unsigned int j = 0; j < face.mNumIndices; j++)
-            indicies.push_back(face.mIndices[j]);
-    }
-    // exit(0);
-    for (unsigned int i = 0; i < mesh->mNumVertices; i++)
-    {
-        auto vert = mesh->mVertices[i];
-        auto normal = mesh->mNormals[i];
-        auto tx = mesh->mTextureCoords[0][i];
-        verticies.push_back(ModelVertex{
-            glm::vec3(vert.x, vert.y, vert.z),
-            glm::vec3(normal.x, normal.y, normal.z),
-            glm::vec2(tx.x, tx.y)});
-    }
-    // std::cout << "size " << meshes[0]->mNormals[0].x << "\n";
+    shader = std::make_unique<Shader>("shaders/basic_vertex.vs", "shaders/basic_fragment.fs");
+    LoadFromFile(path);
     Setup();
 }
 
 void Model::Draw(glm::vec3 rotation, glm::vec3 position, GeneratorParameters &generator_params)
 {
 
-    shader.Use();
+    shader->Use();
 
     glm::mat4 model = glm::mat4(1.0f);
     glm::mat4 view = glm::mat4(1.0f);
@@ -64,11 +40,11 @@ void Model::Draw(glm::vec3 rotation, glm::vec3 position, GeneratorParameters &ge
     projection = glm::perspective(glm::radians(45.0f), (float)10000 / (float)10000, 0.1f, 100.0f);
     auto color = generator_params.model_light_color;
     // set emittor object to uniforms
-    glUniformMatrix4fv(shader.GetUniformLocation("model"), 1, GL_FALSE, glm::value_ptr(model));
-    glUniformMatrix4fv(shader.GetUniformLocation("view"), 1, GL_FALSE, glm::value_ptr(view));
-    glUniformMatrix4fv(shader.GetUniformLocation("projection"), 1, GL_FALSE, glm::value_ptr(projection));
-    glUniform3fv(shader.GetUniformLocation("light_color"), 1, glm::value_ptr(color));
-    glUniform1i(shader.GetUniformLocation("use_light"), generator_params.use_light);
+    glUniformMatrix4fv(shader->GetUniformLocation("model"), 1, GL_FALSE, glm::value_ptr(model));
+    glUniformMatrix4fv(shader->GetUniformLocation("view"), 1, GL_FALSE, glm::value_ptr(view));
+    glUniformMatrix4fv(shader->GetUniformLocation("projection"), 1, GL_FALSE, glm::value_ptr(projection));
+    glUniform3fv(shader->GetUniformLocation("light_color"), 1, glm::value_ptr(color));
+    glUniform1i(shader->GetUniformLocation("use_light"), generator_params.use_light);
     glBindVertexArray(VAO);
     glDrawElements(GL_TRIANGLES, indicies.size(), GL_UNSIGNED_INT, 0);
     // glDrawArrays(GL_TRIANGLES, 0, GL_UNSIGNED_INT);
@@ -111,7 +87,7 @@ void Model::Draw()
 
 void Model::Draw(Camera &camera)
 {
-    shader.Use();
+    shader->Use();
 
     glm::mat4 model = glm::mat4(1.0f);
     glm::mat4 view = glm::mat4(1.0f);
@@ -124,12 +100,46 @@ void Model::Draw(Camera &camera)
     projection = glm::perspective(glm::radians(45.0f), (float)10000 / (float)10000, 0.1f, 100.0f);
 
     // set emittor object to uniforms
-    glUniformMatrix4fv(shader.GetUniformLocation("model"), 1, GL_FALSE, glm::value_ptr(model));
-    glUniformMatrix4fv(shader.GetUniformLocation("view"), 1, GL_FALSE, glm::value_ptr(view));
-    glUniformMatrix4fv(shader.GetUniformLocation("projection"), 1, GL_FALSE, glm::value_ptr(projection));
+    glUniformMatrix4fv(shader->GetUniformLocation("model"), 1, GL_FALSE, glm::value_ptr(model));
+    glUniformMatrix4fv(shader->GetUniformLocation("view"), 1, GL_FALSE, glm::value_ptr(view));
+    glUniformMatrix4fv(shader->GetUniformLocation("projection"), 1, GL_FALSE, glm::value_ptr(projection));
 
     glBindVertexArray(VAO);
     glDrawElements(GL_TRIANGLES, indicies.size(), GL_UNSIGNED_INT, 0);
     // glDrawArrays(GL_TRIANGLES, 0, GL_UNSIGNED_INT);
     glBindVertexArray(0);
+}
+
+void Model::LoadFromFile(std::string path)
+{
+    Assimp::Importer import;
+    const aiScene *scene = import.ReadFile(path, 0);
+    if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
+    {
+        std::cout << "ERROR::ASSIMP::" << import.GetErrorString() << std::endl;
+        exit(69);
+    }
+    auto mesh = scene->mMeshes[0];
+    for (unsigned int i = 0; i < mesh->mNumFaces; i++)
+    {
+        aiFace face = mesh->mFaces[i];
+        for (unsigned int j = 0; j < face.mNumIndices; j++)
+            indicies.push_back(face.mIndices[j]);
+    }
+    // exit(0);
+    for (unsigned int i = 0; i < mesh->mNumVertices; i++)
+    {
+        auto vert = mesh->mVertices[i];
+        auto normal = mesh->mNormals[i];
+        auto tx = mesh->mTextureCoords[0][i];
+        verticies.push_back(ModelVertex{
+            glm::vec3(vert.x, vert.y, vert.z),
+            glm::vec3(normal.x, normal.y, normal.z),
+            glm::vec2(tx.x, tx.y)});
+    }
+    // std::cout << "size " << meshes[0]->mNormals[0].x << "\n";
+}
+
+Model::Model()
+{
 }

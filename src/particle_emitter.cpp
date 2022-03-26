@@ -23,6 +23,7 @@ float atan22(float y, float x)
 ParticleEmitter::ParticleEmitter(int particles)
     : amount_of_particles(particles),
       shader("shaders/particle_vertex.vs", "shaders/particle_fragment.fs"),
+      real_light_shader("shaders/particle_vertex.vs", "shaders/particle_fragment_light.fs"),
       Parameters(particle_parameters)
 {
     particle_prototype = std::make_unique<Particle>();
@@ -61,7 +62,8 @@ void ParticleEmitter::Draw(Camera &camera, float texture_density)
     BindTextureVBO();
     // texture.Bind();
     //  load shader program
-    shader.Use();
+    Shader &used_shader = GetActiveShader();
+    used_shader.Use();
     // emittor object
     glm::mat4 model = glm::mat4(1.0f);
     glm::mat4 view = glm::mat4(1.0f);
@@ -83,14 +85,14 @@ void ParticleEmitter::Draw(Camera &camera, float texture_density)
     // std::cout << "Direction:    " << glm::to_string(dir) << "\n\n";
     //
     //  set emittor object to uniforms
-    glUniformMatrix4fv(shader.GetUniformLocation("model"), 1, GL_FALSE, glm::value_ptr(model));
-    glUniformMatrix4fv(shader.GetUniformLocation("view"), 1, GL_FALSE, glm::value_ptr(view));
-    glUniformMatrix4fv(shader.GetUniformLocation("projection"), 1, GL_FALSE, glm::value_ptr(projection));
-    glUniform2fv(shader.GetUniformLocation("camera_angle"), 1, glm::value_ptr(angle));
-    glUniform3fv(shader.GetUniformLocation("camera_pos"), 1, glm::value_ptr(camera_pos));
-    glUniform1f(shader.GetUniformLocation("u_density"), texture_density);
-    glUniform1i(shader.GetUniformLocation("show_border"), show_borders);
-    glUniformHandleui64vARB(shader.GetUniformLocation("allTheSamplers"), texture_handles.size(), &texture_handles[0]);
+    glUniformMatrix4fv(used_shader.GetUniformLocation("model"), 1, GL_FALSE, glm::value_ptr(model));
+    glUniformMatrix4fv(used_shader.GetUniformLocation("view"), 1, GL_FALSE, glm::value_ptr(view));
+    glUniformMatrix4fv(used_shader.GetUniformLocation("projection"), 1, GL_FALSE, glm::value_ptr(projection));
+    glUniform2fv(used_shader.GetUniformLocation("camera_angle"), 1, glm::value_ptr(angle));
+    glUniform3fv(used_shader.GetUniformLocation("camera_pos"), 1, glm::value_ptr(camera_pos));
+    glUniform1f(used_shader.GetUniformLocation("u_density"), texture_density);
+    glUniform1i(used_shader.GetUniformLocation("show_border"), show_borders);
+    glUniformHandleui64vARB(used_shader.GetUniformLocation("allTheSamplers"), texture_handles.size(), &texture_handles[0]);
 
     // bind VAO
     glBindVertexArray(VAO);
@@ -336,5 +338,37 @@ void ParticleEmitter::UpdateBuffers()
         uvs[i] = particle->GetUV();
         particle_texture_handle[i] = particle->GetTextureID();
         i++;
+    }
+}
+
+void ParticleEmitter::SimulateSteps(int steps)
+{
+    for (size_t i = 0; i < steps; i++)
+    {
+        Update();
+    }
+}
+
+void ParticleEmitter::UseBasicShader()
+{
+    active_shader = ParticleShaderType::Basic;
+}
+
+void ParticleEmitter::UseRealLightShader()
+{
+    active_shader = ParticleShaderType::RealLight;
+}
+
+Shader &ParticleEmitter::GetActiveShader()
+{
+    switch (active_shader)
+    {
+    case ParticleShaderType::RealLight:
+        return real_light_shader;
+        break;
+
+    default:
+        return shader;
+        break;
     }
 }

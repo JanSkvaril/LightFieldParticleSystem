@@ -69,7 +69,9 @@ add_executable(light_field_ps_bp src/main.cpp
     src/lightfield_ps_demo.h
     src/lightfield_ps_demo.cpp
     src/particle_random_model.h
-    src/particle_random_model.cpp)
+    src/particle_random_model.cpp
+    src/model_normals.h
+    src/model_normals.cpp)
 
 
 

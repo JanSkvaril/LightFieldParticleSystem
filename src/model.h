@@ -8,21 +8,23 @@
 #include <glm/vec3.hpp>
 #include "camera.h"
 #include "generator_params.h"
-
+#include <memory>
 class Model
 {
 public:
     Model(std::string path);
-    void Draw();
-    void Draw(glm::vec3 rotation, glm::vec3 position, GeneratorParameters &generator_params);
-    void Draw(Camera &camera);
+    Model();
+    virtual void Draw();
+    virtual void Draw(glm::vec3 rotation, glm::vec3 position, GeneratorParameters &generator_params);
+    virtual void Draw(Camera &camera);
 
 protected:
+    void LoadFromFile(std::string path);
     float time = 0.0f;
-    Shader shader;
+    std::unique_ptr<Shader> shader;
     unsigned int VAO, VBO, EBO;
     std::vector<unsigned int> indicies;
     std::vector<ModelVertex> verticies;
-    void Setup();
+    virtual void Setup();
 };
 #endif

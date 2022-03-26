@@ -8,6 +8,7 @@ out vec2 TexCoord;
 out vec4 firstsecond;
 out vec4 weights;
 flat out int ParticleTexture;
+out vec3 TexPosition;
 
 uniform mat4 model; // emittor rotation
 uniform mat4 view; // emittor position
@@ -35,7 +36,7 @@ void main()
     screen_pos = screen_pos / screen_pos.w;
     
     gl_Position = screen_pos;
-    
+    TexPosition = (word_space / word_space.w).xyz;
     TexCoord = vec2(aTexCoord.x, aTexCoord.y);
     
     //vec3 dir = +(camera_pos * 2.00) - offset2;

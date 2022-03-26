@@ -16,13 +16,14 @@ public:
     void Generate();
     void SetPresetBasic();
     void SetPresetBalloons();
+    void SetPresetRealLight();
     Camera camera;
 
     ParticleEmitter particles;
     GeneratorStore generator_store;
 
 private:
-    std::list<Model> loaded_models;
+    std::list<std::shared_ptr<Model>> loaded_models;
 
     TextReactangle texture_rectangle;
 };
