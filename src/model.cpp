@@ -143,3 +143,14 @@ void Model::LoadFromFile(std::string path)
 Model::Model()
 {
 }
+
+Model::ModelObjectBuffers Model::GetObjectBuffers()
+{
+    ModelObjectBuffers obj{};
+    obj.VAO = VAO;
+    obj.EBO = EBO;
+    obj.VBO = VBO;
+    obj.indicies = &indicies;
+    obj.verticies = &verticies;
+    return obj;
+}

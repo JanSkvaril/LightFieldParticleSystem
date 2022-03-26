@@ -26,7 +26,7 @@ void LightFieldPsDemo::SetPresetBasic()
     generator_store.Clear();
     camera.LookAt(glm::vec3(0.0f, 0.0f, -5.0f), glm::vec3(0.0f, 0.0f, 0.0f));
 
-    loaded_models.push_front(std::make_shared<Model>("models/bird.obj"));
+    loaded_models.push_front(std::make_shared<Model>("models/baloon.obj"));
 
     int density = 21;
     generator_store.AddGenerator(std::make_shared<Generator>(loaded_models.front().get(), density, 5000));

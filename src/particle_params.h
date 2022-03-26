@@ -4,7 +4,7 @@
 struct ParticleParameters
 {
     float particle_speed = 0.04f;
-    int amount_of_pacticles = 50;
+    int amount_of_pacticles = 1000;
     float gravity_strength = 0.05f;
     // glm::vec3 gravity_direction = glm::vec3(0.0f, -1.0f, 0.0f);
     glm::vec3 gravity_direction = glm::vec3(0.0f, -1.0f, 0.0f);

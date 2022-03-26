@@ -26,6 +26,7 @@
 #include "memory"
 #include "particle_leaf.h"
 #include "lightfield_ps_demo.h"
+#include "particle_standart3d.h"
 void framebuffer_size_callback(GLFWwindow *window, int width, int height);
 void processInput(GLFWwindow *window);
 
@@ -75,11 +76,15 @@ int main()
     std::cout << glGetString(GL_VERSION) << "\n";
     glEnable(GL_BLEND);
     TextReactangle rec;
+
+    // ParticleStandard3d bench(std::make_shared<Model>("models/baloon.obj"), ParticleParameters{});
+
     while (!glfwWindowShouldClose(window))
     {
         ui.HandleCameraControls(lfps.camera);
 
         lfps.Update();
+        // bench.Update();
         time += 0.04f;
 
         processInput(window);
@@ -98,6 +103,7 @@ int main()
         if (!ui.config.show_light_field)
         {
             lfps.Draw();
+            //  bench.Draw(lfps.camera);
         }
         else
         {

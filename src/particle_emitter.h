@@ -58,7 +58,7 @@ protected:
     ParticleShaderType active_shader = ParticleShaderType::Basic;
     Shader &GetActiveShader();
     void CalculateUVs(Camera &camera);
-    ParticleParameters particle_parameters;
+    ParticleParameters particle_parameters{};
 
     std::vector<GLuint64> texture_handles;
     int show_borders = 0;

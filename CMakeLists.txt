@@ -73,7 +73,9 @@ add_executable(light_field_ps_bp src/main.cpp
     src/model_normals.h
     src/model_normals.cpp
     src/particle_simulator.h
-    src/particle_simulator.cpp)
+    src/particle_simulator.cpp
+    src/particle_standart3d.h
+    src/particle_standart3d.cpp)
 
 
 
