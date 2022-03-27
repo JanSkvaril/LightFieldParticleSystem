@@ -2,7 +2,7 @@
 #define LIGHTFIELD_PS_DEMO_CLASS_DEF
 #include "generator_store.h"
 #include "particle_emitter.h"
-
+#include "particle_standart3d.h"
 #include "model.h"
 
 #include <list>
@@ -18,6 +18,9 @@ public:
     void SetPresetBalloons();
     void SetPresetRealLight();
     void SetPresetBenchmark();
+    void SetPresetNoLightfield(int particles);
+    void SetPresetBenchmarkComplex();
+    void SetPresetNoLightfieldComplex(int particles);
     Camera camera;
 
     ParticleEmitter particles;
@@ -25,7 +28,8 @@ public:
 
 private:
     std::list<std::shared_ptr<Model>> loaded_models;
-
+    bool using_standard_3d = false;
+    std::unique_ptr<ParticleStandard3d> bench;
     TextReactangle texture_rectangle;
 };
 

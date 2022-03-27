@@ -97,3 +97,11 @@ void ParticleStandard3d::Load()
 
     glBindVertexArray(0);
 }
+
+void ParticleStandard3d::SimulateSteps(int steps)
+{
+    for (size_t i = 0; i < steps; i++)
+    {
+        Update();
+    }
+}

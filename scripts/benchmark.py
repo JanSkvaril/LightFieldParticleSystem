@@ -20,15 +20,16 @@ def GetPcStats(proc):
     return res
 
 
-MAX_SAMPLES = 1
+MAX_SAMPLES = 15
 
 output = ""
 
 
-def RunBenchmark(particles, resolution):
-    print(f" ======= Running test with {particles} particles =======")
+def RunBenchmark(particles, resolution, scene="sbench"):
+    print(
+        f" ======= Running test with [{particles}] particles, resolution [{resolution}] and [{scene}] scene =======")
     # setup process
-    proc = subprocess.Popen([binary, '-f', "-n", f"-p {particles}", f"-r {resolution}", "--sbench"],
+    proc = subprocess.Popen([binary, '-f', "-n", f"-p {particles}", f"-r {resolution}", f"--{scene}"],
                             stdout=subprocess.PIPE, cwd=path)
     proc_psutil = psutil.Process(proc.pid)
     samples = 0
@@ -63,16 +64,28 @@ def RunBenchmark(particles, resolution):
 
 
 main_df = pd.DataFrame()
-df = RunBenchmark(1000, 5000)
-main_df["1000"] = df["FPS"]
+
+
+#df = RunBenchmark(1000, 5000, "s3d")
+#main_df["s_1000"] = df["FPS"]
+df = RunBenchmark(4000, 5000, "s3d")
+main_df["s_4000"] = df["FPS"]
+df = RunBenchmark(7000, 5000, "s3d")
+main_df["s_7000"] = df["FPS"]
+df = RunBenchmark(10000, 5000, "s3d")
+main_df["s_10000"] = df["FPS"]
+
+#df = RunBenchmark(1000, 5000)
+#main_df["1000"] = df["FPS"]
 df = RunBenchmark(4000, 5000)
 main_df["4000"] = df["FPS"]
 df = RunBenchmark(7000, 5000)
 main_df["7000"] = df["FPS"]
 df = RunBenchmark(10000, 5000)
 main_df["10000"] = df["FPS"]
-df = RunBenchmark(1000, 1000)
-main_df["m_1000"] = df["FPS"]
+
+#df = RunBenchmark(1000, 1000)
+#main_df["m_1000"] = df["FPS"]
 df = RunBenchmark(4000, 1000)
 main_df["m_4000"] = df["FPS"]
 df = RunBenchmark(7000, 1000)

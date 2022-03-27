@@ -63,7 +63,11 @@ int main(int argc, char **argv)
     args::Group group3(parser, "Scene:", args::Group::Validators::AtMostOne);
     args::Flag opt_scene_basic(group3, "Basic", "Basic scene", {"sbasic"});
     args::Flag opt_scene_benchmark(group3, "Benchmark", "Special scene for benchmark", {"sbench"});
+    args::Flag opt_scene_benchmarkC(group3, "Benchmark", "Special scene for benchmark with very complex model", {"sbenchc"});
     args::Flag opt_scene_real_light(group3, "Real light", "Scene with realtime light", {"slight"});
+    args::Flag opt_scene_standard3d(group3, "Standard 3D", "Particles are rendered with normal 3D methods", {"s3d"});
+    args::Flag opt_scene_standard3dC(group3, "Standard 3D", "Particles are rendered with normal 3D methods with very complex model", {"s3dc"});
+
     try
     {
         parser.ParseCLI(argc, argv);
@@ -125,6 +129,28 @@ int main(int argc, char **argv)
     {
         lfps.SetPresetRealLight();
     }
+    else if (opt_scene_benchmarkC)
+    {
+        lfps.SetPresetBenchmarkComplex();
+    }
+    else if (opt_scene_standard3dC)
+    {
+        int part = 1000;
+        if (opt_particles)
+        {
+            part = opt_particles.Get();
+        }
+        lfps.SetPresetNoLightfieldComplex(part);
+    }
+    else if (opt_scene_standard3d)
+    {
+        int part = 1000;
+        if (opt_particles)
+        {
+            part = opt_particles.Get();
+        }
+        lfps.SetPresetNoLightfield(part);
+    }
     else
     {
         lfps.SetPresetBasic();
@@ -148,8 +174,6 @@ int main(int argc, char **argv)
     // std::cout << glGetString(GL_VERSION) << "\n";
     glEnable(GL_BLEND);
     TextReactangle rec;
-
-    // ParticleStandard3d bench(std::make_shared<Model>("models/baloon.obj"), ParticleParameters{});
 
     while (!glfwWindowShouldClose(window))
     {

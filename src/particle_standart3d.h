@@ -12,6 +12,7 @@ public:
     ParticleStandard3d(std::shared_ptr<Model> model, ParticleParameters params);
     void Update();
     void Draw(Camera &camera);
+    void SimulateSteps(int steps);
 
 protected:
     void Load();
