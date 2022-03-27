@@ -258,3 +258,8 @@ void UiManager::AddLFPS(LightFieldPsDemo *lfps)
 
     screen->perform_layout();
 }
+
+void UiManager::RefreshUI()
+{
+    screen->perform_layout();
+}

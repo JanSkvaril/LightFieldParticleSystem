@@ -13,6 +13,7 @@ public:
     void HandleCameraControls(Camera &camera);
     UiSettings config;
     void AddLFPS(LightFieldPsDemo *lfps);
+    void RefreshUI();
 
 protected:
     LightFieldPsDemo *lfps = nullptr;

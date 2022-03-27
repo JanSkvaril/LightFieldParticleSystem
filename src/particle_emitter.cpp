@@ -171,6 +171,7 @@ void ParticleEmitter::BindPositionVBO()
 
 void ParticleEmitter::SetPactilesAmount(int amount)
 {
+    particle_parameters.amount_of_pacticles = amount;
     simulator.Resize(amount);
     simulator.Reset(&particle_parameters);
     this->positions.resize(amount);

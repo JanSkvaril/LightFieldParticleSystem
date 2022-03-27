@@ -27,8 +27,23 @@
 #include "particle_leaf.h"
 #include "lightfield_ps_demo.h"
 #include "particle_standart3d.h"
+#include <chrono>
 void framebuffer_size_callback(GLFWwindow *window, int width, int height);
 void processInput(GLFWwindow *window);
+
+void printFPS()
+{
+    static std::chrono::time_point<std::chrono::steady_clock> oldTime = std::chrono::high_resolution_clock::now();
+    static int fps;
+    fps++;
+
+    if (std::chrono::duration_cast<std::chrono::seconds>(std::chrono::high_resolution_clock::now() - oldTime) >= std::chrono::seconds{1})
+    {
+        oldTime = std::chrono::high_resolution_clock::now();
+        std::cout << "FPS: " << fps << std::endl;
+        fps = 0;
+    }
+}
 
 // settings
 const unsigned int SCR_WIDTH = 1200;
@@ -65,7 +80,7 @@ int main()
         std::cout << "Failed to initialize GLAD" << std::endl;
         return -1;
     }
-
+    glfwSwapInterval(0);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     Skybox skybox;
     float time = 0.0f;
@@ -73,7 +88,7 @@ int main()
     lfps.SetPresetBasic();
     UiManager ui(window);
     ui.AddLFPS(&lfps);
-    std::cout << glGetString(GL_VERSION) << "\n";
+    // std::cout << glGetString(GL_VERSION) << "\n";
     glEnable(GL_BLEND);
     TextReactangle rec;
 
@@ -81,6 +96,7 @@ int main()
 
     while (!glfwWindowShouldClose(window))
     {
+        printFPS();
         ui.HandleCameraControls(lfps.camera);
 
         lfps.Update();
