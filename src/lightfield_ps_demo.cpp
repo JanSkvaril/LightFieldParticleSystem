@@ -72,5 +72,19 @@ void LightFieldPsDemo::SetPresetRealLight()
     particles.UseRealLightShader();
     particles.AddTextureHandle(generator_store);
     particles.Reset();
-    particles.SimulateSteps(1000);
+}
+
+void LightFieldPsDemo::SetPresetBenchmark()
+{
+    particles.SetParticleProtype(std::make_unique<Particle>());
+    generator_store.Clear();
+    camera.LookAt(glm::vec3(0.0f, 0.0f, -15.0f), glm::vec3(0.0f, 0.0f, 0.0f));
+
+    loaded_models.push_front(std::make_shared<Model>("models/baloon.obj"));
+
+    int density = 21;
+    generator_store.AddGenerator(std::make_shared<Generator>(loaded_models.front().get(), density, 5000));
+    particles.SetGravity(0.003, glm::vec3(0.0f, -1.0f, 0.0f));
+    particles.AddTextureHandle(generator_store);
+    particles.SimulateSteps(10000);
 }

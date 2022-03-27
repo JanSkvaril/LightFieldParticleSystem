@@ -17,6 +17,7 @@ public:
     void SetPresetBasic();
     void SetPresetBalloons();
     void SetPresetRealLight();
+    void SetPresetBenchmark();
     Camera camera;
 
     ParticleEmitter particles;

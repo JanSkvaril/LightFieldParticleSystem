@@ -78,11 +78,12 @@ add_executable(light_field_ps_bp src/main.cpp
     src/particle_standart3d.cpp)
 
 
-
+target_include_directories(light_field_ps_bp PRIVATE include/args)
 
 target_link_libraries(light_field_ps_bp  nanogui ${NANOGUI_EXTRA_LIBS})
 target_link_libraries(light_field_ps_bp glm)
 target_link_libraries(light_field_ps_bp assimp)
+
 
 
 

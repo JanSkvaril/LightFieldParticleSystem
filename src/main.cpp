@@ -28,6 +28,8 @@
 #include "lightfield_ps_demo.h"
 #include "particle_standart3d.h"
 #include <chrono>
+#include "args.hxx"
+#include <exception>
 void framebuffer_size_callback(GLFWwindow *window, int width, int height);
 void processInput(GLFWwindow *window);
 
@@ -48,8 +50,34 @@ void printFPS()
 // settings
 const unsigned int SCR_WIDTH = 1200;
 const unsigned int SCR_HEIGHT = 800;
-int main()
+int main(int argc, char **argv)
 {
+    args::ArgumentParser parser("This is demo application for Lightfield Particle System by Jan Skvaril", "All options are optional, max 1 scene can be selected");
+    args::HelpFlag help(parser, "help", "Display this help menu", {'h', "help"});
+    args::Group group(parser, "Flags:", args::Group::Validators::DontCare);
+    args::Flag opt_no_vsync(group, "novsync", "Set unlimited PFS", {'n', "novsync"});
+    args::Flag opt_print_fps(group, "print fps", "Should print FPS to STDOUT", {'f', "fpsprint"});
+    args::Group group2(parser, "Parameters:", args::Group::Validators::DontCare);
+    args::ValueFlag<int> opt_particles(group2, "particles", "Starting amount of particles", {'p', "particles"});
+    args::ValueFlag<int> opt_resolution(group2, "resolution", "Set light field texture resolution e.g.: -r=10000 is texture 1000x1000 px", {'r', "resolution"});
+    args::Group group3(parser, "Scene:", args::Group::Validators::AtMostOne);
+    args::Flag opt_scene_basic(group3, "Basic", "Basic scene", {"sbasic"});
+    args::Flag opt_scene_benchmark(group3, "Benchmark", "Special scene for benchmark", {"sbench"});
+    args::Flag opt_scene_real_light(group3, "Real light", "Scene with realtime light", {"slight"});
+    try
+    {
+        parser.ParseCLI(argc, argv);
+    }
+    catch (args::Help)
+    {
+        std::cout << parser;
+        return 0;
+    }
+    catch (std::exception e)
+    {
+        std::cout << "Argument error, -h for help\n";
+        return 1;
+    }
     // glfw: initialize and configure
     // ------------------------------
     glfwInit();
@@ -80,12 +108,41 @@ int main()
         std::cout << "Failed to initialize GLAD" << std::endl;
         return -1;
     }
-    glfwSwapInterval(0);
+    if (opt_no_vsync)
+    {
+        glfwSwapInterval(0);
+    }
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     Skybox skybox;
     float time = 0.0f;
     LightFieldPsDemo lfps;
-    lfps.SetPresetBasic();
+
+    if (opt_scene_benchmark)
+    {
+        lfps.SetPresetBenchmark();
+    }
+    else if (opt_scene_real_light)
+    {
+        lfps.SetPresetRealLight();
+    }
+    else
+    {
+        lfps.SetPresetBasic();
+    }
+
+    if (opt_particles)
+    {
+        lfps.particles.SetPactilesAmount(opt_particles.Get());
+    }
+    if (opt_resolution)
+    {
+        lfps.generator_store.SetResolution(opt_resolution.Get());
+        lfps.particles.AddTextureHandle(lfps.generator_store);
+    }
+    if (opt_scene_benchmark)
+    {
+        lfps.particles.SimulateSteps(10000);
+    }
     UiManager ui(window);
     ui.AddLFPS(&lfps);
     // std::cout << glGetString(GL_VERSION) << "\n";
@@ -96,7 +153,10 @@ int main()
 
     while (!glfwWindowShouldClose(window))
     {
-        printFPS();
+        if (opt_print_fps)
+        {
+            printFPS();
+        }
         ui.HandleCameraControls(lfps.camera);
 
         lfps.Update();
