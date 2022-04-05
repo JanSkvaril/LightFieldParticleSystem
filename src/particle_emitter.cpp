@@ -297,7 +297,10 @@ void ParticleEmitter::CalculateUVs(Camera &camera)
         auto dir = (camera_position * 2.0f) - particle->GetPosition();
         dir = glm::fastNormalize(dir);
 
-        float u = 0.5f + atan2(dir.z, dir.x) / (2.0f * pi);
+        float u = acos(dir.x / sqrt(pow(dir.x,2.0f) + pow(dir.z, 2.0f))) / (2.0f * pi);
+        if (dir.z < 0.0){
+            u = 1.0f - u;
+        }
         float v = 0.5f + (asin(dir.y) / (2.0f * pi));
      
 
