@@ -14,7 +14,9 @@ uniform float u_density;
 uniform int show_border;
 uniform uint64_t allTheSamplers[5];
 float bilinear(vec4 w, vec4 q) {
-    return q.r * w.r + q.g * w.g + q.b * w.b + q.a * w.a;
+    float first = q.x + (q.y - q.x) * w.x;
+    float second = q.z + (q.w - q.z) * w.y;
+    return first + (second - first) * w.z;
 }
 
 void main()
@@ -23,14 +25,14 @@ void main()
     vec4 col = vec4(1.0, 1.0, 1.0, 1.0);
     
     vec4 q11 = texture(u_texture, firstsecond.xy);
-    vec4 q12 = texture(u_texture, vec2(firstsecond.x, firstsecond.a));
-    vec4 q21 = texture(u_texture, vec2(firstsecond.z, firstsecond.y));
+    vec4 q12 = texture(u_texture, vec2(firstsecond.z, firstsecond.y));
+    vec4 q21 = texture(u_texture, vec2(firstsecond.x, firstsecond.a));
     vec4 q22 = texture(u_texture, firstsecond.za);
     
-    col.r = dot(weights, vec4(q11.r, q12.r, q21.r, q22.r));
-    col.g = dot(weights, vec4(q11.g, q12.g, q21.g, q22.g));
-    col.b = dot(weights, vec4(q11.b, q12.b, q21.b, q22.b));
-    col.a = dot(weights, vec4(q11.a, q12.a, q21.a, q22.a));
+    col.r = bilinear(weights, vec4(q11.r, q12.r, q21.r, q22.r));
+    col.g = bilinear(weights, vec4(q11.g, q12.g, q21.g, q22.g));
+    col.b = bilinear(weights, vec4(q11.b, q12.b, q21.b, q22.b));
+    col.a = bilinear(weights, vec4(q11.a, q12.a, q21.a, q22.a));
     
     if (show_border == 1) {
         if (TexCoord.x < 0.01 || TexCoord.y < 0.01 || TexCoord.x > 0.99 || TexCoord.y > 0.99) {

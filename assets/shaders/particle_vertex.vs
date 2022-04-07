@@ -60,9 +60,23 @@ void main()
     vec2 xy = m;
     float x = xy.x;
     float y = xy.y;
-    float w1 = (u2.x - x) * (u2.y - y) / (u2.x - u1.x) * (u2.y - u1.y);
-    float w2 = (u2.x - x) * (y - u1.y) / (u2.x - u1.x) * (u2.y - u1.y);
-    float w3 = (x - u1.x) * (u2.y - y) / (u2.x - u1.x) * (u2.y - u1.y);
-    float w4 = (x - u1.x) * (y - u1.y) / (u2.x - u1.x) * (u2.y - u1.y);
-    weights = vec4(w1, w2, w3, w4);
+    // float w1 = (u2.x - x) * (u2.y - y) / (u2.x - u1.x) * (u2.y - u1.y);
+    // float w2 = (u2.x - x) * (y - u1.y) / (u2.x - u1.x) * (u2.y - u1.y);
+    // float w3 = (x - u1.x) * (u2.y - y) / (u2.x - u1.x) * (u2.y - u1.y);
+    // float w4 = (x - u1.x) * (y - u1.y) / (u2.x - u1.x) * (u2.y - u1.y);
+    
+    vec2 A = vec2(u1);
+    vec2 B = vec2(u2.x, u1.y);
+    vec2 C = vec2(u1.x, u2.y);
+    vec2 D = vec2(u2);
+    
+    vec2 Qab = vec2(x, A.y);
+    vec2 Qcd = vec2(x, C.y);
+    
+    vec2 Q = vec2(x, y);
+    
+    float w1 = length(Qab - A) / length(B - A);
+    float w2 = length(Qcd - C) / length(D - C);
+    float w3 = length(Q - Qab) / length(Qcd - Qab);
+    weights = vec4(w1, w2, w3, y);
 }
