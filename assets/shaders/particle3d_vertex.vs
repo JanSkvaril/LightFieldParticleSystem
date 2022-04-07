@@ -13,14 +13,12 @@ uniform mat4 projection;
 void main()
 {
     vec3 pos = aPos;
-    mat4 pos_mat = mat4(
-        vec4(1.0, 0.0, 0.0, 0.0),
-        vec4(0.0, 1.0, 0.0, 0.0),
-        vec4(0.0, 0.0, 1.0, 0.0),
-        vec4(particle_position.xyz, 1.0));
-        
-        gl_Position = projection * view * pos_mat * model * vec4(pos, 1.0);
-        FragPos = vec3(model * vec4(pos, 1.0));
-        TexCoord = vec2(aTexCoords);
-        Normals = aNormal;
-    }
+    
+    vec4 word_space = view * model * vec4(pos, 1.0);
+    word_space += view * vec4(particle_position.xyz, 1.0);
+    vec4 screen_pos = projection * word_space;
+    gl_Position = screen_pos;
+    FragPos = vec3(model * vec4(pos, 1.0));
+    TexCoord = vec2(aTexCoords);
+    Normals = aNormal;
+}

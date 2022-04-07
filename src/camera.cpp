@@ -1,7 +1,7 @@
 #include "camera.h"
 #include <glm/gtx/rotate_vector.hpp>
 #include <glm/gtc/matrix_transform.hpp>
-Camera::Camera()
+Camera::Camera(glm::ivec2 resolution) : Resolution(resolution)
 {
     view = glm::mat4(1.0f);
 }

@@ -39,11 +39,12 @@ void ParticleStandard3d::Draw(Camera &camera)
     auto obj_data = model->GetObjectBuffers();
 
     glm::mat4 model = glm::mat4(1.0f);
-    model = glm::scale(model, glm::vec3(0.2f, 0.2f, 0.2f));
+    float scale = 0.4f;
+    model = glm::scale(model, glm::vec3(scale, scale, scale));
     glm::mat4 view = camera.GetMatrix();
     glm::mat4 projection = glm::mat4(1.0f);
 
-    projection = glm::perspective(glm::radians(45.0f), (float)10000 / (float)10000, 0.1f, 100.0f);
+    projection = glm::perspective(glm::radians(45.0f), (float)camera.Resolution.x / (float)camera.Resolution.y, 0.1f, 100.0f);
     // set emittor object to uniforms
     glUniformMatrix4fv(shader->GetUniformLocation("model"), 1, GL_FALSE, glm::value_ptr(model));
     glUniformMatrix4fv(shader->GetUniformLocation("view"), 1, GL_FALSE, glm::value_ptr(view));

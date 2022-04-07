@@ -67,7 +67,7 @@ void ParticleEmitter::Draw(Camera &camera, float texture_density)
     // std::cout << glm::to_string(camera.GetPosition()) << "\n"
     //            << glm::to_string(camera.GetAngleToTarget()) << "\n\n";
 
-    projection = glm::perspective(glm::radians(45.0f), (float)800 / (float)600, 0.1f, 100.0f);
+    projection = glm::perspective(glm::radians(45.0f), (float)camera.Resolution.x / (float)camera.Resolution.y, 0.1f, 100.0f);
     auto camera_pos = camera.GetPosition();
     auto dir = camera_pos - positions[0];
     dir = normalize(dir);

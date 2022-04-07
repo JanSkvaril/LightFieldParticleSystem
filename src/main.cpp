@@ -119,7 +119,7 @@ int main(int argc, char **argv)
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     Skybox skybox;
     float time = 0.0f;
-    LightFieldPsDemo lfps;
+    LightFieldPsDemo lfps({SCR_WIDTH, SCR_HEIGHT});
 
     if (opt_scene_benchmark)
     {
@@ -153,6 +153,7 @@ int main(int argc, char **argv)
     }
     else
     {
+
         lfps.SetPresetBasic();
     }
 

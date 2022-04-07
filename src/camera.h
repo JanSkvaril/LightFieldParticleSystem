@@ -5,7 +5,7 @@
 class Camera
 {
 public:
-    Camera();
+    Camera(glm::ivec2 resolution);
     void LookAt(glm::vec3 position, glm::vec3 target);
     void RotateAroundTarget(glm::vec2 amount);
     glm::mat4 GetMatrix();
@@ -13,6 +13,7 @@ public:
     glm::vec3 GetPosition(glm::vec2 additional_rotation);
     glm::vec2 GetAngleToTarget();
     glm::vec3 GetUpVector();
+    const glm::ivec2 Resolution;
 
 protected:
     glm::vec2 rotation = glm::vec2(0.0f);

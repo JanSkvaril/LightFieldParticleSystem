@@ -4,13 +4,13 @@
 #include "particle_emitter.h"
 #include "particle_standart3d.h"
 #include "model.h"
-
+#include <glm/vec2.hpp>
 #include <list>
 
 class LightFieldPsDemo
 {
 public:
-    LightFieldPsDemo();
+    LightFieldPsDemo(glm::ivec2 resolution);
     void Update();
     void Draw();
     void Generate();

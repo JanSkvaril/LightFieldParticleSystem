@@ -37,7 +37,9 @@ void Model::Draw(glm::vec3 rotation, glm::vec3 position, GeneratorParameters &ge
     model = glm::rotate(model, generator_params.model_rotation.x, glm::vec3(0.0f, 1.0f, 0.0f));
 
     view = glm::translate(view, glm::vec3(0.0f, 0.0f, -5.5f));
-    projection = glm::perspective(glm::radians(45.0f), (float)10000 / (float)10000, 0.1f, 100.0f);
+    const unsigned int SCR_WIDTH = 1200;
+    const unsigned int SCR_HEIGHT = 800;
+    projection = glm::perspective(glm::radians(45.0f), 1.0f, 0.1f, 100.0f);
     auto color = generator_params.model_light_color;
     // set emittor object to uniforms
     glUniformMatrix4fv(shader->GetUniformLocation("model"), 1, GL_FALSE, glm::value_ptr(model));
@@ -97,7 +99,9 @@ void Model::Draw(Camera &camera)
     // model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 0.0f, 1.0f));
 
     view = camera.GetMatrix();
-    projection = glm::perspective(glm::radians(45.0f), (float)10000 / (float)10000, 0.1f, 100.0f);
+    const unsigned int SCR_WIDTH = 1200;
+    const unsigned int SCR_HEIGHT = 800;
+    projection = glm::perspective(glm::radians(45.0f), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
 
     // set emittor object to uniforms
     glUniformMatrix4fv(shader->GetUniformLocation("model"), 1, GL_FALSE, glm::value_ptr(model));
