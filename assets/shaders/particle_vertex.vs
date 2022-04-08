@@ -6,7 +6,7 @@ layout(location = 3)in vec2 particle_uv;
 layout(location = 4)in int particle_texture;
 out vec2 TexCoord;
 out vec4 firstsecond;
-out vec4 weights;
+out vec3 weights;
 flat out int ParticleTexture;
 out vec3 TexPosition;
 
@@ -78,5 +78,5 @@ void main()
     float w1 = length(Qab - A) / length(B - A);
     float w2 = length(Qcd - C) / length(D - C);
     float w3 = length(Q - Qab) / length(Qcd - Qab);
-    weights = vec4(w1, w2, w3, y);
+    weights = vec3(w1, w2, w3);
 }

@@ -5,7 +5,7 @@ out vec4 FragColor;
 
 in vec2 TexCoord;
 in vec4 firstsecond;
-in vec4 weights;
+in vec3 weights;
 flat in int ParticleTexture;
 
 uniform vec3 offset;
@@ -13,7 +13,7 @@ uniform mat4 view; // emittor position
 uniform float u_density;
 uniform int show_border;
 uniform uint64_t allTheSamplers[5];
-float bilinear(vec4 w, vec4 q) {
+float bilinear(vec3 w, vec4 q) {
     float first = q.x + (q.y - q.x) * w.x;
     float second = q.z + (q.w - q.z) * w.y;
     return first + (second - first) * w.z;

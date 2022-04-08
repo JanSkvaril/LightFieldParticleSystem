@@ -92,13 +92,13 @@ void LightFieldPsDemo::SetPresetBenchmark()
 {
     particles.SetParticleProtype(std::make_unique<Particle>());
     generator_store.Clear();
-    camera.LookAt(glm::vec3(0.0f, 0.0f, -2.0f), glm::vec3(0.0f, 0.0f, 0.0f));
+    camera.LookAt(glm::vec3(0.0f, 0.0f, -15.0f), glm::vec3(0.0f, 0.0f, 0.0f));
 
     loaded_models.push_front(std::make_shared<Model>("models/baloon.obj"));
 
     int density = 21;
     generator_store.AddGenerator(std::make_shared<Generator>(loaded_models.front().get(), density, 5000));
-    particles.SetGravity(1.00f, glm::vec3(0.0f, -1.0f, 0.0f));
+    particles.SetGravity(0.003f, glm::vec3(0.0f, -1.0f, 0.0f));
     particles.AddTextureHandle(generator_store);
     particles.SimulateSteps(10000);
 }
@@ -106,10 +106,10 @@ void LightFieldPsDemo::SetPresetBenchmark()
 void LightFieldPsDemo::SetPresetNoLightfield(int particles)
 {
     ParticleParameters params{};
-    params.gravity_strength = 1.00f;
+    params.gravity_strength = 0.003f;
     params.gravity_direction = glm::vec3(0.0f, -1.0f, 0.0f);
     params.amount_of_pacticles = particles;
-    camera.LookAt(glm::vec3(0.0f, 0.0f, -2.0f), glm::vec3(0.0f, 0.0f, 0.0f));
+    camera.LookAt(glm::vec3(0.0f, 0.0f, -15.0f), glm::vec3(0.0f, 0.0f, 0.0f));
     bench = std::make_unique<ParticleStandard3d>(std::make_shared<Model>("models/baloon.obj"), params);
     using_standard_3d = true;
     bench->SimulateSteps(10000);
@@ -133,7 +133,7 @@ void LightFieldPsDemo::SetPresetBenchmarkComplex()
 void LightFieldPsDemo::SetPresetNoLightfieldComplex(int particles)
 {
     ParticleParameters params{};
-    params.gravity_strength = 0.01f;
+    params.gravity_strength = 0.003f;
     params.gravity_direction = glm::vec3(0.0f, -1.0f, 0.0f);
     params.amount_of_pacticles = particles;
     camera.LookAt(glm::vec3(0.0f, 0.0f, -15.0f), glm::vec3(0.0f, 0.0f, 0.0f));
