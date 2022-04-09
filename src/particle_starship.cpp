@@ -14,8 +14,10 @@ std::unique_ptr<Particle> ParticleStarhip::clone()
 
 void ParticleStarhip::Reset()
 {
+    texture_id = rand() % params->textures_avaiable;
     direction = glm::vec3(-1.0, 0.0, 0.0);
     speed = params->particle_speed;
+    speed += (rand() % 100) / 1500.0f;
     time_to_live = params->starting_time_to_live + rand() % params->time_to_live_dispersion;
     position = glm::vec3(GetRandomStartingPoint(), GetRandomStartingPoint(), GetRandomStartingPoint());
     position += glm::vec3(30.0f, 0.0, 5.0f);
@@ -36,11 +38,10 @@ void ParticleStarhip::Reset()
         x_rotation_speed = 0.0f;
     }
     random_time_offset = (float)rand();
-    texture_id = rand() % params->textures_avaiable;
 }
 
 float ParticleStarhip::GetRandomStartingPoint()
 {
     auto r = rand() % 2000 - 1000;
-    return r / 100.0f;
+    return r / 70.0f;
 }

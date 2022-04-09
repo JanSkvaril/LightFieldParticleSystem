@@ -149,7 +149,7 @@ void LightFieldPsDemo::SetPresetStarships()
     active_skybox = 1;
     particles.SetParticleProtype(std::make_unique<ParticleStarhip>());
     generator_store.Clear();
-    camera.LookAt(glm::vec3(0.0f, 0.0f, -10.0f), glm::vec3(0.0f, 0.0f, 0.0f));
+    camera.LookAt(glm::vec3(0.0f, 0.0f, -18.0f), glm::vec3(0.0f, 0.0f, 0.0f));
     int density = 31;
 
     loaded_models.push_front(std::make_shared<Model>("models/battleship.obj"));
@@ -165,8 +165,8 @@ void LightFieldPsDemo::SetPresetStarships()
     generator_store.SetDensity(density);
     particles.SetGravity(0.0f, glm::vec3(0.0f, -1.0f, 0.0f));
     particles.AddTextureHandle(generator_store);
-    particles.SetTimeToLive(1400, 800);
-    particles.SetPactilesAmount(3000);
+    particles.SetTimeToLive(1000, 800);
+    particles.SetPactilesAmount(5000);
     particles.SimulateSteps(10000);
 }
 
