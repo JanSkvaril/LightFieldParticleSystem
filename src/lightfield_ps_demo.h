@@ -23,6 +23,7 @@ public:
     void SetPresetNoLightfield(int particles);
     void SetPresetBenchmarkComplex();
     void SetPresetNoLightfieldComplex(int particles);
+    void SetPresetHalfChange();
     Camera camera;
 
     ParticleEmitter particles;

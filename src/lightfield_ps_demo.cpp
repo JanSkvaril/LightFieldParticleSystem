@@ -3,6 +3,7 @@
 #include "particle_leaf.h"
 #include "model_normals.h"
 #include "particle_starship.h"
+#include "particle_halfchange.h"
 LightFieldPsDemo::LightFieldPsDemo(glm::ivec2 resolution) : particles(100), camera(resolution)
 {
     LoadSkyboxes();
@@ -194,4 +195,30 @@ void LightFieldPsDemo::LoadSkyboxes()
 void LightFieldPsDemo::DrawSkybox()
 {
     loaded_skyboxes[active_skybox]->Draw(camera);
+}
+
+void LightFieldPsDemo::SetPresetHalfChange()
+{
+    particles.SetParticleProtype(std::make_unique<ParticleHalfChange>());
+    generator_store.Clear();
+    camera.LookAt(glm::vec3(0.0f, 0.0f, -15.0f), glm::vec3(0.0f, 0.0f, 0.0f));
+    int density = 21;
+
+    loaded_models.push_front(std::make_shared<Model>("models/cube.obj"));
+    generator_store.AddGenerator(std::make_shared<Generator>(loaded_models.front().get(), density, 5000));
+    generator_store.Generators.back()->SetModelRotation(glm::vec3(3.14 / 4.0f, 3.14 / 4.0f, 1.5));
+    generator_store.Generators.back()->SetLightColor(glm::vec3(0.7, 0.3, 0.12));
+    loaded_models.push_front(std::make_shared<Model>("models/donut.obj"));
+    generator_store.AddGenerator(std::make_shared<Generator>(loaded_models.front().get(), density, 5000));
+    generator_store.Generators.back()->SetModelRotation(glm::vec3(0.3, 3.14 / 2.0f, 1.5));
+    generator_store.Generators.back()->SetLightColor(glm::vec3(0.7, 0.3, 0.12));
+
+    generator_store.SetDensity(51);
+    particles.SetSpeed(0.2f);
+    particles.AddTextureHandle(generator_store);
+    particles.SetTimeToLive(100, 100);
+    particles.SetPactilesAmount(2000);
+    particles.SetGravity(0.05f, glm::vec3(0.0f, -1.0f, 0.0f));
+    particles.ShouldParticlesRotate(true);
+    particles.Reset();
 }
