@@ -25,6 +25,7 @@ public:
     void SetPresetNoLightfieldComplex(int particles);
     void SetPresetHalfChange();
     void SetPresetSunflower();
+    void SetPresetDisco();
     Camera camera;
 
     ParticleEmitter particles;
@@ -43,6 +44,10 @@ private:
     bool sunflower_preset = false;
     int day_counter = 0;
     const int max_day_counter = 200;
+
+    bool disco_preset = false;
+    int color_counter = 0;
+    const int max_color_counter = 30;
 };
 
 #endif

@@ -13,6 +13,7 @@ LightFieldPsDemo::LightFieldPsDemo(glm::ivec2 resolution) : particles(100), came
 
 void LightFieldPsDemo::Update()
 {
+    UpdatePresetSpecific();
     // ui.HandleCameraControls(camera);
     if (!using_standard_3d)
     {
@@ -25,7 +26,6 @@ void LightFieldPsDemo::Update()
     {
         bench->Update();
     }
-    UpdatePresetSpecific();
 }
 
 void LightFieldPsDemo::Draw()
@@ -214,6 +214,8 @@ void LightFieldPsDemo::LoadSkyboxes()
 
 void LightFieldPsDemo::DrawSkybox()
 {
+    if (active_skybox < 0)
+        return;
     loaded_skyboxes[active_skybox]->Draw(camera);
 }
 
@@ -285,4 +287,38 @@ void LightFieldPsDemo::UpdatePresetSpecific()
         camera.RotateAroundTarget(glm::vec2(0.01f, 0.0));
         day_counter++;
     }
+
+    if (disco_preset)
+    {
+        camera.RotateAroundTarget(glm::vec2(0.01f, 0.0));
+        color_counter++;
+        if (color_counter >= max_color_counter)
+        {
+            color_counter = 0;
+            generator_store.Generators.front()->SetLightColor(
+                glm::vec3(
+                    (rand() % 100) / 100.0f,
+                    (rand() % 100) / 100.0f,
+                    (rand() % 100) / 100.0f));
+        }
+    }
+}
+
+void LightFieldPsDemo::SetPresetDisco()
+{
+    particles.SetParticleProtype(std::make_unique<Particle>());
+    generator_store.Clear();
+    camera.LookAt(glm::vec3(0.0f, 0.0f, -10.0f), glm::vec3(0.0f, 0.0f, 0.0f));
+
+    loaded_models.push_front(std::make_shared<Model>("models/baloon.obj"));
+
+    int density = 21;
+    generator_store.AddGenerator(std::make_shared<Generator>(loaded_models.front().get(), density, 5000));
+    particles.AddTextureHandle(generator_store);
+    particles.SetSpeed(0.1f);
+    particles.SetGravity(0.01f, glm::vec3(0.1f, -0.9f, 0.0f));
+    particles.SetTimeToLive(150, 150);
+    particles.SetPactilesAmount(3000);
+    disco_preset = true;
+    active_skybox = -1;
 }

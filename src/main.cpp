@@ -153,7 +153,7 @@ int main(int argc, char **argv)
     else
     {
 
-        lfps.SetPresetSunflower();
+        lfps.SetPresetDisco();
     }
 
     if (opt_particles)
