@@ -13,6 +13,7 @@ public:
     GLuint Generate(glm::vec3 rotation, glm::vec3 position, GeneratorParameters &generator_params);
     void BindTexture();
     void Delete();
+    void SetModel(Model *model);
     void Resize(GLsizei width, GLsizei height);
 
 protected:

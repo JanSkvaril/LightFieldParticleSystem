@@ -77,3 +77,8 @@ void GeneratorTexture::Resize(GLsizei width, GLsizei height)
     this->height = height;
     Setup();
 }
+
+void GeneratorTexture::SetModel(Model *model)
+{
+    this->model = model;
+}

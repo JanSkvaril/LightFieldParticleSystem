@@ -24,6 +24,7 @@ public:
     void SetPresetBenchmarkComplex();
     void SetPresetNoLightfieldComplex(int particles);
     void SetPresetHalfChange();
+    void SetPresetSunflower();
     Camera camera;
 
     ParticleEmitter particles;
@@ -31,12 +32,17 @@ public:
     void LoadSkyboxes();
 
 private:
+    void UpdatePresetSpecific();
     int active_skybox = 0;
     std::vector<std::unique_ptr<Skybox>> loaded_skyboxes;
     std::list<std::shared_ptr<Model>> loaded_models;
     bool using_standard_3d = false;
     std::unique_ptr<ParticleStandard3d> bench;
     TextReactangle texture_rectangle;
+
+    bool sunflower_preset = false;
+    int day_counter = 0;
+    const int max_day_counter = 200;
 };
 
 #endif

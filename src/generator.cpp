@@ -223,3 +223,10 @@ void Generator::ShouldUseLight(bool use_light)
     this->generator_params.use_light = use_light;
     ResetCache();
 }
+
+void Generator::SetModel(Model *model)
+{
+    this->model = model;
+    gt.SetModel(model);
+    ResetCache();
+}

@@ -79,7 +79,9 @@ add_executable(light_field_ps_bp src/main.cpp
     src/particle_starship.h
     src/particle_starship.cpp
     src/particle_halfchange.h
-    src/particle_halfchange.cpp)
+    src/particle_halfchange.cpp
+    src/particle_flower.h
+    src/particle_flower.cpp)
 
 
 target_include_directories(light_field_ps_bp PRIVATE include/args)

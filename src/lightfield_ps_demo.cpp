@@ -4,6 +4,8 @@
 #include "model_normals.h"
 #include "particle_starship.h"
 #include "particle_halfchange.h"
+#include "particle_flower.h"
+#include <iostream>
 LightFieldPsDemo::LightFieldPsDemo(glm::ivec2 resolution) : particles(100), camera(resolution)
 {
     LoadSkyboxes();
@@ -23,6 +25,7 @@ void LightFieldPsDemo::Update()
     {
         bench->Update();
     }
+    UpdatePresetSpecific();
 }
 
 void LightFieldPsDemo::Draw()
@@ -189,6 +192,23 @@ void LightFieldPsDemo::LoadSkyboxes()
         "imgs/skybox/space/skybox_down.png",
         "imgs/skybox/space/skybox_front.png",
         "imgs/skybox/space/skybox_back.png"};
+
+    loaded_skyboxes.push_back(std::make_unique<Skybox>(faces));
+    faces = {
+        "imgs/skybox/field1/posx.jpg",
+        "imgs/skybox/field1/negx.jpg",
+        "imgs/skybox/field1/posy.jpg",
+        "imgs/skybox/field1/negy.jpg",
+        "imgs/skybox/field1/posz.jpg",
+        "imgs/skybox/field1/negz.jpg"};
+    loaded_skyboxes.push_back(std::make_unique<Skybox>(faces));
+    faces = {
+        "imgs/skybox/field2/posx.jpg",
+        "imgs/skybox/field2/negx.jpg",
+        "imgs/skybox/field2/posy.jpg",
+        "imgs/skybox/field2/negy.jpg",
+        "imgs/skybox/field2/posz.jpg",
+        "imgs/skybox/field2/negz.jpg"};
     loaded_skyboxes.push_back(std::make_unique<Skybox>(faces));
 }
 
@@ -221,4 +241,48 @@ void LightFieldPsDemo::SetPresetHalfChange()
     particles.SetGravity(0.05f, glm::vec3(0.0f, -1.0f, 0.0f));
     particles.ShouldParticlesRotate(true);
     particles.Reset();
+}
+
+void LightFieldPsDemo::SetPresetSunflower()
+{
+    particles.SetParticleProtype(std::make_unique<ParticleFlower>());
+    generator_store.Clear();
+    camera.LookAt(glm::vec3(0.0f, 0.0f, -5.0f), glm::vec3(0.0f, 0.0f, 0.0f));
+    camera.RotateAroundTarget(glm::vec2(0.5, 0.2));
+
+    loaded_models.push_front(std::make_shared<Model>("models/flower_dead.obj"));
+
+    int density = 31;
+
+    generator_store.AddGenerator(std::make_shared<Generator>(loaded_models.front().get(), density, 5000));
+    loaded_models.push_front(std::make_shared<Model>("models/flower_alive.obj"));
+    generator_store.Generators.front()->SetLightColor(glm::vec3(0.463, 0.404, 0.0));
+    generator_store.SetDensity(density);
+    particles.AddTextureHandle(generator_store);
+    sunflower_preset = true;
+    particles.SetSpeed(0.0f);
+    particles.SetPactilesAmount(10000);
+    active_skybox = 3;
+}
+
+void LightFieldPsDemo::UpdatePresetSpecific()
+{
+    if (sunflower_preset)
+    {
+        if (day_counter == max_day_counter / 2)
+        {
+            generator_store.Generators.front()->SetModel(loaded_models.front().get());
+            generator_store.Generators.front()->SetLightColor(glm::vec3(0.663, 0.804, 0.0));
+            active_skybox = 2;
+        }
+        else if (day_counter >= max_day_counter)
+        {
+            day_counter = 0;
+            generator_store.Generators.front()->SetModel(loaded_models.back().get());
+            generator_store.Generators.front()->SetLightColor(glm::vec3(0.463, 0.404, 0.0));
+            active_skybox = 3;
+        }
+        camera.RotateAroundTarget(glm::vec2(0.01f, 0.0));
+        day_counter++;
+    }
 }

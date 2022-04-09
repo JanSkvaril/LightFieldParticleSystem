@@ -15,6 +15,7 @@ public:
     GLuint GetTexture();
     void Bind();
     int GetDensity();
+    void SetModel(Model *model);
     void SetModelRotation(glm::vec3 rotation);
     void ChangeDensity(int density);
     void ChangeResolution(int res);
