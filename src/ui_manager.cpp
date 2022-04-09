@@ -97,6 +97,7 @@ void UiManager::Draw()
 void UiManager::HandleCameraControls(Camera &camera)
 {
     const float speed = 0.05f;
+    const float zoom_speed = 0.1f;
     if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
     {
         camera.RotateAroundTarget(glm::vec2(speed, 0.0f));
@@ -112,6 +113,14 @@ void UiManager::HandleCameraControls(Camera &camera)
     else if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
     {
         camera.RotateAroundTarget(glm::vec2(0.0f, -speed));
+    }
+    if (glfwGetKey(window, GLFW_KEY_I) == GLFW_PRESS)
+    {
+        camera.Zoom(zoom_speed);
+    }
+    else if (glfwGetKey(window, GLFW_KEY_O) == GLFW_PRESS)
+    {
+        camera.Zoom(-zoom_speed);
     }
 }
 

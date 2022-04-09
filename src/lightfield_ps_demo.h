@@ -18,6 +18,7 @@ public:
     void SetPresetBalloons();
     void SetPresetRealLight();
     void SetPresetBenchmark();
+    void SetPresetStarships();
     void SetPresetNoLightfield(int particles);
     void SetPresetBenchmarkComplex();
     void SetPresetNoLightfieldComplex(int particles);

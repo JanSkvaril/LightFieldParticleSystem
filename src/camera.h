@@ -14,6 +14,7 @@ public:
     glm::vec2 GetAngleToTarget();
     glm::vec3 GetUpVector();
     const glm::ivec2 Resolution;
+    void Zoom(float amount);
 
 protected:
     glm::vec2 rotation = glm::vec2(0.0f);

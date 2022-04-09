@@ -75,7 +75,9 @@ add_executable(light_field_ps_bp src/main.cpp
     src/particle_simulator.h
     src/particle_simulator.cpp
     src/particle_standart3d.h
-    src/particle_standart3d.cpp)
+    src/particle_standart3d.cpp
+    src/particle_starship.h
+    src/particle_starship.cpp)
 
 
 target_include_directories(light_field_ps_bp PRIVATE include/args)

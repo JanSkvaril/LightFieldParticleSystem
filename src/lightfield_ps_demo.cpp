@@ -2,6 +2,7 @@
 #include "particle_random_model.h"
 #include "particle_leaf.h"
 #include "model_normals.h"
+#include "particle_starship.h"
 LightFieldPsDemo::LightFieldPsDemo(glm::ivec2 resolution) : particles(100), camera(resolution)
 {
 }
@@ -140,4 +141,25 @@ void LightFieldPsDemo::SetPresetNoLightfieldComplex(int particles)
     bench = std::make_unique<ParticleStandard3d>(std::make_shared<Model>("models/bunny.obj"), params);
     using_standard_3d = true;
     bench->SimulateSteps(10000);
+}
+
+void LightFieldPsDemo::SetPresetStarships()
+{
+    particles.SetParticleProtype(std::make_unique<ParticleStarhip>());
+    generator_store.Clear();
+    camera.LookAt(glm::vec3(0.0f, 0.0f, -10.0f), glm::vec3(0.0f, 0.0f, 0.0f));
+    int density = 21;
+
+    loaded_models.push_front(std::make_shared<Model>("models/battleship.obj"));
+    generator_store.AddGenerator(std::make_shared<Generator>(loaded_models.front().get(), density, 5000));
+    loaded_models.push_front(std::make_shared<Model>("models/battleship2.obj"));
+    generator_store.AddGenerator(std::make_shared<Generator>(loaded_models.front().get(), density, 5000));
+    loaded_models.push_front(std::make_shared<Model>("models/battleship3.obj"));
+    generator_store.AddGenerator(std::make_shared<Generator>(loaded_models.front().get(), density, 5000));
+    generator_store.Generators.back()->SetModelRotation(glm::vec3(0.0, 3.14f / 2.0f, 0.0));
+    particles.SetGravity(0.0f, glm::vec3(0.0f, -1.0f, 0.0f));
+    particles.AddTextureHandle(generator_store);
+    particles.SetTimeToLive(1400, 800);
+    particles.SetPactilesAmount(3000);
+    particles.SimulateSteps(10000);
 }

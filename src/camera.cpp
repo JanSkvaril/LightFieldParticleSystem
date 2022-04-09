@@ -91,3 +91,9 @@ glm::vec3 Camera::GetPosition(glm::vec2 additional_rotation)
     rotated_position = glm::rotate(rotated_position, rotation.x + additional_rotation.y, glm::vec3(0.0f, 1.0f, 0.0f));
     return rotated_position;
 }
+
+void Camera::Zoom(float amount)
+{
+    camera_position.z += amount;
+    LookAt(camera_position, target);
+}

@@ -289,12 +289,11 @@ void ParticleEmitter::CalculateUVs(Camera &camera)
     const float pi = 3.1415926538;
     int i = 0;
     auto camera_position = camera.GetPosition();
-
     std::for_each(std::execution::par, simulator.Particles.begin(), simulator.Particles.end(), [&camera_position, pi](auto &particle)
                   {
         auto rot = particle->GetRotation();
 
-        auto dir = (camera_position * 2.0f) - particle->GetPosition();
+        auto dir = (camera_position *4.0f) - particle->GetPosition();
         dir = glm::fastNormalize(dir);
 
         float u = acos(dir.x / sqrt(pow(dir.x,2.0f) + pow(dir.z, 2.0f))) / (2.0f * pi);
