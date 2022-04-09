@@ -274,6 +274,12 @@ void UiManager::AddLFPS(LightFieldPsDemo *lfps)
                     { lfps->SetPresetSunflower(); this->UpdateComentaryText(); });
     gui->add_button("Disco", [&, lfps]()
                     { lfps->SetPresetDisco(); this->UpdateComentaryText(); });
+    gui->add_button("Dynamic light", [&, lfps]()
+                    { lfps->SetPresetRealLight(); this->UpdateComentaryText(); });
+    gui->add_button("No light field", [&, lfps]()
+                    { lfps->SetPresetNoLightfield(1000); this->UpdateComentaryText(); });
+    gui->add_button("Benchark", [&, lfps]()
+                    { lfps->SetPresetBenchmark(); this->UpdateComentaryText(); });
     auto group = gui->add_group("Commentary");
 
     text_area = new nanogui::TextArea(nanoguiWindow4);
@@ -297,6 +303,6 @@ void UiManager::UpdateComentaryText()
     {
         text_area->append_line(line);
     }
-
+    gui->refresh();
     screen->perform_layout();
 }

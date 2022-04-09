@@ -88,17 +88,20 @@ void LightFieldPsDemo::SetPresetRealLight()
     particles.SetParticleProtype(std::make_unique<Particle>());
     generator_store.Clear();
     camera.LookAt(glm::vec3(0.0f, 0.0f, -5.0f), glm::vec3(0.0f, 0.0f, 0.0f));
-
+    camera.RotateAroundTarget(glm::vec2(0.0, 0.3));
     int density = 21;
-    std::string model_path = "models/baloon.obj";
+    std::string model_path = "models/donut.obj";
     loaded_models.push_front(std::make_shared<Model>(model_path));
     generator_store.AddGenerator(std::make_shared<Generator>(loaded_models.front().get(), density, 5000));
     generator_store.Generators.front()->ShouldUseLight(false);
     loaded_models.push_front(std::make_shared<ModelNormals>(model_path));
     generator_store.AddGenerator(std::make_shared<Generator>(loaded_models.front().get(), density, 5000));
+    generator_store.SetDensity(31);
     particles.UseRealLightShader();
     particles.AddTextureHandle(generator_store);
     particles.Reset();
+
+    scene_comentary = "This scene is using special shader for dynamic light.\n2 generators are used:\n  - one for model base\n  - second for normals\nTextures are then combinded in fragment shader.\n Try to notice changing shadow on falling particles as they are falling";
 }
 
 void LightFieldPsDemo::SetPresetBenchmark()
@@ -114,7 +117,10 @@ void LightFieldPsDemo::SetPresetBenchmark()
     generator_store.AddGenerator(std::make_shared<Generator>(loaded_models.front().get(), density, 5000));
     particles.SetGravity(0.003f, glm::vec3(0.0f, -1.0f, 0.0f));
     particles.AddTextureHandle(generator_store);
+    particles.SetPactilesAmount(1000);
     particles.SimulateSteps(10000);
+    scene_comentary = "This is special scene used for benchmarking.\nDuring benchmark, it's rendered with different amounts\nof particles and different resolutions";
+    active_skybox = -1;
 }
 
 void LightFieldPsDemo::SetPresetNoLightfield(int particles)
@@ -128,6 +134,8 @@ void LightFieldPsDemo::SetPresetNoLightfield(int particles)
     bench = std::make_unique<ParticleStandard3d>(std::make_shared<Model>("models/baloon.obj"), params);
     using_standard_3d = true;
     bench->SimulateSteps(10000);
+    scene_comentary = "This is special scene, because particles are rendered\nby standard 3D technique - no light field is used.\nParicle system is replaced with Standard3DParticle system";
+    active_skybox = -1;
 }
 
 void LightFieldPsDemo::SetPresetBenchmarkComplex()
@@ -144,6 +152,7 @@ void LightFieldPsDemo::SetPresetBenchmarkComplex()
     particles.SetGravity(0.003, glm::vec3(0.0f, -1.0f, 0.0f));
     particles.AddTextureHandle(generator_store);
     particles.SimulateSteps(10000);
+    active_skybox = -1;
 }
 
 void LightFieldPsDemo::SetPresetNoLightfieldComplex(int particles)
@@ -157,6 +166,7 @@ void LightFieldPsDemo::SetPresetNoLightfieldComplex(int particles)
     bench = std::make_unique<ParticleStandard3d>(std::make_shared<Model>("models/bunny.obj"), params);
     using_standard_3d = true;
     bench->SimulateSteps(10000);
+    active_skybox = -1;
 }
 
 void LightFieldPsDemo::SetPresetStarships()
@@ -353,6 +363,7 @@ void LightFieldPsDemo::Clean()
     loaded_models.clear();
     disco_preset = false;
     sunflower_preset = false;
+    using_standard_3d = false;
 }
 
 std::string LightFieldPsDemo::GetSceneComentary()
