@@ -8,6 +8,6 @@ struct UiSettings : public ParticleParameters, public GeneratorParameters
     bool show_border = false;
     bool show_light_field = false;
     int density = 21;
-    bool show_skybox = false;
+    bool show_skybox = true;
 };
 #endif

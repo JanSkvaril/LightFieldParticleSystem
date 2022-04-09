@@ -6,13 +6,14 @@
 #include "model.h"
 #include <glm/vec2.hpp>
 #include <list>
-
+#include "skybox.h"
 class LightFieldPsDemo
 {
 public:
     LightFieldPsDemo(glm::ivec2 resolution);
     void Update();
     void Draw();
+    void DrawSkybox();
     void Generate();
     void SetPresetBasic();
     void SetPresetBalloons();
@@ -26,8 +27,11 @@ public:
 
     ParticleEmitter particles;
     GeneratorStore generator_store;
+    void LoadSkyboxes();
 
 private:
+    int active_skybox = 0;
+    std::vector<std::unique_ptr<Skybox>> loaded_skyboxes;
     std::list<std::shared_ptr<Model>> loaded_models;
     bool using_standard_3d = false;
     std::unique_ptr<ParticleStandard3d> bench;

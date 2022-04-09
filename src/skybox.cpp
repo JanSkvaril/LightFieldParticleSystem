@@ -7,7 +7,7 @@
 #include <iostream>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
-Skybox::Skybox() : shader("shaders/skybox_vertex.vs", "shaders/skybox_fragment.fs")
+Skybox::Skybox(std::vector<std::string> faces) : shader("shaders/skybox_vertex.vs", "shaders/skybox_fragment.fs")
 {
 
     glGenVertexArrays(1, &skyboxVAO);
@@ -18,13 +18,6 @@ Skybox::Skybox() : shader("shaders/skybox_vertex.vs", "shaders/skybox_fragment.f
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *)0);
 
-    std::vector<std::string> faces = {
-        "imgs/skybox/right.jpg",
-        "imgs/skybox/left.jpg",
-        "imgs/skybox/top.jpg",
-        "imgs/skybox/bottom.jpg",
-        "imgs/skybox/front.jpg",
-        "imgs/skybox/back.jpg"};
     glGenTextures(1, &textureID);
     glBindTexture(GL_TEXTURE_CUBE_MAP, textureID);
 

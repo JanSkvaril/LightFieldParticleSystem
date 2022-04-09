@@ -10,7 +10,7 @@ uniform sampler2D texture2;
 uniform mat4 view; // emittor position
 uniform vec3 light_color;
 uniform bool use_light;
-vec3 light_pos = vec3(0.0, 10.0, 0.0);
+vec3 light_pos = vec3(0.0, - 10.0, 0.0);
 void main()
 {
     if (use_light) {

@@ -117,7 +117,6 @@ int main(int argc, char **argv)
         glfwSwapInterval(0);
     }
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    Skybox skybox;
     float time = 0.0f;
     LightFieldPsDemo lfps({SCR_WIDTH, SCR_HEIGHT});
 
@@ -154,7 +153,7 @@ int main(int argc, char **argv)
     else
     {
 
-        lfps.SetPresetBasic();
+        lfps.SetPresetStarships();
     }
 
     if (opt_particles)
@@ -199,7 +198,7 @@ int main(int argc, char **argv)
         glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
         if (ui.config.show_skybox)
         {
-            skybox.Draw(lfps.camera);
+            lfps.DrawSkybox();
         }
         if (!ui.config.show_light_field)
         {

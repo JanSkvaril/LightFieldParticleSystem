@@ -5,6 +5,7 @@
 #include "particle_starship.h"
 LightFieldPsDemo::LightFieldPsDemo(glm::ivec2 resolution) : particles(100), camera(resolution)
 {
+    LoadSkyboxes();
 }
 
 void LightFieldPsDemo::Update()
@@ -145,21 +146,52 @@ void LightFieldPsDemo::SetPresetNoLightfieldComplex(int particles)
 
 void LightFieldPsDemo::SetPresetStarships()
 {
+    active_skybox = 1;
     particles.SetParticleProtype(std::make_unique<ParticleStarhip>());
     generator_store.Clear();
     camera.LookAt(glm::vec3(0.0f, 0.0f, -10.0f), glm::vec3(0.0f, 0.0f, 0.0f));
-    int density = 21;
+    int density = 31;
 
     loaded_models.push_front(std::make_shared<Model>("models/battleship.obj"));
     generator_store.AddGenerator(std::make_shared<Generator>(loaded_models.front().get(), density, 5000));
+    generator_store.Generators.back()->SetLightColor(glm::vec3(0.77, 0.2, 0.27));
     loaded_models.push_front(std::make_shared<Model>("models/battleship2.obj"));
     generator_store.AddGenerator(std::make_shared<Generator>(loaded_models.front().get(), density, 5000));
+    generator_store.Generators.back()->SetLightColor(glm::vec3(0.2, 0.27, 0.4));
     loaded_models.push_front(std::make_shared<Model>("models/battleship3.obj"));
     generator_store.AddGenerator(std::make_shared<Generator>(loaded_models.front().get(), density, 5000));
+    generator_store.Generators.back()->SetLightColor(glm::vec3(0.3, 0.3, 0.3));
     generator_store.Generators.back()->SetModelRotation(glm::vec3(0.0, 3.14f / 2.0f, 0.0));
+    generator_store.SetDensity(density);
     particles.SetGravity(0.0f, glm::vec3(0.0f, -1.0f, 0.0f));
     particles.AddTextureHandle(generator_store);
     particles.SetTimeToLive(1400, 800);
     particles.SetPactilesAmount(3000);
     particles.SimulateSteps(10000);
+}
+
+void LightFieldPsDemo::LoadSkyboxes()
+{
+    std::vector<std::string> faces = {
+        "imgs/skybox/basic/right.jpg",
+        "imgs/skybox/basic/left.jpg",
+        "imgs/skybox/basic/top.jpg",
+        "imgs/skybox/basic/bottom.jpg",
+        "imgs/skybox/basic/front.jpg",
+        "imgs/skybox/basic/back.jpg"};
+    loaded_skyboxes.push_back(std::make_unique<Skybox>(faces));
+
+    faces = {
+        "imgs/skybox/space/skybox_left.png",
+        "imgs/skybox/space/skybox_right.png",
+        "imgs/skybox/space/skybox_up.png",
+        "imgs/skybox/space/skybox_down.png",
+        "imgs/skybox/space/skybox_front.png",
+        "imgs/skybox/space/skybox_back.png"};
+    loaded_skyboxes.push_back(std::make_unique<Skybox>(faces));
+}
+
+void LightFieldPsDemo::DrawSkybox()
+{
+    loaded_skyboxes[active_skybox]->Draw(camera);
 }

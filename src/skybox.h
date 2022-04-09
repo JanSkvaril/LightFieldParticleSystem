@@ -9,7 +9,7 @@
 class Skybox
 {
 public:
-    Skybox();
+    Skybox(std::vector<std::string> faces);
     void Draw(Camera &camera);
 
 protected:
