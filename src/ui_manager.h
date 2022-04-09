@@ -16,11 +16,14 @@ public:
     void RefreshUI();
 
 protected:
+    void UpdateComentaryText();
+    std::string scene_comentary = "Generic scene\n Generic scene Generic scene Generic scene Generic scene Generic scene";
     LightFieldPsDemo *lfps = nullptr;
     void InitEvents();
     nanogui::Screen *screen;
     GLFWwindow *window;
     nanogui::FormHelper *gui;
+    nanogui::TextArea *text_area;
 };
 
 #endif

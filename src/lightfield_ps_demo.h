@@ -31,12 +31,15 @@ public:
     ParticleEmitter particles;
     GeneratorStore generator_store;
     void LoadSkyboxes();
+    std::string GetSceneComentary();
 
 private:
+    void Clean();
     void UpdatePresetSpecific();
     int active_skybox = 0;
     std::vector<std::unique_ptr<Skybox>> loaded_skyboxes;
     std::list<std::shared_ptr<Model>> loaded_models;
+    std::string scene_comentary = "- no text -";
     bool using_standard_3d = false;
     std::unique_ptr<ParticleStandard3d> bench;
     TextReactangle texture_rectangle;

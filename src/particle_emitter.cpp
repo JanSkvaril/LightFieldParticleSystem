@@ -372,3 +372,8 @@ void ParticleEmitter::AddTextureHandle(GeneratorStore *store)
         AddTextureHandle(generator->CreateHandle());
     }
 }
+
+ParticleEmitter &ParticleEmitter::ParticleEmitter::operator=(const ParticleEmitter &rhs)
+{
+    return *this;
+}

@@ -153,7 +153,7 @@ int main(int argc, char **argv)
     else
     {
 
-        lfps.SetPresetDisco();
+        lfps.SetPresetBasic();
     }
 
     if (opt_particles)

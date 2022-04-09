@@ -22,11 +22,6 @@ UiManager::UiManager(GLFWwindow *window)
     gui->add_group("Scene preset");
     gui->add_group("Light");
 
-    nanogui::ref<nanogui::Window> nanoguiWindow4 = gui->add_window(nanogui::Vector2i(750, 10), "Presets");
-    nanoguiWindow4->set_width(200);
-    gui->add_group("Avaiable presets");
-    gui->add_group("Settings");
-    screen->set_visible(true);
     InitEvents();
 }
 
@@ -264,11 +259,44 @@ void UiManager::AddLFPS(LightFieldPsDemo *lfps)
                 return nanogui::Color{col.r, col.g, col.b, 1.0f};
             });
     }
+    auto nanoguiWindow4 = gui->add_window(nanogui::Vector2i(750, 10), "Presets");
+    nanoguiWindow4->set_width(200);
+    gui->add_group("Avaiable presets");
+    gui->add_button("Basic", [&, lfps]()
+                    { lfps->SetPresetBasic(); this->UpdateComentaryText(); });
+    gui->add_button("Leafes", [&, lfps]()
+                    { lfps->SetPresetBalloons();this->UpdateComentaryText(); });
+    gui->add_button("Starships", [&, lfps]()
+                    { lfps->SetPresetStarships();this->UpdateComentaryText(); });
+    gui->add_button("Transformation", [&, lfps]()
+                    { lfps->SetPresetHalfChange();this->UpdateComentaryText(); });
+    gui->add_button("Sunflowers", [&, lfps]()
+                    { lfps->SetPresetSunflower(); this->UpdateComentaryText(); });
+    gui->add_button("Disco", [&, lfps]()
+                    { lfps->SetPresetDisco(); this->UpdateComentaryText(); });
+    auto group = gui->add_group("Commentary");
 
+    text_area = new nanogui::TextArea(nanoguiWindow4);
+    text_area->append_line("No text");
+    gui->add_widget("", text_area);
+    screen->set_visible(true);
     screen->perform_layout();
 }
 
 void UiManager::RefreshUI()
 {
+    screen->perform_layout();
+}
+
+void UiManager::UpdateComentaryText()
+{
+    text_area->clear();
+    auto text = lfps->GetSceneComentary();
+    std::istringstream iss(text);
+    for (std::string line; std::getline(iss, line);)
+    {
+        text_area->append_line(line);
+    }
+
     screen->perform_layout();
 }

@@ -24,6 +24,7 @@ class ParticleEmitter
 public:
     ParticleEmitter(int particles);
     ParticleEmitter(int particles, std::unique_ptr<Particle> particle_prototype_ptr);
+    ParticleEmitter &ParticleEmitter::operator=(const ParticleEmitter &rhs);
     void Reset();
     void Update();
     void Draw(Camera &camera, float texture_density);

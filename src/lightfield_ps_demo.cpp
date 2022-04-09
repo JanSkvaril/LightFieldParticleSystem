@@ -42,6 +42,7 @@ void LightFieldPsDemo::Draw()
 
 void LightFieldPsDemo::SetPresetBasic()
 {
+    Clean();
     particles.SetParticleProtype(std::make_unique<Particle>());
     generator_store.Clear();
     camera.LookAt(glm::vec3(0.0f, 0.0f, -5.0f), glm::vec3(0.0f, 0.0f, 0.0f));
@@ -51,6 +52,8 @@ void LightFieldPsDemo::SetPresetBasic()
     int density = 21;
     generator_store.AddGenerator(std::make_shared<Generator>(loaded_models.front().get(), density, 5000));
     particles.AddTextureHandle(generator_store);
+
+    scene_comentary = "Basic scene";
 }
 
 void LightFieldPsDemo::Generate()
@@ -60,6 +63,7 @@ void LightFieldPsDemo::Generate()
 
 void LightFieldPsDemo::SetPresetBalloons()
 {
+    Clean();
     particles.SetParticleProtype(std::make_unique<ParticleRandomModel>());
     generator_store.Clear();
     camera.LookAt(glm::vec3(0.0f, 0.0f, -5.0f), glm::vec3(0.0f, 0.0f, 0.0f));
@@ -74,10 +78,13 @@ void LightFieldPsDemo::SetPresetBalloons()
     generator_store.Generators.back()->SetLightColor(glm::vec3(0.0, 0.5, 0.5));
     particles.AddTextureHandle(generator_store);
     particles.Reset();
+
+    scene_comentary = "Scene containging 3 seperate generators\neach with different light, rotattion, etc.\n \nParticles are created with leaf prototype";
 }
 
 void LightFieldPsDemo::SetPresetRealLight()
 {
+    Clean();
     particles.SetParticleProtype(std::make_unique<Particle>());
     generator_store.Clear();
     camera.LookAt(glm::vec3(0.0f, 0.0f, -5.0f), glm::vec3(0.0f, 0.0f, 0.0f));
@@ -96,6 +103,7 @@ void LightFieldPsDemo::SetPresetRealLight()
 
 void LightFieldPsDemo::SetPresetBenchmark()
 {
+    Clean();
     particles.SetParticleProtype(std::make_unique<Particle>());
     generator_store.Clear();
     camera.LookAt(glm::vec3(0.0f, 0.0f, -15.0f), glm::vec3(0.0f, 0.0f, 0.0f));
@@ -111,6 +119,7 @@ void LightFieldPsDemo::SetPresetBenchmark()
 
 void LightFieldPsDemo::SetPresetNoLightfield(int particles)
 {
+    Clean();
     ParticleParameters params{};
     params.gravity_strength = 0.003f;
     params.gravity_direction = glm::vec3(0.0f, -1.0f, 0.0f);
@@ -123,6 +132,7 @@ void LightFieldPsDemo::SetPresetNoLightfield(int particles)
 
 void LightFieldPsDemo::SetPresetBenchmarkComplex()
 {
+    Clean();
     particles.SetParticleProtype(std::make_unique<Particle>());
     generator_store.Clear();
     camera.LookAt(glm::vec3(0.0f, 0.0f, -15.0f), glm::vec3(0.0f, 0.0f, 0.0f));
@@ -138,6 +148,7 @@ void LightFieldPsDemo::SetPresetBenchmarkComplex()
 
 void LightFieldPsDemo::SetPresetNoLightfieldComplex(int particles)
 {
+    Clean();
     ParticleParameters params{};
     params.gravity_strength = 0.003f;
     params.gravity_direction = glm::vec3(0.0f, -1.0f, 0.0f);
@@ -150,6 +161,7 @@ void LightFieldPsDemo::SetPresetNoLightfieldComplex(int particles)
 
 void LightFieldPsDemo::SetPresetStarships()
 {
+    Clean();
     active_skybox = 1;
     particles.SetParticleProtype(std::make_unique<ParticleStarhip>());
     generator_store.Clear();
@@ -172,6 +184,8 @@ void LightFieldPsDemo::SetPresetStarships()
     particles.SetTimeToLive(1000, 800);
     particles.SetPactilesAmount(5000);
     particles.SimulateSteps(10000);
+
+    scene_comentary = "Scene containg example of particle system usage\nEvery ship type has it's own generator.\nParticles are spawned in square area.\n \nSpace ship particle prototype is used.";
 }
 
 void LightFieldPsDemo::LoadSkyboxes()
@@ -221,6 +235,7 @@ void LightFieldPsDemo::DrawSkybox()
 
 void LightFieldPsDemo::SetPresetHalfChange()
 {
+    Clean();
     particles.SetParticleProtype(std::make_unique<ParticleHalfChange>());
     generator_store.Clear();
     camera.LookAt(glm::vec3(0.0f, 0.0f, -15.0f), glm::vec3(0.0f, 0.0f, 0.0f));
@@ -243,10 +258,12 @@ void LightFieldPsDemo::SetPresetHalfChange()
     particles.SetGravity(0.05f, glm::vec3(0.0f, -1.0f, 0.0f));
     particles.ShouldParticlesRotate(true);
     particles.Reset();
+    scene_comentary = "Scene containg particles, that change used texture\nwhen they pass thought specific point.\nThis scene is using 2 generators.\n \nParticles are created with Transform prototype";
 }
 
 void LightFieldPsDemo::SetPresetSunflower()
 {
+    Clean();
     particles.SetParticleProtype(std::make_unique<ParticleFlower>());
     generator_store.Clear();
     camera.LookAt(glm::vec3(0.0f, 0.0f, -5.0f), glm::vec3(0.0f, 0.0f, 0.0f));
@@ -265,6 +282,7 @@ void LightFieldPsDemo::SetPresetSunflower()
     particles.SetSpeed(0.0f);
     particles.SetPactilesAmount(10000);
     active_skybox = 3;
+    scene_comentary = "This scene contains sunflower field\nwith changing day and night cycle.\nSunflowers are facing sun only at daytime.\n \nThis particle system is using only 1 generator.\nLight field is recreated ever day and night\nwith different model.\nParticles are placen in rectangle area.\n \nFlower prototype is used.";
 }
 
 void LightFieldPsDemo::UpdatePresetSpecific()
@@ -306,6 +324,7 @@ void LightFieldPsDemo::UpdatePresetSpecific()
 
 void LightFieldPsDemo::SetPresetDisco()
 {
+    Clean();
     particles.SetParticleProtype(std::make_unique<Particle>());
     generator_store.Clear();
     camera.LookAt(glm::vec3(0.0f, 0.0f, -10.0f), glm::vec3(0.0f, 0.0f, 0.0f));
@@ -321,4 +340,22 @@ void LightFieldPsDemo::SetPresetDisco()
     particles.SetPactilesAmount(3000);
     disco_preset = true;
     active_skybox = -1;
+    scene_comentary = "Scene containging 'disco' balloons,\nthat randomly change color.\n \nThis scene contains only 1 generator.\nLight field texture is recreated every color change.\n \nParticles are created with Disco prototyp.";
+}
+
+void LightFieldPsDemo::Clean()
+{
+    new (&particles) ParticleEmitter(100);
+    new (&camera) Camera(camera.Resolution);
+    new (&generator_store) GeneratorStore();
+    active_skybox = 0;
+    generator_store.Clear();
+    loaded_models.clear();
+    disco_preset = false;
+    sunflower_preset = false;
+}
+
+std::string LightFieldPsDemo::GetSceneComentary()
+{
+    return scene_comentary;
 }
