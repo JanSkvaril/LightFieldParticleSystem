@@ -12,14 +12,14 @@ public:
     void Clear();
     void SetDensity(int density);
     void SetResolution(int resolution);
-    const std::list<std::shared_ptr<Generator>> &Generators;
+    const std::vector<std::shared_ptr<Generator>> &Generators;
     int GetDensity() const;
     int GetRelution() const;
 
 protected:
     int density = 21;
     int resolution = 5000;
-    std::list<std::shared_ptr<Generator>> generators;
+    std::vector<std::shared_ptr<Generator>> generators;
 };
 
 #endif

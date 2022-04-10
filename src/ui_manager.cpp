@@ -201,85 +201,29 @@ void UiManager::AddLFPS(LightFieldPsDemo *lfps)
         [gs]()
         { return gs->GetRelution(); });
 
-    // model
-    for (auto &generator : gs->Generators)
-    {
-        nanogui::ref<nanogui::Window> nanoguiWindow2 = gui->add_window(nanogui::Vector2i(250, 10), "Model");
-        //  nanoguiWindow2->set_width(200);
+    CreateModelWindows();
 
-        gui->add_group("Position");
-        gui->add_variable<float>(
-            "Rotation x",
-            [generator](float value)
-            {
-                auto r = generator->Parameters.model_rotation;
-                generator->SetModelRotation({value, r.y, r.z});
-            },
-            [generator]()
-            { return generator->Parameters.model_rotation.x; });
-        gui->add_variable<float>(
-            "Rotation y",
-            [generator](float value)
-            {
-                auto r = generator->Parameters.model_rotation;
-                generator->SetModelRotation({r.x, value, r.z});
-            },
-            [generator]()
-            { return generator->Parameters.model_rotation.y; });
-        gui->add_variable<float>(
-            "Rotation z",
-            [generator](float value)
-            {
-                auto r = generator->Parameters.model_rotation;
-                generator->SetModelRotation({r.x, r.y, value});
-            },
-            [generator]()
-            { return generator->Parameters.model_rotation.z; });
-        gui->add_group("Light");
-        gui->add_variable<bool>(
-            "Use baked-in light",
-            [generator](bool value)
-            {
-                generator->ShouldUseLight(value);
-            },
-            [generator]()
-            {
-                return generator->Parameters.use_light;
-            });
-        gui->add_variable<nanogui::Color>(
-            "Color",
-            [generator](nanogui::Color value)
-            {
-                glm::vec3 col = glm::vec3(value.r(), value.g(), value.b());
-                generator->SetLightColor(col);
-            },
-            [generator]()
-            {
-                glm::vec3 col = generator->Parameters.model_light_color;
-                return nanogui::Color{col.r, col.g, col.b, 1.0f};
-            });
-    }
     auto nanoguiWindow4 = gui->add_window(nanogui::Vector2i(750, 10), "Presets");
     nanoguiWindow4->set_width(200);
     gui->add_group("Avaiable presets");
     gui->add_button("Basic", [&, lfps]()
-                    { lfps->SetPresetBasic(); this->UpdateComentaryText(); });
+                    {DisposeModelWindows() ;lfps->SetPresetBasic(); this->PrepNewScene(); });
     gui->add_button("Leafes", [&, lfps]()
-                    { lfps->SetPresetBalloons();this->UpdateComentaryText(); });
+                    {DisposeModelWindows(); lfps->SetPresetBalloons();this->PrepNewScene(); });
     gui->add_button("Starships", [&, lfps]()
-                    { lfps->SetPresetStarships();this->UpdateComentaryText(); });
+                    { lfps->SetPresetStarships();this->PrepNewScene(); });
     gui->add_button("Transformation", [&, lfps]()
-                    { lfps->SetPresetHalfChange();this->UpdateComentaryText(); });
+                    { lfps->SetPresetHalfChange();this->PrepNewScene(); });
     gui->add_button("Sunflowers", [&, lfps]()
-                    { lfps->SetPresetSunflower(); this->UpdateComentaryText(); });
+                    { lfps->SetPresetSunflower(); this->PrepNewScene(); });
     gui->add_button("Disco", [&, lfps]()
-                    { lfps->SetPresetDisco(); this->UpdateComentaryText(); });
+                    { lfps->SetPresetDisco(); this->PrepNewScene(); });
     gui->add_button("Dynamic light", [&, lfps]()
-                    { lfps->SetPresetRealLight(); this->UpdateComentaryText(); });
+                    { lfps->SetPresetRealLight(); this->PrepNewScene(); });
     gui->add_button("No light field", [&, lfps]()
-                    { lfps->SetPresetNoLightfield(1000); this->UpdateComentaryText(); });
+                    { lfps->SetPresetNoLightfield(1000); this->PrepNewScene(); });
     gui->add_button("Benchark", [&, lfps]()
-                    { lfps->SetPresetBenchmark(); this->UpdateComentaryText(); });
+                    { lfps->SetPresetBenchmark(); this->PrepNewScene(); });
     auto group = gui->add_group("Commentary");
 
     text_area = new nanogui::TextArea(nanoguiWindow4);
@@ -303,6 +247,113 @@ void UiManager::UpdateComentaryText()
     {
         text_area->append_line(line);
     }
+}
+#include <iostream>
+void UiManager::CreateModelWindows()
+{
+    GeneratorStore *gs = &lfps->generator_store;
+    active_counter++;
+    // model
+    for (int i = 0; i < gs->Generators.size(); i++)
+    {
+        nanogui::ref<nanogui::Window> nanoguiWindow2 = gui->add_window(nanogui::Vector2i(250, 10 * (i + 1)), "Model");
+        nanoguiWindow2->set_width(200);
+        int ac = active_counter;
+        gui->add_group("Position");
+        gui->add_variable<float>(
+            "Rotation x",
+            [&, i, ac](float value)
+            {
+                if (ac != this->active_counter)
+                    return;
+                auto r = lfps->generator_store.Generators[i]->Parameters.model_rotation;
+                lfps->generator_store.Generators[i]->SetModelRotation({value, r.y, r.z});
+            },
+            [&, i, ac]()
+            {
+                if (ac != this->active_counter) return 0.0f;
+                return lfps->generator_store.Generators[i]->Parameters.model_rotation.x; });
+        gui->add_variable<float>(
+            "Rotation y",
+            [&, i, ac](float value)
+            {
+                if (ac != this->active_counter)
+                    return;
+                auto r = lfps->generator_store.Generators[i]->Parameters.model_rotation;
+                lfps->generator_store.Generators[i]->SetModelRotation({r.x, value, r.y});
+            },
+            [&, i, ac]()
+            {
+                if (ac != this->active_counter) return 0.0f;
+                return lfps->generator_store.Generators[i]->Parameters.model_rotation.y; });
+        gui->add_variable<float>(
+            "Rotation z",
+            [&, i, ac](float value)
+            {
+                if (ac != this->active_counter)
+                    return;
+                auto r = lfps->generator_store.Generators[i]->Parameters.model_rotation;
+                lfps->generator_store.Generators[i]->SetModelRotation({r.x, r.y, value});
+            },
+            [&, i, ac]()
+            {
+                if (ac != this->active_counter) return 0.0f;
+                return lfps->generator_store.Generators[i]->Parameters.model_rotation.z; });
+        gui->add_group("Light");
+        gui->add_variable<bool>(
+            "Use baked-in light",
+            [&, i, ac](bool value)
+            {
+                if (ac != this->active_counter)
+                    return;
+                lfps->generator_store.Generators[i]->ShouldUseLight(value);
+            },
+            [&, i, ac]()
+            {
+                if (ac != this->active_counter)
+                    return false;
+                return lfps->generator_store.Generators[i]->Parameters.use_light;
+            });
+        gui->add_variable<nanogui::Color>(
+            "Color",
+            [&, i, ac](nanogui::Color value)
+            {
+                if (ac != this->active_counter)
+                    return;
+                glm::vec3 col = glm::vec3(value.r(), value.g(), value.b());
+                lfps->generator_store.Generators[i]->SetLightColor(col);
+            },
+            [&, i, ac]()
+            {
+                if (ac != this->active_counter)
+                    return nanogui::Color();
+                glm::vec3 col = lfps->generator_store.Generators[i]->Parameters.model_light_color;
+                return nanogui::Color{col.r, col.g, col.b, 1.0f};
+            });
+        active_model_windows.push_back(nanoguiWindow2);
+        all_model_windows.push_back(nanoguiWindow2);
+    }
+}
+
+void UiManager::PrepNewScene()
+{
+    UpdateComentaryText();
+    CreateModelWindows();
     gui->refresh();
     screen->perform_layout();
+}
+
+void UiManager::DisposeModelWindows()
+{
+
+    for (auto &model_window : active_model_windows)
+    {
+        model_window->set_visible(false);
+        model_window->set_enabled(false);
+        model_window->dispose();
+    }
+    gui->refresh();
+    screen->nvg_flush();
+    screen->perform_layout();
+    active_model_windows.clear();
 }
