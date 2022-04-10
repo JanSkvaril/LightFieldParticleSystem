@@ -188,6 +188,8 @@ void UiManager::AddLFPS(LightFieldPsDemo *lfps)
         { ps->ParticleRotationSpeed(value); },
         [ps]()
         { return ps->Parameters.rotation_multiplier; });
+    gui->add_button("Simulate 1000 steps", [ps]()
+                    { ps->SimulateSteps(1000); });
     gui->add_group("Visual");
     gui->add_variable<bool>(
         "Show borders",
