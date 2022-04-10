@@ -14,7 +14,7 @@ struct ParticleParameters
     int time_to_live_dispersion = 350;
 
     bool random_x_rotation = false;
-    bool random_rotation_speed = false;
+    bool random_rotation_speed = true;
     float rotation_multiplier = 0.00f;
     float x_rotation_speed = 0.00f;
 

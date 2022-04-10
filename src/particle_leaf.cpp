@@ -23,3 +23,10 @@ std::unique_ptr<Particle> ParticleLeaf::clone()
 {
     return std::make_unique<ParticleLeaf>();
 }
+
+void ParticleLeaf::Reset()
+{
+    Particle::Reset();
+    texture_id = rand() % params->textures_avaiable;
+    position = glm::vec3(-(rand() % 100) / 100.0f, 10.0f, 0.0f);
+}

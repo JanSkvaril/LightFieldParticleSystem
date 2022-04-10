@@ -64,21 +64,35 @@ void LightFieldPsDemo::Generate()
 void LightFieldPsDemo::SetPresetBalloons()
 {
     Clean();
-    particles.SetParticleProtype(std::make_unique<ParticleRandomModel>());
+    particles.SetParticleProtype(std::make_unique<ParticleLeaf>());
     generator_store.Clear();
-    camera.LookAt(glm::vec3(0.0f, 0.0f, -5.0f), glm::vec3(0.0f, 0.0f, 0.0f));
+    camera.LookAt(glm::vec3(0.0f, 0.0f, -8.0f), glm::vec3(0.0f, 0.0f, 0.0f));
 
     loaded_models.push_front(std::make_shared<Model>("models/leaf.obj"));
 
-    int density = 21;
-    generator_store.AddGenerator(std::make_shared<Generator>(loaded_models.front().get(), density, 5000));
-    generator_store.AddGenerator(std::make_shared<Generator>(loaded_models.front().get(), density, 5000));
-    generator_store.Generators.back()->SetLightColor(glm::vec3(1.0, 0.0, 0.0));
-    generator_store.AddGenerator(std::make_shared<Generator>(loaded_models.front().get(), density, 5000));
-    generator_store.Generators.back()->SetLightColor(glm::vec3(0.0, 0.5, 0.5));
+    int density = 51;
+    int resolution = 10000;
+    generator_store.AddGenerator(std::make_shared<Generator>(loaded_models.front().get(), density, 10000));
+    generator_store.Generators.back()->SetLightColor({0.149, 0.4, 0.0});
+    generator_store.Generators.back()->SetModelRotation({0.149, 0.6, 0.0});
+    generator_store.AddGenerator(std::make_shared<Generator>(loaded_models.front().get(), density, 10000));
+    generator_store.Generators.back()->SetLightColor({0.239, 0.106, 0.0});
+    generator_store.Generators.back()->SetModelRotation({0.239, 0.106, 0.0});
+    generator_store.AddGenerator(std::make_shared<Generator>(loaded_models.front().get(), density, 10000));
+    generator_store.Generators.back()->SetLightColor({0.518, 0.192, 0.0});
+    generator_store.Generators.back()->SetModelRotation({0.518, 0.42, 0.0});
     particles.AddTextureHandle(generator_store);
+    particles.ShouldParticlesRotate(true);
+    particles.ParticleRotationSpeed(0.005f);
+    particles.SetGravity(0.008f, glm::vec3(-0.2f, -0.9f, 0.0f));
+    particles.SetSpeed(0.03f);
+    particles.SetPactilesAmount(500);
+    particles.SetTimeToLive(1000, 1000);
     particles.Reset();
+    generator_store.SetDensity(density);
+    particles.SimulateSteps(10000);
 
+    active_skybox = 2;
     scene_comentary = "Scene containging 3 seperate generators\neach with different light, rotattion, etc.\n \nParticles are created with leaf prototype";
 }
 

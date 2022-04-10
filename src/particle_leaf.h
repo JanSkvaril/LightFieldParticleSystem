@@ -7,6 +7,7 @@ public:
     ParticleLeaf();
     ParticleLeaf(const Particle &rhs);
     std::unique_ptr<Particle> clone();
+    void Reset() override;
 
 protected:
     virtual void SimulateMovement(float time) override;
