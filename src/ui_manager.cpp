@@ -211,19 +211,19 @@ void UiManager::AddLFPS(LightFieldPsDemo *lfps)
     gui->add_button("Leafes", [&, lfps]()
                     {DisposeModelWindows(); lfps->SetPresetBalloons();this->PrepNewScene(); });
     gui->add_button("Starships", [&, lfps]()
-                    { lfps->SetPresetStarships();this->PrepNewScene(); });
+                    {DisposeModelWindows() ; lfps->SetPresetStarships();this->PrepNewScene(); });
     gui->add_button("Transformation", [&, lfps]()
-                    { lfps->SetPresetHalfChange();this->PrepNewScene(); });
+                    {DisposeModelWindows() ; lfps->SetPresetHalfChange();this->PrepNewScene(); });
     gui->add_button("Sunflowers", [&, lfps]()
-                    { lfps->SetPresetSunflower(); this->PrepNewScene(); });
+                    {DisposeModelWindows() ; lfps->SetPresetSunflower(); this->PrepNewScene(); });
     gui->add_button("Disco", [&, lfps]()
-                    { lfps->SetPresetDisco(); this->PrepNewScene(); });
+                    {DisposeModelWindows() ; lfps->SetPresetDisco(); this->PrepNewScene(); });
     gui->add_button("Dynamic light", [&, lfps]()
-                    { lfps->SetPresetRealLight(); this->PrepNewScene(); });
+                    {DisposeModelWindows() ; lfps->SetPresetRealLight(); this->PrepNewScene(); });
     gui->add_button("No light field", [&, lfps]()
-                    { lfps->SetPresetNoLightfield(1000); this->PrepNewScene(); });
+                    {DisposeModelWindows() ; lfps->SetPresetNoLightfield(1000); this->PrepNewScene(); });
     gui->add_button("Benchark", [&, lfps]()
-                    { lfps->SetPresetBenchmark(); this->PrepNewScene(); });
+                    {DisposeModelWindows() ; lfps->SetPresetBenchmark(); this->PrepNewScene(); });
     auto group = gui->add_group("Commentary");
 
     text_area = new nanogui::TextArea(nanoguiWindow4);
