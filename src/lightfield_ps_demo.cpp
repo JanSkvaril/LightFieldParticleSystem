@@ -66,14 +66,14 @@ void LightFieldPsDemo::SetPresetBalloons()
     Clean();
     particles.SetParticleProtype(std::make_unique<ParticleLeaf>());
     generator_store.Clear();
-    camera.LookAt(glm::vec3(0.0f, 0.0f, -8.0f), glm::vec3(0.0f, 0.0f, 0.0f));
+    camera.LookAt(glm::vec3(0.0f, 0.0f, -12.0f), glm::vec3(0.0f, 0.0f, 0.0f));
 
     loaded_models.push_front(std::make_shared<Model>("models/leaf.obj"));
 
     int density = 51;
     int resolution = 10000;
     generator_store.AddGenerator(std::make_shared<Generator>(loaded_models.front().get(), density, 10000));
-    generator_store.Generators.back()->SetLightColor({0.149, 0.4, 0.0});
+    generator_store.Generators.back()->SetLightColor({0.949, 0.4, 0.0});
     generator_store.Generators.back()->SetModelRotation({0.149, 0.6, 0.0});
     generator_store.AddGenerator(std::make_shared<Generator>(loaded_models.front().get(), density, 10000));
     generator_store.Generators.back()->SetLightColor({0.239, 0.106, 0.0});
@@ -84,15 +84,15 @@ void LightFieldPsDemo::SetPresetBalloons()
     particles.AddTextureHandle(generator_store);
     particles.ShouldParticlesRotate(true);
     particles.ParticleRotationSpeed(0.005f);
-    particles.SetGravity(0.008f, glm::vec3(-0.2f, -0.9f, 0.0f));
+    particles.SetGravity(0.002f, glm::vec3(-0.2f, -0.9f, 0.0f));
     particles.SetSpeed(0.03f);
-    particles.SetPactilesAmount(500);
+    particles.SetPactilesAmount(1000);
     particles.SetTimeToLive(1000, 1000);
     particles.Reset();
     generator_store.SetDensity(density);
     particles.SimulateSteps(10000);
 
-    active_skybox = 2;
+    active_skybox = 4;
     scene_comentary = "Scene containging 3 seperate generators\neach with different light, rotattion, etc.\n \nParticles are created with leaf prototype";
 }
 
@@ -247,6 +247,15 @@ void LightFieldPsDemo::LoadSkyboxes()
         "imgs/skybox/field2/negy.jpg",
         "imgs/skybox/field2/posz.jpg",
         "imgs/skybox/field2/negz.jpg"};
+    loaded_skyboxes.push_back(std::make_unique<Skybox>(faces));
+
+    faces = {
+        "imgs/skybox/forest/posx.jpg",
+        "imgs/skybox/forest/negx.jpg",
+        "imgs/skybox/forest/posy.jpg",
+        "imgs/skybox/forest/negy.jpg",
+        "imgs/skybox/forest/posz.jpg",
+        "imgs/skybox/forest/negz.jpg"};
     loaded_skyboxes.push_back(std::make_unique<Skybox>(faces));
 }
 

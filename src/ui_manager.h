@@ -16,6 +16,8 @@ public:
     void RefreshUI();
 
 protected:
+    bool hide_ui = false;
+
     float test = 0.0f;
     void PrepNewScene();
     void DisposeModelWindows();

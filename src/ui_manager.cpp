@@ -86,6 +86,8 @@ void UiManager::InitEvents()
 
 void UiManager::Draw()
 {
+    if (hide_ui)
+        return;
     screen->draw_widgets();
 }
 
@@ -116,6 +118,15 @@ void UiManager::HandleCameraControls(Camera &camera)
     else if (glfwGetKey(window, GLFW_KEY_O) == GLFW_PRESS)
     {
         camera.Zoom(-zoom_speed);
+    }
+
+    if (glfwGetKey(window, GLFW_KEY_U) == GLFW_PRESS)
+    {
+        hide_ui = true;
+    }
+    if (glfwGetKey(window, GLFW_KEY_J) == GLFW_PRESS)
+    {
+        hide_ui = false;
     }
 }
 
