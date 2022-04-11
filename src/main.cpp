@@ -122,8 +122,8 @@ int main(int argc, char **argv)
     }
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     float time = 0.0f;
+    std::srand(0); // same seed every time
     LightFieldPsDemo lfps({SCR_WIDTH, SCR_HEIGHT});
-
     if (opt_scene_benchmark)
     {
         lfps.SetPresetBenchmark();
@@ -169,12 +169,14 @@ int main(int argc, char **argv)
         lfps.generator_store.SetResolution(opt_resolution.Get());
         lfps.particles.AddTextureHandle(lfps.generator_store);
     }
-    if (opt_scene_benchmark)
-    {
-        lfps.particles.SimulateSteps(10000);
-    }
     UiManager ui(window);
     ui.AddLFPS(&lfps);
+    if (opt_no_vsync)
+    {
+        lfps.particles.Reset();
+        lfps.particles.SimulateSteps(1000);
+        ui.ShouldDisplayui(false);
+    }
     // std::cout << glGetString(GL_VERSION) << "\n";
     glEnable(GL_BLEND);
     TextReactangle rec;

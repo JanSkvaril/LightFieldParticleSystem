@@ -14,6 +14,7 @@ public:
     UiSettings config;
     void AddLFPS(LightFieldPsDemo *lfps);
     void RefreshUI();
+    void ShouldDisplayui(bool display_ui);
 
 protected:
     bool hide_ui = false;

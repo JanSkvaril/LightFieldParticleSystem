@@ -131,8 +131,6 @@ void LightFieldPsDemo::SetPresetBenchmark()
     generator_store.AddGenerator(std::make_shared<Generator>(loaded_models.front().get(), density, 5000));
     particles.SetGravity(0.003f, glm::vec3(0.0f, -1.0f, 0.0f));
     particles.AddTextureHandle(generator_store);
-    particles.SetPactilesAmount(1000);
-    particles.SimulateSteps(10000);
     scene_comentary = "This is special scene used for benchmarking.\nDuring benchmark, it's rendered with different amounts\nof particles and different resolutions";
     active_skybox = -1;
 }
@@ -147,9 +145,9 @@ void LightFieldPsDemo::SetPresetNoLightfield(int particles)
     camera.LookAt(glm::vec3(0.0f, 0.0f, -15.0f), glm::vec3(0.0f, 0.0f, 0.0f));
     bench = std::make_unique<ParticleStandard3d>(std::make_shared<Model>("models/baloon.obj"), params);
     using_standard_3d = true;
-    bench->SimulateSteps(10000);
     scene_comentary = "This is special scene, because particles are rendered\nby standard 3D technique - no light field is used.\nParicle system is replaced with Standard3DParticle system";
     active_skybox = -1;
+    bench->SimulateSteps(1000);
 }
 
 void LightFieldPsDemo::SetPresetBenchmarkComplex()
@@ -165,7 +163,6 @@ void LightFieldPsDemo::SetPresetBenchmarkComplex()
     generator_store.AddGenerator(std::make_shared<Generator>(loaded_models.front().get(), density, 5000));
     particles.SetGravity(0.003, glm::vec3(0.0f, -1.0f, 0.0f));
     particles.AddTextureHandle(generator_store);
-    particles.SimulateSteps(10000);
     active_skybox = -1;
 }
 
@@ -179,8 +176,8 @@ void LightFieldPsDemo::SetPresetNoLightfieldComplex(int particles)
     camera.LookAt(glm::vec3(0.0f, 0.0f, -15.0f), glm::vec3(0.0f, 0.0f, 0.0f));
     bench = std::make_unique<ParticleStandard3d>(std::make_shared<Model>("models/bunny.obj"), params);
     using_standard_3d = true;
-    bench->SimulateSteps(10000);
     active_skybox = -1;
+    bench->SimulateSteps(1000);
 }
 
 void LightFieldPsDemo::SetPresetStarships()

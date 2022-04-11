@@ -370,3 +370,8 @@ void UiManager::DisposeModelWindows()
     screen->perform_layout();
     active_model_windows.clear();
 }
+
+void UiManager::ShouldDisplayui(bool display_ui)
+{
+    hide_ui = !display_ui;
+}

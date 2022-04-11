@@ -20,7 +20,7 @@ def GetPcStats(proc):
     return res
 
 
-MAX_SAMPLES = 15
+MAX_SAMPLES = 10
 
 output = ""
 
@@ -50,7 +50,8 @@ def RunBenchmark(particles, resolution, scene="sbench"):
         # save data
         fps = int(st.split(" ")[1])
         gpu = GPUtil.getGPUs()[0]
-        data.append([samples, fps, gpu.load, gpu.memoryUsed, gpu.memoryUtil,
+        name = f"{scene}_p{particles}_r{resolution}"
+        data.append([name, scene, particles, resolution, samples, fps, gpu.load, gpu.memoryUsed, gpu.memoryUtil,
                     proc_psutil.cpu_percent(interval=None)])
 
         # sample counting
@@ -59,47 +60,81 @@ def RunBenchmark(particles, resolution, scene="sbench"):
             proc.terminate()
             break
     df = pd.DataFrame(data=data, columns=[
-        "samples", "FPS", "GPU", "VRAM", "VRAM_UTIL", "CPU"])
+        "name", "scene", "particles", "resolution", "samples", "FPS", "GPU", "VRAM", "VRAM_UTIL", "CPU"])
     return df
 
 
 main_df = pd.DataFrame()
 
-
-#df = RunBenchmark(1000, 5000, "s3d")
-#main_df["s_1000"] = df["FPS"]
+df = RunBenchmark(1000, 5000, "s3d")
+main_df = pd.concat([main_df, df])
 df = RunBenchmark(4000, 5000, "s3d")
-main_df["s_4000"] = df["FPS"]
+main_df = pd.concat([main_df, df])
 df = RunBenchmark(7000, 5000, "s3d")
-main_df["s_7000"] = df["FPS"]
+main_df = pd.concat([main_df, df])
 df = RunBenchmark(10000, 5000, "s3d")
-main_df["s_10000"] = df["FPS"]
+main_df = pd.concat([main_df, df])
 
-#df = RunBenchmark(1000, 5000)
-#main_df["1000"] = df["FPS"]
+df = RunBenchmark(1000, 5000)
+main_df = pd.concat([main_df, df])
 df = RunBenchmark(4000, 5000)
-main_df["4000"] = df["FPS"]
+main_df = pd.concat([main_df, df])
 df = RunBenchmark(7000, 5000)
-main_df["7000"] = df["FPS"]
+main_df = pd.concat([main_df, df])
 df = RunBenchmark(10000, 5000)
-main_df["10000"] = df["FPS"]
+main_df = pd.concat([main_df, df])
 
-#df = RunBenchmark(1000, 1000)
-#main_df["m_1000"] = df["FPS"]
+df = RunBenchmark(1000, 1000)
+main_df = pd.concat([main_df, df])
 df = RunBenchmark(4000, 1000)
-main_df["m_4000"] = df["FPS"]
+main_df = pd.concat([main_df, df])
 df = RunBenchmark(7000, 1000)
-main_df["m_7000"] = df["FPS"]
+main_df = pd.concat([main_df, df])
 df = RunBenchmark(10000, 1000)
-main_df["m_10000"] = df["FPS"]
+main_df = pd.concat([main_df, df])
+
+# complex
+df = RunBenchmark(1000, 1000, "sbenchc")
+main_df = pd.concat([main_df, df])
+df = RunBenchmark(4000, 1000, "sbenchc")
+main_df = pd.concat([main_df, df])
+df = RunBenchmark(7000, 1000, "sbenchc")
+main_df = pd.concat([main_df, df])
+df = RunBenchmark(10000, 1000, "sbenchc")
+main_df = pd.concat([main_df, df])
+
+df = RunBenchmark(1000, 5000, "sbenchc")
+main_df = pd.concat([main_df, df])
+df = RunBenchmark(4000, 5000, "sbenchc")
+main_df = pd.concat([main_df, df])
+df = RunBenchmark(7000, 5000, "sbenchc")
+main_df = pd.concat([main_df, df])
+df = RunBenchmark(10000, 5000, "sbenchc")
+main_df = pd.concat([main_df, df])
+
+df = RunBenchmark(1000, 5000, "s3dc")
+main_df = pd.concat([main_df, df])
+df = RunBenchmark(4000, 5000, "s3dc")
+main_df = pd.concat([main_df, df])
+df = RunBenchmark(7000, 5000, "s3dc")
+main_df = pd.concat([main_df, df])
+df = RunBenchmark(10000, 5000, "s3dc")
+main_df = pd.concat([main_df, df])
+
 
 print("Done")
-# print("Average values")
-# print(df[["FPS", "GPU", "CPU"]].mean())
-ax = plt.subplot()
-df.to_pickle("result.pckl")
-main_df.plot(ax=ax)
-ax.set_ylim([0, None])
+#print("Average values")
+#print(df[["FPS", "GPU", "CPU"]].mean())
+#ax = plt.subplot()
+main_df.to_pickle("result.pckl")
+#main_df = main_df.mean()
+print(main_df)
+r = main_df[["name", "FPS"]]
+r = r.groupby(["name"]).mean()
+print(r)
+r = r.sort_values("FPS")
+r.plot(kind='barh')
+#ax.set_ylim([0, None])
 plt.show()
 
 # GPUs = GPUtil.getGPUs()
