@@ -7,16 +7,26 @@ COL2 = "#008ca2"
 
 
 def GenBasic(df):
-    fig, ax = plt.subplots()
+    labels = ["Light field | Complex", "Light field | Basic",
+              "Standard | Complex", "Standard | Basic", "Light field | Disco"]
+    labels.reverse()
+
+    fig, ax = plt.subplots(2)
     r = df[df["variant"] == "basic"]
     r = r[r["particles"] == 10000]
     r = r[r["resolution"] != 1000]
 
-    a = r[r["camera_rotation"] == True]
-    a = a[["name", "FPS"]]
+    r = r[r["camera_rotation"] == True]
+    a = r[["name", "FPS"]]
     a = a.groupby(["name"]).mean()
-    a = a.sort_values("FPS")
-    a.plot(kind='barh', ax=ax, color=COL1)
+    a.plot(kind='barh', ax=ax[0], color=COL1)
+    ax[0].yaxis.set_ticklabels(labels)
+
+    b = r[["name", "VRAM"]]
+    b = b.groupby(["name"]).mean()
+    b.plot(kind='barh', ax=ax[1], color=COL2)
+    ax[1].yaxis.set_ticklabels(labels)
+
     plt.savefig("graphs/basic.png", bbox_inches="tight")
 
 
@@ -24,7 +34,7 @@ def GenParticles(df):
     r = df[df["variant"] == "particles"]
     r = r[["particles", "FPS"]]
     r = r.groupby(["particles"]).mean()
-    r.plot()
+    r.plot(color=COL1)
     plt.savefig("graphs/particles.png", bbox_inches="tight")
 
 
