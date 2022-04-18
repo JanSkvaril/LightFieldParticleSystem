@@ -76,7 +76,7 @@ if (args.iterations != None):
 MAX_SAMPLES = iterations
 print(f"Starting with {MAX_SAMPLES} samples per scene...")
 # == basic run ==
-scenes = ["disco", "s3d", "sbench", "sbenchc", "s3dc"]
+scenes = ["s3d", "sbench", "sbenchc", "s3dc", "disco"]
 particles = [1000, 4000, 7000, 10000]
 resolutions = [1000, 5000]
 main_df = pd.DataFrame()
