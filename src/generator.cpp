@@ -30,8 +30,9 @@ void Generator::CreateRenderTexture()
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, t_size, t_size, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
 
     // Poor filtering. Needed !
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST_MIPMAP_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
+    glGenerateTextureMipmap(renderedTexture);
 
     // The depth buffer
     glGenRenderbuffers(1, &depthrenderbuffer);
@@ -80,10 +81,11 @@ void Generator::Generate()
             generated++;
         }
     }
-    // if (generated != 0)
-    // {
-    //     std::cout << "Generating: " << generated << "\n";
-    // }
+
+    if (generated != 0)
+    {
+        glGenerateTextureMipmap(renderedTexture);
+    }
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
