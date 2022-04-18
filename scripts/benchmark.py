@@ -76,7 +76,7 @@ if (args.iterations != None):
 MAX_SAMPLES = iterations
 print(f"Starting with {MAX_SAMPLES} samples per scene...")
 # == basic run ==
-scenes = ["s3d", "sbench", "sbenchc", "s3dc"]
+scenes = ["disco", "s3d", "sbench", "sbenchc", "s3dc"]
 particles = [1000, 4000, 7000, 10000]
 resolutions = [1000, 5000]
 main_df = pd.DataFrame()
@@ -104,7 +104,8 @@ for resolution in range(1000, 30000, 1000):
 # == particles ==
 for particles in range(1000, 50000, 1000):
     PARTICLE_RESOLUTION = 1000
-    df = RunBenchmark(particles, PARTICLE_RESOLUTION, "particles")
+    df = RunBenchmark(particles, PARTICLE_RESOLUTION,
+                      "particles", rotate_camera=True)
     main_df = pd.concat([main_df, df])
 
 print("Done")

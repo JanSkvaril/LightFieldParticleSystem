@@ -72,6 +72,7 @@ int main(int argc, char **argv)
     args::Flag opt_scene_real_light(group3, "Real light", "Scene with realtime light", {"slight"});
     args::Flag opt_scene_standard3d(group3, "Standard 3D", "Particles are rendered with normal 3D methods", {"s3d"});
     args::Flag opt_scene_standard3dC(group3, "Standard 3D", "Particles are rendered with normal 3D methods with very complex model", {"s3dc"});
+    args::Flag opt_scene_disco(group3, "Disco", "Disco scene, with pariodical light field redraw", {"disco"});
 
     try
     {
@@ -136,6 +137,14 @@ int main(int argc, char **argv)
     else if (opt_scene_benchmarkC)
     {
         lfps.SetPresetBenchmarkComplex();
+    }
+    else if (opt_scene_benchmarkC)
+    {
+        lfps.SetPresetBenchmarkComplex();
+    }
+    else if (opt_scene_disco)
+    {
+        lfps.SetPresetDiscoBench();
     }
     else if (opt_scene_standard3dC)
     {

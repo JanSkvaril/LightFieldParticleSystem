@@ -26,6 +26,7 @@ public:
     void SetPresetHalfChange();
     void SetPresetSunflower();
     void SetPresetDisco();
+    void SetPresetDiscoBench();
     Camera camera;
 
     ParticleEmitter particles;

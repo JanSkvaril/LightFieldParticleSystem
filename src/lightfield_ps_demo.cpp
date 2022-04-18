@@ -342,7 +342,6 @@ void LightFieldPsDemo::UpdatePresetSpecific()
 
     if (disco_preset)
     {
-        camera.RotateAroundTarget(glm::vec2(0.01f, 0.0));
         color_counter++;
         if (color_counter >= max_color_counter)
         {
@@ -359,6 +358,7 @@ void LightFieldPsDemo::UpdatePresetSpecific()
 void LightFieldPsDemo::SetPresetDisco()
 {
     Clean();
+    rotate_camera_benchmark = true;
     particles.SetParticleProtype(std::make_unique<Particle>());
     generator_store.Clear();
     camera.LookAt(glm::vec3(0.0f, 0.0f, -10.0f), glm::vec3(0.0f, 0.0f, 0.0f));
@@ -388,6 +388,7 @@ void LightFieldPsDemo::Clean()
     disco_preset = false;
     sunflower_preset = false;
     using_standard_3d = false;
+    rotate_camera_benchmark = false;
 }
 
 std::string LightFieldPsDemo::GetSceneComentary()
@@ -398,4 +399,22 @@ std::string LightFieldPsDemo::GetSceneComentary()
 void LightFieldPsDemo::ShouldCameraRotate(bool rotate)
 {
     rotate_camera_benchmark = rotate;
+}
+
+void LightFieldPsDemo::SetPresetDiscoBench()
+{
+    Clean();
+    particles.SetParticleProtype(std::make_unique<Particle>());
+    generator_store.Clear();
+    camera.LookAt(glm::vec3(0.0f, 0.0f, -15.0f), glm::vec3(0.0f, 0.0f, 0.0f));
+
+    loaded_models.push_front(std::make_shared<Model>("models/baloon.obj"));
+
+    int density = 21;
+    generator_store.AddGenerator(std::make_shared<Generator>(loaded_models.front().get(), density, 5000));
+    particles.SetGravity(0.003f, glm::vec3(0.0f, -1.0f, 0.0f));
+    particles.AddTextureHandle(generator_store);
+    disco_preset = true;
+    active_skybox = -1;
+    scene_comentary = "-";
 }
