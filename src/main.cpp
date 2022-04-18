@@ -60,6 +60,7 @@ int main(int argc, char **argv)
     args::HelpFlag help(parser, "help", "Display this help menu", {'h', "help"});
     args::Group group(parser, "Flags:", args::Group::Validators::DontCare);
     args::Flag opt_no_vsync(group, "novsync", "Set unlimited PFS", {'n', "novsync"});
+    args::Flag opt_cam_rot(group, "rotate camera", "Camera will rotate", {'c', "camrot"});
     args::Flag opt_print_fps(group, "print fps", "Should print FPS to STDOUT", {'f', "fpsprint"});
     args::Group group2(parser, "Parameters:", args::Group::Validators::DontCare);
     args::ValueFlag<int> opt_particles(group2, "particles", "Starting amount of particles", {'p', "particles"});
@@ -176,6 +177,10 @@ int main(int argc, char **argv)
         lfps.particles.Reset();
         lfps.particles.SimulateSteps(1000);
         ui.ShouldDisplayui(false);
+    }
+    if (opt_cam_rot)
+    {
+        lfps.ShouldCameraRotate(true);
     }
     // std::cout << glGetString(GL_VERSION) << "\n";
     glEnable(GL_BLEND);

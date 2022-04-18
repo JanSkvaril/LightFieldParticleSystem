@@ -15,6 +15,10 @@ void LightFieldPsDemo::Update()
 {
     UpdatePresetSpecific();
     // ui.HandleCameraControls(camera);
+    if (rotate_camera_benchmark)
+    {
+        camera.RotateAroundTarget(glm::vec2(0.01f, 0.0));
+    }
     if (!using_standard_3d)
     {
         particles.Update();
@@ -389,4 +393,9 @@ void LightFieldPsDemo::Clean()
 std::string LightFieldPsDemo::GetSceneComentary()
 {
     return scene_comentary;
+}
+
+void LightFieldPsDemo::ShouldCameraRotate(bool rotate)
+{
+    rotate_camera_benchmark = rotate;
 }

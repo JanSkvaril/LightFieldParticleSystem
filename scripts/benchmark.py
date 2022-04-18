@@ -1,9 +1,11 @@
+from pickle import FALSE
 import GPUtil
 import subprocess
 import psutil
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+import argparse
 path = "../build"
 binary = "../build/Release/light_field_ps_bp.exe"
 
@@ -20,16 +22,16 @@ def GetPcStats(proc):
     return res
 
 
-MAX_SAMPLES = 10
-
-output = ""
-
-
-def RunBenchmark(particles, resolution, scene="sbench"):
+def RunBenchmark(particles, resolution, variant, scene="sbench", rotate_camera=False):
     print(
-        f" ======= Running test with [{particles}] particles, resolution [{resolution}] and [{scene}] scene =======")
+        f" ==== Running test with [{particles}] particles, resolution [{resolution}] and [{scene}] scene. Camera rotation: {rotate_camera} ====")
+
+    flags = [binary, '-f', "-n",
+             f"-p {particles}", f"-r {resolution}", f"--{scene}"]
+    if rotate_camera:
+        flags.append("-c")
     # setup process
-    proc = subprocess.Popen([binary, '-f', "-n", f"-p {particles}", f"-r {resolution}", f"--{scene}"],
+    proc = subprocess.Popen(flags,
                             stdout=subprocess.PIPE, cwd=path)
     proc_psutil = psutil.Process(proc.pid)
     samples = 0
@@ -45,13 +47,12 @@ def RunBenchmark(particles, resolution, scene="sbench"):
         line = "S: " + str(int(samples / MAX_SAMPLES * 100)) + \
             "%\t | " + st + "\t | " + GetPcStats(proc_psutil)
         print(line)
-        #output += line + "\n"
 
         # save data
         fps = int(st.split(" ")[1])
         gpu = GPUtil.getGPUs()[0]
         name = f"{scene}_p{particles}_r{resolution}"
-        data.append([name, scene, particles, resolution, samples, fps, gpu.load, gpu.memoryUsed, gpu.memoryUtil,
+        data.append([name, variant, scene, particles, resolution, samples, rotate_camera, fps, gpu.load, gpu.memoryUsed, gpu.memoryUtil,
                     proc_psutil.cpu_percent(interval=None)])
 
         # sample counting
@@ -60,82 +61,52 @@ def RunBenchmark(particles, resolution, scene="sbench"):
             proc.terminate()
             break
     df = pd.DataFrame(data=data, columns=[
-        "name", "scene", "particles", "resolution", "samples", "FPS", "GPU", "VRAM", "VRAM_UTIL", "CPU"])
+        "name", "variant", "scene", "particles", "resolution", "samples", "camera_rotation", "FPS", "GPU", "VRAM", "VRAM_UTIL", "CPU"])
     return df
 
 
+# args
+parser = argparse.ArgumentParser(description='Process some integers.')
+parser.add_argument('--iterations', type=int)
+args = parser.parse_args()
+# args - iterations
+iterations = 10
+if (args.iterations != None):
+    iterations = args.iterations
+MAX_SAMPLES = iterations
+print(f"Starting with {MAX_SAMPLES} samples per scene...")
+# == basic run ==
+scenes = ["s3d", "sbench", "sbenchc", "s3dc"]
+particles = [1000, 4000, 7000, 10000]
+resolutions = [1000, 5000]
 main_df = pd.DataFrame()
+for rotating_camera in [True, False]:
+    for scene in scenes:
+        for particle_amount in particles:
+            # standard 3d scenes are without resolution
+            if scene == "s3d" or scene == "s3dc":
+                df = RunBenchmark(particle_amount, 0, "basic",
+                                  scene=scene, rotate_camera=rotating_camera)
+                main_df = pd.concat([main_df, df])
+            else:
+                for resolution in resolutions:
+                    df = RunBenchmark(particle_amount, resolution, "basic",
+                                      scene=scene, rotate_camera=rotating_camera)
+                    main_df = pd.concat([main_df, df])
 
-df = RunBenchmark(1000, 5000, "s3d")
-main_df = pd.concat([main_df, df])
-df = RunBenchmark(4000, 5000, "s3d")
-main_df = pd.concat([main_df, df])
-df = RunBenchmark(7000, 5000, "s3d")
-main_df = pd.concat([main_df, df])
-df = RunBenchmark(10000, 5000, "s3d")
-main_df = pd.concat([main_df, df])
+# == resolution ==
+for resolution in range(1000, 30000, 1000):
+    PARTICLE_AMOUNT = 3000
+    df = RunBenchmark(PARTICLE_AMOUNT,
+                      resolution, "resolution")
+    main_df = pd.concat([main_df, df])
 
-df = RunBenchmark(1000, 5000)
-main_df = pd.concat([main_df, df])
-df = RunBenchmark(4000, 5000)
-main_df = pd.concat([main_df, df])
-df = RunBenchmark(7000, 5000)
-main_df = pd.concat([main_df, df])
-df = RunBenchmark(10000, 5000)
-main_df = pd.concat([main_df, df])
-
-df = RunBenchmark(1000, 1000)
-main_df = pd.concat([main_df, df])
-df = RunBenchmark(4000, 1000)
-main_df = pd.concat([main_df, df])
-df = RunBenchmark(7000, 1000)
-main_df = pd.concat([main_df, df])
-df = RunBenchmark(10000, 1000)
-main_df = pd.concat([main_df, df])
-
-# complex
-df = RunBenchmark(1000, 1000, "sbenchc")
-main_df = pd.concat([main_df, df])
-df = RunBenchmark(4000, 1000, "sbenchc")
-main_df = pd.concat([main_df, df])
-df = RunBenchmark(7000, 1000, "sbenchc")
-main_df = pd.concat([main_df, df])
-df = RunBenchmark(10000, 1000, "sbenchc")
-main_df = pd.concat([main_df, df])
-
-df = RunBenchmark(1000, 5000, "sbenchc")
-main_df = pd.concat([main_df, df])
-df = RunBenchmark(4000, 5000, "sbenchc")
-main_df = pd.concat([main_df, df])
-df = RunBenchmark(7000, 5000, "sbenchc")
-main_df = pd.concat([main_df, df])
-df = RunBenchmark(10000, 5000, "sbenchc")
-main_df = pd.concat([main_df, df])
-
-df = RunBenchmark(1000, 5000, "s3dc")
-main_df = pd.concat([main_df, df])
-df = RunBenchmark(4000, 5000, "s3dc")
-main_df = pd.concat([main_df, df])
-df = RunBenchmark(7000, 5000, "s3dc")
-main_df = pd.concat([main_df, df])
-df = RunBenchmark(10000, 5000, "s3dc")
-main_df = pd.concat([main_df, df])
-
+# == particles ==
+for particles in range(1000, 50000, 1000):
+    PARTICLE_RESOLUTION = 1000
+    df = RunBenchmark(particles, PARTICLE_RESOLUTION, "particles")
+    main_df = pd.concat([main_df, df])
 
 print("Done")
-#print("Average values")
-#print(df[["FPS", "GPU", "CPU"]].mean())
-#ax = plt.subplot()
 main_df.to_pickle("result.pckl")
-#main_df = main_df.mean()
-print(main_df)
-r = main_df[["name", "FPS"]]
-r = r.groupby(["name"]).mean()
-print(r)
-r = r.sort_values("FPS")
-r.plot(kind='barh')
-#ax.set_ylim([0, None])
-plt.show()
-
-# GPUs = GPUtil.getGPUs()
-# print(GPUs[0].load)
+print("Saved to [result.pckl]")

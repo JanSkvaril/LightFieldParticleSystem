@@ -33,6 +33,8 @@ public:
     void LoadSkyboxes();
     std::string GetSceneComentary();
 
+    void ShouldCameraRotate(bool rotate);
+
 private:
     void Clean();
     void UpdatePresetSpecific();
@@ -51,6 +53,7 @@ private:
     bool disco_preset = false;
     int color_counter = 0;
     const int max_color_counter = 30;
+    bool rotate_camera_benchmark = false;
 };
 
 #endif
