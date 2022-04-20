@@ -66,6 +66,13 @@ void ParticleEmitter::Draw(Camera &camera, float texture_density)
     auto angle = camera.GetAngleToTarget();
     // std::cout << glm::to_string(camera.GetPosition()) << "\n"
     //            << glm::to_string(camera.GetAngleToTarget()) << "\n\n";
+    glm::vec3 camera_normal = glm::vec3(view[0][2], view[1][2], view[2][2]);
+    camera_normal = -camera_normal;
+    glm::vec3 up = glm::vec3(view[0][1], view[1][1], view[2][1]);
+    glm::vec3 r = cross(camera_normal, up);
+    r = normalize(r);
+    glm::vec3 new_up = cross(camera_normal, r);
+    glm::mat3 rot = glm::mat3(r, new_up, camera_normal);
 
     projection = glm::perspective(glm::radians(45.0f), (float)camera.Resolution.x / (float)camera.Resolution.y, 0.1f, 100.0f);
     auto camera_pos = camera.GetPosition();
@@ -78,9 +85,10 @@ void ParticleEmitter::Draw(Camera &camera, float texture_density)
     // std::cout << "Direction:    " << glm::to_string(dir) << "\n\n";
     //
     //  set emittor object to uniforms
-    glUniformMatrix4fv(used_shader.GetUniformLocation("model"), 1, GL_FALSE, glm::value_ptr(model));
-    glUniformMatrix4fv(used_shader.GetUniformLocation("view"), 1, GL_FALSE, glm::value_ptr(view));
+    glm::mat4 viewmodel = view * model;
+    glUniformMatrix4fv(used_shader.GetUniformLocation("viewmodel"), 1, GL_FALSE, glm::value_ptr(viewmodel));
     glUniformMatrix4fv(used_shader.GetUniformLocation("projection"), 1, GL_FALSE, glm::value_ptr(projection));
+    glUniformMatrix3fv(used_shader.GetUniformLocation("rot"), 1, GL_FALSE, glm::value_ptr(rot));
     glUniform2fv(used_shader.GetUniformLocation("camera_angle"), 1, glm::value_ptr(angle));
     glUniform3fv(used_shader.GetUniformLocation("camera_pos"), 1, glm::value_ptr(camera_pos));
     glUniform1f(used_shader.GetUniformLocation("u_density"), texture_density);

@@ -34,11 +34,11 @@ void main()
     col.b = bilinear(weights, vec4(q11.b, q12.b, q21.b, q22.b));
     col.a = bilinear(weights, vec4(q11.a, q12.a, q21.a, q22.a));
     
-    if (show_border == 1) {
-        if (TexCoord.x < 0.01 || TexCoord.y < 0.01 || TexCoord.x > 0.99 || TexCoord.y > 0.99) {
-            col = vec4(1.0, 0.0, 0.0, 1.0);
-        }
-    }
+    // if (show_border == 1) {
+        //     if (TexCoord.x < 0.01 || TexCoord.y < 0.01 || TexCoord.x > 0.99 || TexCoord.y > 0.99) {
+            //         col = vec4(1.0, 0.0, 0.0, 1.0);
+        //     }
+    // }
     
     FragColor = col; //vec4(col.xyz, alpha);
     

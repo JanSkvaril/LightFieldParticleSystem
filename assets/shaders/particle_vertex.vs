@@ -10,28 +10,22 @@ out vec3 weights;
 flat out int ParticleTexture;
 out vec3 TexPosition;
 
-uniform mat4 model; // emittor rotation
-uniform mat4 view; // emittor position
+uniform mat4 viewmodel;
 uniform mat4 projection;
 uniform vec2 camera_angle;
 uniform vec3 camera_pos;
 uniform float u_density;
+uniform mat3 rot;
 #define PI 3.1415926538
 
 void main()
 {
     ParticleTexture = particle_texture;
-    vec3 camera_normal = vec3(view[0][2], view[1][2], view[2][2]);
-    camera_normal = - camera_normal;
-    vec3 up = vec3(view[0][1], view[1][1], view[2][1]);
-    vec3 r = cross(camera_normal, up);
-    r = normalize(r);
-    vec3 new_up = cross(camera_normal , r);
-    mat3 rot = mat3(r, new_up, camera_normal);
+    
     vec3 posi = rot * aPos;
     vec3 new_offset = rot * offset2.xyz;
-    vec4 word_space = (view * model * (vec4(posi, 1.0)));
-    word_space += (view * model * (vec4(offset2, 1.0)));
+    vec4 word_space = (viewmodel * (vec4(posi, 1.0)));
+    word_space += (viewmodel * (vec4(offset2, 1.0)));
     vec4 screen_pos = projection * word_space;
     screen_pos = screen_pos / screen_pos.w;
     
