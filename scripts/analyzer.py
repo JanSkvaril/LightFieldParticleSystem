@@ -1,12 +1,12 @@
 import pandas as pd
 import matplotlib.pyplot as plt
-
-
+import argparse
+import os
 COL1 = "#22a200"
 COL2 = "#008ca2"
 
 
-def GenBasic(df):
+def GenBasic(df, out="graphs"):
     labels = ["Light field | Complex", "Light field | Basic",
               "Standard | Complex", "Standard | Basic", "Light field | Disco"]
     labels.reverse()
@@ -27,18 +27,18 @@ def GenBasic(df):
     b.plot(kind='barh', ax=ax[1], color=COL2)
     ax[1].yaxis.set_ticklabels(labels)
 
-    plt.savefig("graphs/basic.png", bbox_inches="tight")
+    plt.savefig(f"{out}/basic.png", bbox_inches="tight")
 
 
-def GenParticles(df):
+def GenParticles(df, out="graphs"):
     r = df[df["variant"] == "particles"]
     r = r[["particles", "FPS"]]
     r = r.groupby(["particles"]).mean()
     r.plot(color=COL1)
-    plt.savefig("graphs/particles.png", bbox_inches="tight")
+    plt.savefig(f"{out}/particles.png", bbox_inches="tight")
 
 
-def GenResolution(df):
+def GenResolution(df, out="graphs"):
     fig, ax = plt.subplots()
     r = df[df["variant"] == "resolution"]
     a = r[["resolution", "FPS"]]
@@ -48,12 +48,18 @@ def GenResolution(df):
     b = b.groupby(["resolution"]).mean()
     ax2 = ax.twinx()
     ax2.plot(b, COL2)
-    plt.savefig("graphs/resolution.png", bbox_inches="tight")
+    plt.savefig(f"{out}/resolution.png", bbox_inches="tight")
 
 
-df = pd.read_pickle("result.pckl")
+parser = argparse.ArgumentParser()
+parser.add_argument('--input', type=str, default="result.pckl")
+parser.add_argument('--output', type=str, default="graphs")
+args = parser.parse_args()
+if not os.path.isdir(args.output):
+    os.mkdir(args.output)
+df = pd.read_pickle(args.input)
 
 print(df)
-GenBasic(df)
-GenParticles(df)
-GenResolution(df)
+GenBasic(df, out=args.output)
+GenParticles(df, out=args.output)
+GenResolution(df, out=args.output)

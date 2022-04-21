@@ -6,8 +6,8 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import argparse
-path = "../build"
-binary = "../build/Release/light_field_ps_bp.exe"
+PATH = "../build"
+BINARY = "../build/Release/light_field_ps_bp.exe"
 
 
 def GetPcStats(proc):
@@ -22,17 +22,17 @@ def GetPcStats(proc):
     return res
 
 
-def RunBenchmark(particles, resolution, variant, scene="sbench", rotate_camera=False):
+def RunBenchmark(particles, resolution, variant, scene="sbench", rotate_camera=False, cwd=PATH, bin=BINARY):
     print(
         f" ==== Running test with [{particles}] particles, resolution [{resolution}] and [{scene}] scene. Camera rotation: {rotate_camera} ====")
 
-    flags = [binary, '-f', "-n",
+    flags = [bin, '-f', "-n",
              f"-p {particles}", f"-r {resolution}", f"--{scene}"]
     if rotate_camera:
         flags.append("-c")
     # setup process
     proc = subprocess.Popen(flags,
-                            stdout=subprocess.PIPE, cwd=path)
+                            stdout=subprocess.PIPE, cwd=cwd)
     proc_psutil = psutil.Process(proc.pid)
     samples = 0
     data = []
@@ -68,7 +68,13 @@ def RunBenchmark(particles, resolution, variant, scene="sbench", rotate_camera=F
 # args
 parser = argparse.ArgumentParser(description='Process some integers.')
 parser.add_argument('--iterations', type=int)
+parser.add_argument('--cwd', type=str, default=PATH)
+parser.add_argument('--bin', type=str, default=BINARY)
 args = parser.parse_args()
+PATH = args.cwd
+if PATH == ".":
+    PATH = None
+BINARY = args.bin
 # args - iterations
 iterations = 10
 if (args.iterations != None):
