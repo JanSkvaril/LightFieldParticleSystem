@@ -7,6 +7,7 @@
 #include "glm/gtx/rotate_vector.hpp"
 #include <execution>
 #include <algorithm>
+#include <omp.h>
 float atan22(float y, float x)
 {
     bool s = (abs(x) > abs(y));
@@ -161,8 +162,8 @@ void ParticleEmitter::DrawParticle(Particle &particle)
 void ParticleEmitter::SortByDepth(Camera &camera)
 {
     const auto camera_pos = camera.GetPosition();
-    std::for_each(std::execution::par, simulator.Particles.begin(), simulator.Particles.end(), [&camera_pos](auto &p_a)
-                  { p_a->distance = glm::fastDistance(camera_pos, p_a->GetPosition()); });
+    // std::for_each(std::execution::par, simulator.Particles.begin(), simulator.Particles.end(), [&camera_pos](auto &p_a)
+    //               { p_a->distance = glm::fastDistance(camera_pos, p_a->GetPosition()); });
     std::sort(std::execution::par, simulator.Particles.begin(), simulator.Particles.end(), [](auto &p_a, auto &p_b)
               {
                   const auto dist_a = p_a->distance;
@@ -294,29 +295,40 @@ bool ParticleEmitter::ShouldParticlesRotate()
 void ParticleEmitter::CalculateUVs(Camera &camera)
 {
 
-    const float pi = 3.1415926538;
+    const float pi = 3.1415926538f;
     int i = 0;
     auto camera_position = camera.GetPosition();
-    std::for_each(std::execution::par, simulator.Particles.begin(), simulator.Particles.end(), [&camera_position, pi](auto &particle)
-                  {
-        auto rot = particle->GetRotation();
 
-        auto dir = (camera_position *4.0f) - particle->GetPosition();
-        dir = glm::fastNormalize(dir);
-
-        float u = acos(dir.x / sqrt(pow(dir.x,2.0f) + pow(dir.z, 2.0f))) / (2.0f * pi);
-        if (dir.z < 0.0){
-            u = 1.0f - u;
-        }
-        float v = 0.5f + (asin(dir.y) / (2.0f * pi));
-     
-
-        u += rot.x;
-        particle->SetUV({u, v});
-        auto corrected = particle->GetUV(); });
-    for (size_t i = 0; i < uvs.size(); i++)
+#pragma omp parallel
     {
-        uvs[i] = simulator.Particles[i]->GetUV();
+#pragma omp for
+        for (int i = 0; i < simulator.Particles.size(); i++)
+        {
+            const auto &particle = simulator.Particles[i];
+            const auto particle_pos = particle->GetPosition();
+            particle->distance = glm::fastDistance(camera_position, particle_pos);
+
+            auto rot = particle->GetRotation();
+
+            auto dir = (camera_position * 4.0f) - particle_pos;
+            dir = glm::fastNormalize(dir);
+            float inverse_sqrt = glm::fastInverseSqrt(pow(dir.x, 2.0f) + pow(dir.z, 2.0f));
+            float u = acos(dir.x * inverse_sqrt) / (2.0f * pi);
+            if (dir.z < 0.0)
+            {
+                u = 1.0f - u;
+            }
+            float v = 0.5f + (asin(dir.y) / (2.0f * pi));
+
+            u += rot.x;
+            particle->SetUV({u, v});
+            auto corrected = particle->GetUV();
+        }
+#pragma omp for
+        for (int i = 0; i < uvs.size(); i++)
+        {
+            uvs[i] = simulator.Particles[i]->GetUV();
+        }
     }
 }
 

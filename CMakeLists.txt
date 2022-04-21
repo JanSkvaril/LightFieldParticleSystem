@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.9)
 project(LIGHT_FIELD_PS)
 set(CMAKE_CXX_STANDARD 17)   
+
 if (MSVC) 
     add_compile_options(/MP16) # set compile parallel
 endif()
@@ -82,6 +83,7 @@ add_executable(light_field_ps_bp src/main.cpp
     src/particle_flower.h
     src/particle_flower.cpp)
 
+target_compile_options(light_field_ps_bp PRIVATE /openmp)
 
 target_include_directories(light_field_ps_bp PRIVATE include/args)
 
