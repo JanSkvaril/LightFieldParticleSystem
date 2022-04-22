@@ -39,7 +39,7 @@ void Particle::Update(float time)
     }
 }
 
-glm::vec3 Particle::GetPosition()
+glm::vec3 Particle::GetPosition() const
 {
     return position;
 }
@@ -59,12 +59,12 @@ Particle::Particle()
     this->params = nullptr;
 }
 
-glm::vec2 Particle::GetRotation()
+glm::vec2 Particle::GetRotation() const
 {
     return rotation;
 }
 
-glm::vec2 Particle::GetUV()
+glm::vec2 Particle::GetUV() const
 {
     return uv;
 }

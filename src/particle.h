@@ -13,10 +13,10 @@ public:
     Particle(const Particle &rhs);
     virtual void Reset();
     virtual void Update(float time);
-    glm::vec3 GetPosition();
-    glm::vec2 GetRotation();
+    glm::vec3 GetPosition() const;
+    glm::vec2 GetRotation() const;
     void SetParticleParameters(ParticleParameters *params);
-    glm::vec2 GetUV();
+    glm::vec2 GetUV() const;
     void SetUV(glm::vec2 uv);
     virtual std::unique_ptr<Particle> clone();
     int GetTextureID();
