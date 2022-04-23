@@ -86,16 +86,24 @@ def GenParticles(df, name, out="graphs"):
 
 
 def GenResolution(df, name, out="graphs"):
-    fig, ax = plt.subplots()
+    fig, ax = plt.subplots(figsize=(4, 4))
     r = df[df["variant"] == "resolution"]
+    plt.xticks(rotation=-45)
+
     a = r[["resolution", "FPS"]]
     a = a.groupby(["resolution"]).mean()
     ax.set_ylim(0, 600)
-    ax.plot(a, MAIN_COL)
+    ax.plot(a, COL3)
     b = r[["resolution", "VRAM"]]
     b = b.groupby(["resolution"]).mean()
+    ax.set_xlabel("Rozlíšení v pixelech")
+    ax.set_ylabel("FPS")
+
     ax2 = ax.twinx()
-    ax2.plot(b, MAIN_COL)
+    ax2.set_ylim(0, max(b["VRAM"]) + 300)
+    ax2.set_ylabel("VRAM v MB")
+    ax2.plot(b, COL2)
+    plt.title(f"{name} | Vliv rozlišení na FPS a VRAM",  pad=20)
     plt.savefig(f"{out}/resolution.pdf", bbox_inches="tight")
 
 
