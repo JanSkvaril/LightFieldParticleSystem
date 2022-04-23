@@ -4,4 +4,9 @@ cmake-build-debug
 .idea
 scripts/result.pckl
 scripts/graphs
+scripts/graph1
+scripts/graph2
+scripts/graph3
+scripts/graph4
+scripts/particle_count.pdf
 .vscode
