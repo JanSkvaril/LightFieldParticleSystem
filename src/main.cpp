@@ -12,6 +12,9 @@ with standard 3D rendering techniques.
 // 2022
 // LICENCE: MIT
 
+// This application required GPU supporting bindless textures (many Intel integrated GPUs do
+// not support this functionality)
+
 #define GLFW_INCLUDE_GLEXT
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>

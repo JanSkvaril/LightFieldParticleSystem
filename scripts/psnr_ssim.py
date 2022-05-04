@@ -1,3 +1,5 @@
+# calculates PSNR, SSIM and MSE for two images
+
 import cv2
 from skimage.metrics import structural_similarity as ssim
 from skimage.metrics import mean_squared_error

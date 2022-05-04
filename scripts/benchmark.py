@@ -1,3 +1,6 @@
+# script for benchamrking main application
+# for help run:
+# python benchmark.py -h
 from pickle import FALSE
 import GPUtil
 import subprocess
@@ -10,7 +13,8 @@ path = "../build"
 binary = "../build/Release/light_field_ps_bp.exe"
 
 
-def GetPcStats(proc):
+def GetPcStats(proc) -> str:
+    """Get current PC statistics"""
     gpu = GPUtil.getGPUs()[0]
     res = ""
     res += "GPU load " + str(int(gpu.load*100)) + " %  \t| "
@@ -23,6 +27,17 @@ def GetPcStats(proc):
 
 
 def RunBenchmark(particles, resolution, variant, scene="sbench", rotate_camera=False):
+    """
+    Runs single benchmark
+    * particles - amount of rendered particles 
+    * resolution - lf texture resolution
+    * variant - test batch name, e.g "basic" or "particles"
+    * scene - name of the scene
+    * rotate_camera - if true, camera will rotate around the scene
+
+    Returns pandas dataframe containging messurements
+    """
+
     print(
         f" ==== Running test with [{particles}] particles, resolution [{resolution}] and [{scene}] scene. Camera rotation: {rotate_camera} ====")
 
@@ -65,55 +80,58 @@ def RunBenchmark(particles, resolution, variant, scene="sbench", rotate_camera=F
     return df
 
 
-# args
-parser = argparse.ArgumentParser(description='Process some integers.')
-parser.add_argument('--iterations', type=int)
-parser.add_argument('--cwd', type=str, default=path)
-parser.add_argument('--bin', type=str, default=binary)
-args = parser.parse_args()
-path = args.cwd
-if path == ".":
-    path = None
-binary = args.bin
-# args - iterations
-iterations = 10
-if (args.iterations != None):
-    iterations = args.iterations
-MAX_SAMPLES = iterations
-print(f"Starting with {MAX_SAMPLES} samples per scene...")
-# == basic run ==
-scenes = ["s3d", "sbench", "sbenchc", "s3dc", "disco"]
-particles = [1000, 4000, 7000, 10000]
-resolutions = [1000, 5000]
-main_df = pd.DataFrame()
-for rotating_camera in [True, False]:
-    for scene in scenes:
-        for particle_amount in particles:
-            # standard 3d scenes are without resolution
-            if scene == "s3d" or scene == "s3dc":
-                df = RunBenchmark(particle_amount, 0, "basic",
-                                  scene=scene, rotate_camera=rotating_camera)
-                main_df = pd.concat([main_df, df])
-            else:
-                for resolution in resolutions:
-                    df = RunBenchmark(particle_amount, resolution, "basic",
+if __name__ == "__main__":
+    # ==== arguments ====
+    parser = argparse.ArgumentParser(description='Process some integers.')
+    parser.add_argument('--iterations', type=int)
+    parser.add_argument('--cwd', type=str, default=path)
+    parser.add_argument('--bin', type=str, default=binary)
+    args = parser.parse_args()
+    path = args.cwd
+    if path == ".":
+        path = None
+    binary = args.bin
+    # args - iterations
+    iterations = 10
+    if (args.iterations != None):
+        iterations = args.iterations
+    MAX_SAMPLES = iterations
+    print(f"Starting with {MAX_SAMPLES} samples per scene...")
+
+    # == basic run ==
+    scenes = ["s3d", "sbench", "sbenchc", "s3dc", "disco"]
+    particles = [1000, 4000, 7000, 10000]
+    resolutions = [1000, 5000]
+    main_df = pd.DataFrame()  # dataframe containg all results
+    # run tests for both rotating and not rotating camera
+    for rotating_camera in [True, False]:
+        for scene in scenes:
+            for particle_amount in particles:
+
+                if scene == "s3d" or scene == "s3dc":
+                    df = RunBenchmark(particle_amount, 0, "basic",
                                       scene=scene, rotate_camera=rotating_camera)
                     main_df = pd.concat([main_df, df])
+                else:  # standard 3d scenes are without resolution
+                    for resolution in resolutions:
+                        df = RunBenchmark(particle_amount, resolution, "basic",
+                                          scene=scene, rotate_camera=rotating_camera)
+                        main_df = pd.concat([main_df, df])
 
-# == resolution ==
-for resolution in range(1000, 30000, 1000):
-    PARTICLE_AMOUNT = 3000
-    df = RunBenchmark(PARTICLE_AMOUNT,
-                      resolution, "resolution")
-    main_df = pd.concat([main_df, df])
+    # == resolution ==
+    for resolution in range(1000, 30000, 1000):
+        PARTICLE_AMOUNT = 3000
+        df = RunBenchmark(PARTICLE_AMOUNT,
+                          resolution, "resolution")
+        main_df = pd.concat([main_df, df])
 
-# == particles ==
-for particles in range(1000, 50000, 1000):
-    PARTICLE_RESOLUTION = 1000
-    df = RunBenchmark(particles, PARTICLE_RESOLUTION,
-                      "particles", rotate_camera=True)
-    main_df = pd.concat([main_df, df])
+    # == particles ==
+    for particles in range(1000, 50000, 1000):
+        PARTICLE_RESOLUTION = 1000
+        df = RunBenchmark(particles, PARTICLE_RESOLUTION,
+                          "particles", rotate_camera=True)
+        main_df = pd.concat([main_df, df])
 
-print("Done")
-main_df.to_pickle("result.pckl")
-print("Saved to [result.pckl]")
+    print("Done")
+    main_df.to_pickle("result.pckl")
+    print("Saved to [result.pckl]")
