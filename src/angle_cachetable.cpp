@@ -22,13 +22,15 @@ void AngleCacheTable::ClearCache()
 void AngleCacheTable::Activate(int u, int v)
 {
     const int range = 1;
+    // activate surronding records
     for (int i = -range; i <= range; i++)
     {
         for (int j = -range; j <= range; j++)
         {
+            // get proper coordinate (no overflow)
             int n_u = GetTablePosition(u + i);
             int n_v = GetTablePosition(v + j);
-
+            // cached records are not activated
             if (cache_table[n_u][n_v] != CacheState::Cached)
             {
                 cache_table[n_u][n_v] = CacheState::Activated;

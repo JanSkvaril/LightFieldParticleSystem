@@ -279,39 +279,39 @@ void UiManager::CreateModelWindows()
             {
                 if (ac != this->active_counter)
                     return;
-                auto r = lfps->generator_store.Generators[i]->Parameters.model_rotation;
+                auto r = lfps->generator_store.Generators[i]->GetCurrentParams()->model_rotation;
                 lfps->generator_store.Generators[i]->SetModelRotation({value, r.y, r.z});
             },
             [&, i, ac]()
             {
                 if (ac != this->active_counter) return 0.0f;
-                return lfps->generator_store.Generators[i]->Parameters.model_rotation.x; });
+                return lfps->generator_store.Generators[i]->GetCurrentParams()->model_rotation.x; });
         gui->add_variable<float>(
             "Rotation y",
             [&, i, ac](float value)
             {
                 if (ac != this->active_counter)
                     return;
-                auto r = lfps->generator_store.Generators[i]->Parameters.model_rotation;
+                auto r = lfps->generator_store.Generators[i]->GetCurrentParams()->model_rotation;
                 lfps->generator_store.Generators[i]->SetModelRotation({r.x, value, r.y});
             },
             [&, i, ac]()
             {
                 if (ac != this->active_counter) return 0.0f;
-                return lfps->generator_store.Generators[i]->Parameters.model_rotation.y; });
+                return lfps->generator_store.Generators[i]->GetCurrentParams()->model_rotation.y; });
         gui->add_variable<float>(
             "Rotation z",
             [&, i, ac](float value)
             {
                 if (ac != this->active_counter)
                     return;
-                auto r = lfps->generator_store.Generators[i]->Parameters.model_rotation;
+                auto r = lfps->generator_store.Generators[i]->GetCurrentParams()->model_rotation;
                 lfps->generator_store.Generators[i]->SetModelRotation({r.x, r.y, value});
             },
             [&, i, ac]()
             {
                 if (ac != this->active_counter) return 0.0f;
-                return lfps->generator_store.Generators[i]->Parameters.model_rotation.z; });
+                return lfps->generator_store.Generators[i]->GetCurrentParams()->model_rotation.z; });
         gui->add_group("Light");
         gui->add_variable<bool>(
             "Use baked-in light",
@@ -325,7 +325,7 @@ void UiManager::CreateModelWindows()
             {
                 if (ac != this->active_counter)
                     return false;
-                return lfps->generator_store.Generators[i]->Parameters.use_light;
+                return lfps->generator_store.Generators[i]->GetCurrentParams()->use_light;
             });
         gui->add_variable<nanogui::Color>(
             "Color",
@@ -340,7 +340,7 @@ void UiManager::CreateModelWindows()
             {
                 if (ac != this->active_counter)
                     return nanogui::Color();
-                glm::vec3 col = lfps->generator_store.Generators[i]->Parameters.model_light_color;
+                glm::vec3 col = lfps->generator_store.Generators[i]->GetCurrentParams()->model_light_color;
                 return nanogui::Color{col.r, col.g, col.b, 1.0f};
             });
         active_model_windows.push_back(nanoguiWindow2);

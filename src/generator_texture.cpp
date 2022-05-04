@@ -1,12 +1,12 @@
 #include "generator_texture.h"
 
-GeneratorTexture::GeneratorTexture(Model *model, GLsizei width, GLsizei height) : width(width), height(height)
+GeneratorTexture::GeneratorTexture(std::shared_ptr<Model> model, GLsizei width, GLsizei height) : width(width), height(height)
 {
     this->model = model;
     Setup();
 }
 
-GLuint GeneratorTexture::Generate(glm::vec3 rotation, glm::vec3 position, GeneratorParameters &generator_params)
+GLuint GeneratorTexture::Generate(glm::vec3 rotation, glm::vec3 position, std::shared_ptr<GeneratorParameters> generator_params)
 {
     glBindFramebuffer(GL_FRAMEBUFFER, FramebufferName);
     glEnable(GL_DEPTH_TEST);
@@ -79,7 +79,7 @@ void GeneratorTexture::Resize(GLsizei width, GLsizei height)
     Setup();
 }
 
-void GeneratorTexture::SetModel(Model *model)
+void GeneratorTexture::SetModel(std::shared_ptr<Model> model)
 {
     this->model = model;
 }

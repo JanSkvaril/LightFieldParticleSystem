@@ -10,12 +10,12 @@
 class Generator
 {
 public:
-    Generator(Model *model, int density, int res);
+    Generator(std::shared_ptr<Model> model, int density, int res);
     void Generate();
     GLuint GetTexture();
     void Bind();
     int GetDensity();
-    void SetModel(Model *model);
+    void SetModel(std::shared_ptr<Model> model);
     void SetModelRotation(glm::vec3 rotation);
     void ChangeDensity(int density);
     void ChangeResolution(int res);
@@ -27,8 +27,8 @@ public:
     void SetLightColor(glm::vec3 color);
     void ShouldUseLight(bool use_light);
     AngleCacheTable &GetCacheTable();
-    void SetParams(GeneratorParameters params);
-    const GeneratorParameters &Parameters;
+    void SetParams(std::shared_ptr<GeneratorParameters> params);
+    std::shared_ptr<GeneratorParameters> GetCurrentParams() const;
 
 protected:
     bool has_handle = false;
@@ -38,12 +38,12 @@ protected:
     void ClearTexture();
     void MakeNonResident();
     void Delete();
-    GeneratorParameters generator_params;
+    std::shared_ptr<GeneratorParameters> generator_params;
     GLuint64 texture_handle;
     int density;
     GLsizei t_size;
     void CreateRenderTexture();
-    Model *model;
+    std::shared_ptr<Model> model;
     TextReactangle rectangle;
     GeneratorTexture gt;
     GLuint FramebufferName = 0;

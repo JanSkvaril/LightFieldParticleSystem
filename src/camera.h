@@ -2,18 +2,30 @@
 #define CAMERA_CLASS_DEF
 
 #include "glm/glm.hpp"
+
+// scene camera, contains view matrix
 class Camera
 {
 public:
     Camera(glm::ivec2 resolution);
+    // camera is placed at position and rotated to look at target
     void LookAt(glm::vec3 position, glm::vec3 target);
+    // camera will rotated by given amount around target position
     void RotateAroundTarget(glm::vec2 amount);
-    glm::mat4 GetMatrix();
-    glm::vec3 GetPosition();
+    // returns view matrix
+    glm::mat4 GetMatrix() const;
+    // returns camera position
+    glm::vec3 GetPosition() const;
     glm::vec3 GetPosition(glm::vec2 additional_rotation);
-    glm::vec2 GetAngleToTarget();
-    glm::vec3 GetUpVector();
+    // returns between target and camera
+    glm::vec2 GetAngleToTarget() const;
+    // returns camera up vector
+    glm::vec3 GetUpVector() const;
+
+    // camera resolution
     const glm::ivec2 Resolution;
+
+    // zoom by amount, negative value will zoom out
     void Zoom(float amount);
 
 protected:

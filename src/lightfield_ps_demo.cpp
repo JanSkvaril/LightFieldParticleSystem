@@ -54,7 +54,7 @@ void LightFieldPsDemo::SetPresetBasic()
     loaded_models.push_front(std::make_shared<Model>("models/bird.obj"));
 
     int density = 21;
-    generator_store.AddGenerator(std::make_shared<Generator>(loaded_models.front().get(), density, 5000));
+    generator_store.AddGenerator(std::make_shared<Generator>(loaded_models.front(), density, 5000));
     particles.AddTextureHandle(generator_store);
 
     scene_comentary = "Basic scene";
@@ -76,13 +76,13 @@ void LightFieldPsDemo::SetPresetBalloons()
 
     int density = 51;
     int resolution = 10000;
-    generator_store.AddGenerator(std::make_shared<Generator>(loaded_models.front().get(), density, 10000));
+    generator_store.AddGenerator(std::make_shared<Generator>(loaded_models.front(), density, 10000));
     generator_store.Generators.back()->SetLightColor({0.949, 0.4, 0.0});
     generator_store.Generators.back()->SetModelRotation({0.149, 0.6, 0.0});
-    generator_store.AddGenerator(std::make_shared<Generator>(loaded_models.front().get(), density, 10000));
+    generator_store.AddGenerator(std::make_shared<Generator>(loaded_models.front(), density, 10000));
     generator_store.Generators.back()->SetLightColor({0.239, 0.106, 0.0});
     generator_store.Generators.back()->SetModelRotation({0.239, 0.106, 0.0});
-    generator_store.AddGenerator(std::make_shared<Generator>(loaded_models.front().get(), density, 10000));
+    generator_store.AddGenerator(std::make_shared<Generator>(loaded_models.front(), density, 10000));
     generator_store.Generators.back()->SetLightColor({0.518, 0.192, 0.0});
     generator_store.Generators.back()->SetModelRotation({0.518, 0.42, 0.0});
     particles.AddTextureHandle(generator_store);
@@ -110,10 +110,10 @@ void LightFieldPsDemo::SetPresetRealLight()
     int density = 21;
     std::string model_path = "models/donut.obj";
     loaded_models.push_front(std::make_shared<Model>(model_path));
-    generator_store.AddGenerator(std::make_shared<Generator>(loaded_models.front().get(), density, 5000));
+    generator_store.AddGenerator(std::make_shared<Generator>(loaded_models.front(), density, 5000));
     generator_store.Generators.front()->ShouldUseLight(false);
     loaded_models.push_front(std::make_shared<ModelNormals>(model_path));
-    generator_store.AddGenerator(std::make_shared<Generator>(loaded_models.front().get(), density, 5000));
+    generator_store.AddGenerator(std::make_shared<Generator>(loaded_models.front(), density, 5000));
     generator_store.SetDensity(31);
     particles.UseRealLightShader();
     particles.AddTextureHandle(generator_store);
@@ -132,7 +132,7 @@ void LightFieldPsDemo::SetPresetBenchmark()
     loaded_models.push_front(std::make_shared<Model>("models/baloon.obj"));
 
     int density = 21;
-    generator_store.AddGenerator(std::make_shared<Generator>(loaded_models.front().get(), density, 5000));
+    generator_store.AddGenerator(std::make_shared<Generator>(loaded_models.front(), density, 5000));
     particles.SetGravity(0.003f, glm::vec3(0.0f, -1.0f, 0.0f));
     particles.AddTextureHandle(generator_store);
     scene_comentary = "This is special scene used for benchmarking.\nDuring benchmark, it's rendered with different amounts\nof particles and different resolutions";
@@ -164,7 +164,7 @@ void LightFieldPsDemo::SetPresetBenchmarkComplex()
     loaded_models.push_front(std::make_shared<Model>("models/bunny.obj"));
 
     int density = 21;
-    generator_store.AddGenerator(std::make_shared<Generator>(loaded_models.front().get(), density, 5000));
+    generator_store.AddGenerator(std::make_shared<Generator>(loaded_models.front(), density, 5000));
     particles.SetGravity(0.003, glm::vec3(0.0f, -1.0f, 0.0f));
     particles.AddTextureHandle(generator_store);
     active_skybox = -1;
@@ -194,13 +194,13 @@ void LightFieldPsDemo::SetPresetStarships()
     int density = 31;
 
     loaded_models.push_front(std::make_shared<Model>("models/battleship.obj"));
-    generator_store.AddGenerator(std::make_shared<Generator>(loaded_models.front().get(), density, 5000));
+    generator_store.AddGenerator(std::make_shared<Generator>(loaded_models.front(), density, 5000));
     generator_store.Generators.back()->SetLightColor(glm::vec3(0.77, 0.2, 0.27));
     loaded_models.push_front(std::make_shared<Model>("models/battleship2.obj"));
-    generator_store.AddGenerator(std::make_shared<Generator>(loaded_models.front().get(), density, 5000));
+    generator_store.AddGenerator(std::make_shared<Generator>(loaded_models.front(), density, 5000));
     generator_store.Generators.back()->SetLightColor(glm::vec3(0.2, 0.27, 0.4));
     loaded_models.push_front(std::make_shared<Model>("models/battleship3.obj"));
-    generator_store.AddGenerator(std::make_shared<Generator>(loaded_models.front().get(), density, 5000));
+    generator_store.AddGenerator(std::make_shared<Generator>(loaded_models.front(), density, 5000));
     generator_store.Generators.back()->SetLightColor(glm::vec3(0.3, 0.3, 0.3));
     generator_store.Generators.back()->SetModelRotation(glm::vec3(0.0, 3.14f / 2.0f, 0.0));
     generator_store.SetDensity(density);
@@ -276,11 +276,11 @@ void LightFieldPsDemo::SetPresetHalfChange()
     int density = 21;
 
     loaded_models.push_front(std::make_shared<Model>("models/cube.obj"));
-    generator_store.AddGenerator(std::make_shared<Generator>(loaded_models.front().get(), density, 5000));
+    generator_store.AddGenerator(std::make_shared<Generator>(loaded_models.front(), density, 5000));
     generator_store.Generators.back()->SetModelRotation(glm::vec3(3.14 / 4.0f, 3.14 / 4.0f, 1.5));
     generator_store.Generators.back()->SetLightColor(glm::vec3(0.7, 0.3, 0.12));
     loaded_models.push_front(std::make_shared<Model>("models/donut.obj"));
-    generator_store.AddGenerator(std::make_shared<Generator>(loaded_models.front().get(), density, 5000));
+    generator_store.AddGenerator(std::make_shared<Generator>(loaded_models.front(), density, 5000));
     generator_store.Generators.back()->SetModelRotation(glm::vec3(0.3, 3.14 / 2.0f, 1.5));
     generator_store.Generators.back()->SetLightColor(glm::vec3(0.7, 0.3, 0.12));
 
@@ -307,7 +307,7 @@ void LightFieldPsDemo::SetPresetSunflower()
 
     int density = 31;
 
-    generator_store.AddGenerator(std::make_shared<Generator>(loaded_models.front().get(), density, 5000));
+    generator_store.AddGenerator(std::make_shared<Generator>(loaded_models.front(), density, 5000));
     loaded_models.push_front(std::make_shared<Model>("models/flower_alive.obj"));
     generator_store.Generators.front()->SetLightColor(glm::vec3(0.463, 0.404, 0.0));
     generator_store.SetDensity(density);
@@ -325,14 +325,14 @@ void LightFieldPsDemo::UpdatePresetSpecific()
     {
         if (day_counter == max_day_counter / 2)
         {
-            generator_store.Generators.front()->SetModel(loaded_models.front().get());
+            generator_store.Generators.front()->SetModel(loaded_models.front());
             generator_store.Generators.front()->SetLightColor(glm::vec3(0.663, 0.804, 0.0));
             active_skybox = 2;
         }
         else if (day_counter >= max_day_counter)
         {
             day_counter = 0;
-            generator_store.Generators.front()->SetModel(loaded_models.back().get());
+            generator_store.Generators.front()->SetModel(loaded_models.back());
             generator_store.Generators.front()->SetLightColor(glm::vec3(0.463, 0.404, 0.0));
             active_skybox = 3;
         }
@@ -366,7 +366,7 @@ void LightFieldPsDemo::SetPresetDisco()
     loaded_models.push_front(std::make_shared<Model>("models/baloon.obj"));
 
     int density = 21;
-    generator_store.AddGenerator(std::make_shared<Generator>(loaded_models.front().get(), density, 5000));
+    generator_store.AddGenerator(std::make_shared<Generator>(loaded_models.front(), density, 5000));
     particles.AddTextureHandle(generator_store);
     particles.SetSpeed(0.1f);
     particles.SetGravity(0.01f, glm::vec3(0.1f, -0.9f, 0.0f));
@@ -411,7 +411,7 @@ void LightFieldPsDemo::SetPresetDiscoBench()
     loaded_models.push_front(std::make_shared<Model>("models/baloon.obj"));
 
     int density = 21;
-    generator_store.AddGenerator(std::make_shared<Generator>(loaded_models.front().get(), density, 5000));
+    generator_store.AddGenerator(std::make_shared<Generator>(loaded_models.front(), density, 5000));
     particles.SetGravity(0.003f, glm::vec3(0.0f, -1.0f, 0.0f));
     particles.AddTextureHandle(generator_store);
     disco_preset = true;

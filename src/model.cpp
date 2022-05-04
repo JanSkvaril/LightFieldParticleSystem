@@ -20,7 +20,7 @@ Model::Model(std::string path)
     Setup();
 }
 
-void Model::Draw(glm::vec3 rotation, glm::vec3 position, GeneratorParameters &generator_params)
+void Model::Draw(glm::vec3 rotation, glm::vec3 position, std::shared_ptr<GeneratorParameters> generator_params)
 {
 
     shader->Use();
@@ -33,20 +33,20 @@ void Model::Draw(glm::vec3 rotation, glm::vec3 position, GeneratorParameters &ge
     model = glm::rotate(model, rotation.y, glm::vec3(1.0f, 0.0f, 0.0f));
     model = glm::rotate(model, rotation.x, glm::vec3(0.0f, 1.0f, 0.0f));
     // model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-    model = glm::rotate(model, generator_params.model_rotation.y, glm::vec3(1.0f, 0.0f, 0.0f));
-    model = glm::rotate(model, generator_params.model_rotation.x, glm::vec3(0.0f, 1.0f, 0.0f));
+    model = glm::rotate(model, generator_params->model_rotation.y, glm::vec3(1.0f, 0.0f, 0.0f));
+    model = glm::rotate(model, generator_params->model_rotation.x, glm::vec3(0.0f, 1.0f, 0.0f));
 
     view = glm::translate(view, glm::vec3(0.0f, 0.0f, -5.5f));
     const unsigned int SCR_WIDTH = 1200;
     const unsigned int SCR_HEIGHT = 800;
     projection = glm::perspective(glm::radians(45.0f), 1.0f, 0.1f, 100.0f);
-    auto color = generator_params.model_light_color;
+    auto color = generator_params->model_light_color;
     // set emittor object to uniforms
     glUniformMatrix4fv(shader->GetUniformLocation("model"), 1, GL_FALSE, glm::value_ptr(model));
     glUniformMatrix4fv(shader->GetUniformLocation("view"), 1, GL_FALSE, glm::value_ptr(view));
     glUniformMatrix4fv(shader->GetUniformLocation("projection"), 1, GL_FALSE, glm::value_ptr(projection));
     glUniform3fv(shader->GetUniformLocation("light_color"), 1, glm::value_ptr(color));
-    glUniform1i(shader->GetUniformLocation("use_light"), generator_params.use_light);
+    glUniform1i(shader->GetUniformLocation("use_light"), generator_params->use_light);
     glBindVertexArray(VAO);
     glDrawElements(GL_TRIANGLES, indicies.size(), GL_UNSIGNED_INT, 0);
     // glDrawArrays(GL_TRIANGLES, 0, GL_UNSIGNED_INT);
@@ -83,8 +83,7 @@ void Model::Setup()
 
 void Model::Draw()
 {
-    GeneratorParameters params{};
-    Draw(glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(0.0f, 0.0f, 0.0f), params);
+    Draw(glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(0.0f, 0.0f, 0.0f), std::make_shared<GeneratorParameters>());
 }
 
 void Model::Draw(Camera &camera)

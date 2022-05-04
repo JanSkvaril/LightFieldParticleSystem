@@ -6,12 +6,12 @@ Camera::Camera(glm::ivec2 resolution) : Resolution(resolution)
     view = glm::mat4(1.0f);
 }
 
-glm::mat4 Camera::GetMatrix()
+glm::mat4 Camera::GetMatrix() const
 {
     return view;
 }
 
-glm::vec3 Camera::GetPosition()
+glm::vec3 Camera::GetPosition() const
 {
     glm::vec3 rotated_position;
     rotated_position = glm::rotate(camera_position, rotation.y, glm::vec3(1.0f, 0.0f, 0.0f));
@@ -29,25 +29,9 @@ void Camera::LookAt(glm::vec3 position, glm::vec3 target)
     view = glm::lookAt(rotated_position, target, up_vector);
 }
 
-glm::vec2 Camera::GetAngleToTarget()
+glm::vec2 Camera::GetAngleToTarget() const
 {
-    auto position = GetPosition();
-    position = glm::normalize(position);
-
-    // auto angle = glm::vec2(atan2(position.x, position.z), acosf(position.y / 1.0f));
-    // angle.x /= glm::two_pi<float>();
-    // angle.y /= glm::pi<float>();
-    // if (angle.x < 0.0)
-    // {
-    //     angle.x = 1.0f + angle.x;
-    // }
-
-    // if (angle.y < 0.5)
-    // {
-    //     // angle.y = 1.0f - angle.y;
-    // }
     glm::vec2 angle = rotation;
-
     angle /= glm::two_pi<float>();
     return angle;
 }
@@ -76,7 +60,7 @@ void Camera::RotateAroundTarget(glm::vec2 amount)
     LookAt(camera_position, target);
 }
 
-glm::vec3 Camera::GetUpVector()
+glm::vec3 Camera::GetUpVector() const
 {
     glm::vec3 rotated_up;
     rotated_up = glm::rotate(up_vec, rotation.y, glm::vec3(1.0f, 0.0f, 0.0f));

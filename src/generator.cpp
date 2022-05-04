@@ -3,10 +3,10 @@
 #include "glm/gtc/constants.hpp"
 #include "glm/gtc/epsilon.hpp"
 #include <iostream>
-Generator::Generator(Model *model, int density, int res) : gt(model, res / density, res / density),
-                                                           t_size(res),
-                                                           Parameters(generator_params)
+Generator::Generator(std::shared_ptr<Model> model, int density, int res) : gt(model, res / density, res / density),
+                                                                           t_size(res)
 {
+    SetParams(std::make_shared<GeneratorParameters>());
     this->density = density;
     this->model = model;
     CreateRenderTexture();
@@ -108,10 +108,10 @@ int Generator::GetDensity()
 
 void Generator::SetModelRotation(glm::vec3 rotation)
 {
-    auto e = glm::epsilonEqual(rotation, generator_params.model_rotation, 0.01f);
+    auto e = glm::epsilonEqual(rotation, generator_params->model_rotation, 0.01f);
     if (!e.x || !e.y || !e.z)
     {
-        generator_params.model_rotation = rotation;
+        generator_params->model_rotation = rotation;
         ResetCache();
     };
 }
@@ -209,26 +209,31 @@ AngleCacheTable &Generator::GetCacheTable()
     return cache_table;
 }
 
-void Generator::SetParams(GeneratorParameters params)
+void Generator::SetParams(std::shared_ptr<GeneratorParameters> params)
 {
     this->generator_params = params;
 }
 
 void Generator::SetLightColor(glm::vec3 color)
 {
-    this->generator_params.model_light_color = color;
+    this->generator_params->model_light_color = color;
     ResetCache();
 }
 
 void Generator::ShouldUseLight(bool use_light)
 {
-    this->generator_params.use_light = use_light;
+    this->generator_params->use_light = use_light;
     ResetCache();
 }
 
-void Generator::SetModel(Model *model)
+void Generator::SetModel(std::shared_ptr<Model> model)
 {
     this->model = model;
     gt.SetModel(model);
     ResetCache();
+}
+
+std::shared_ptr<GeneratorParameters> Generator::GetCurrentParams() const
+{
+    return generator_params;
 }
