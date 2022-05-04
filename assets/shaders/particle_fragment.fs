@@ -1,18 +1,30 @@
 #version 450
 #extension GL_NV_bindless_texture : require
 #extension GL_NV_gpu_shader5 : require
+
+// this is light field particle shader
+// it interpolates final color from given samples
+
+// output color
 out vec4 FragColor;
 
+// tex coordinates
 in vec2 TexCoord;
-in vec4 firstsecond;
-in vec3 weights;
+// interpolation points (A and C). B and D are derived from these points, viz. thesis
+in vec4 InterpolationPoints;
+// calculated and interpolated weights for interplation
+in vec3 InterpolationWeights;
+// particle texture ID
 flat in int ParticleTexture;
 
-uniform vec3 offset;
-uniform mat4 view; // emittor position
-uniform float u_density;
+// if true, border around particle will be shown
 uniform int show_border;
-uniform uint64_t allTheSamplers[5];
+
+// bindless texture handles
+// maximum amount is 5, but can be easly increased
+uniform uint64_t texture_handles[5];
+
+// calculate final part of the interpolation
 float bilinear(vec3 w, vec4 q) {
     float first = q.x + (q.y - q.x) * w.x;
     float second = q.z + (q.w - q.z) * w.y;
@@ -21,27 +33,30 @@ float bilinear(vec3 w, vec4 q) {
 
 void main()
 {
-    sampler2D u_texture = sampler2D(allTheSamplers[ParticleTexture]);
+    // create texture sampler
+    sampler2D u_texture = sampler2D(texture_handles[ParticleTexture]);
     vec4 col = vec4(1.0, 1.0, 1.0, 1.0);
     
-    vec4 q11 = texture(u_texture, firstsecond.xy);
-    vec4 q12 = texture(u_texture, vec2(firstsecond.z, firstsecond.y));
-    vec4 q21 = texture(u_texture, vec2(firstsecond.x, firstsecond.a));
-    vec4 q22 = texture(u_texture, firstsecond.za);
+    // fetch textures from given points
+    vec4 q11 = texture(u_texture, InterpolationPoints.xy);
+    vec4 q12 = texture(u_texture, vec2(InterpolationPoints.z, InterpolationPoints.y));
+    vec4 q21 = texture(u_texture, vec2(InterpolationPoints.x, InterpolationPoints.a));
+    vec4 q22 = texture(u_texture, InterpolationPoints.za);
     
-    col.r = bilinear(weights, vec4(q11.r, q12.r, q21.r, q22.r));
-    col.g = bilinear(weights, vec4(q11.g, q12.g, q21.g, q22.g));
-    col.b = bilinear(weights, vec4(q11.b, q12.b, q21.b, q22.b));
-    col.a = bilinear(weights, vec4(q11.a, q12.a, q21.a, q22.a));
+    // interpolate
+    col.r = bilinear(InterpolationWeights, vec4(q11.r, q12.r, q21.r, q22.r));
+    col.g = bilinear(InterpolationWeights, vec4(q11.g, q12.g, q21.g, q22.g));
+    col.b = bilinear(InterpolationWeights, vec4(q11.b, q12.b, q21.b, q22.b));
+    col.a = bilinear(InterpolationWeights, vec4(q11.a, q12.a, q21.a, q22.a));
     
-    // if (show_border == 1) {
-        //     if (TexCoord.x < 0.01 || TexCoord.y < 0.01 || TexCoord.x > 0.99 || TexCoord.y > 0.99) {
-            //         col = vec4(1.0, 0.0, 0.0, 1.0);
-        //     }
-    // }
+    // show border if specified
+    // remove this to increase performance!
+    if (show_border == 1) {
+        if (TexCoord.x < 0.01 || TexCoord.y < 0.01 || TexCoord.x > 0.99 || TexCoord.y > 0.99) {
+            col = vec4(1.0, 0.0, 0.0, 1.0);
+        }
+    }
     
-    FragColor = col; //vec4(col.xyz, alpha);
+    FragColor = col;
     
-    return;
-    //  col.r = col.g;
 }

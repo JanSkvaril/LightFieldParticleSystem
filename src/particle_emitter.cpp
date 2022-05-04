@@ -74,7 +74,7 @@ void ParticleEmitter::Draw(Camera &camera, float texture_density)
     glUniformMatrix3fv(used_shader.GetUniformLocation("rot"), 1, GL_FALSE, glm::value_ptr(rot));
     glUniform1f(used_shader.GetUniformLocation("u_density"), texture_density);
     glUniform1i(used_shader.GetUniformLocation("show_border"), show_borders);
-    glUniformHandleui64vARB(used_shader.GetUniformLocation("allTheSamplers"), texture_handles.size(), &texture_handles[0]);
+    glUniformHandleui64vARB(used_shader.GetUniformLocation("texture_handles"), texture_handles.size(), &texture_handles[0]);
 
     // bind VAO
     glBindVertexArray(VAO);

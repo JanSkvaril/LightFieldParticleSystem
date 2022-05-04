@@ -1,3 +1,17 @@
+// Light field particle system demo
+// This application was created as part of Bachelor's thesis at VUT FIT Brno
+/*              Abstract
+The goal of this thesis is to propose and implement a method combining light field and
+particle effects. Particles are rendered as billboards and their textures are created with
+synthetic light field, which is dynamically generated at runtime. Particles can also use
+several of these textures at the same time. The thesis also includes several implemented
+scenes demonstrating various functionality and measurements comparing proposed method
+with standard 3D rendering techniques.
+*/
+// Author: Jan Škvařil
+// 2022
+// LICENCE: MIT
+
 #define GLFW_INCLUDE_GLEXT
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
@@ -30,13 +44,15 @@
 #include <chrono>
 #include "args.hxx"
 #include <exception>
-void framebuffer_size_callback(GLFWwindow *window, int width, int height);
 void processInput(GLFWwindow *window);
+
+// turn off optimus!
 extern "C"
 {
     __declspec(dllexport) unsigned long NvOptimusEnablement = 0x00000001;
 }
 
+// print fps to stdout
 void printFPS()
 {
     static std::chrono::time_point<std::chrono::steady_clock> oldTime = std::chrono::high_resolution_clock::now();
@@ -54,8 +70,10 @@ void printFPS()
 // settings
 const unsigned int SCR_WIDTH = 1200;
 const unsigned int SCR_HEIGHT = 800;
+
 int main(int argc, char **argv)
 {
+    // ===== arguments ====
     args::ArgumentParser parser("This is demo application for Lightfield Particle System by Jan Skvaril", "All options are optional, max 1 scene can be selected");
     args::HelpFlag help(parser, "help", "Display this help menu", {'h', "help"});
     args::Group group(parser, "Flags:", args::Group::Validators::DontCare);
@@ -73,7 +91,6 @@ int main(int argc, char **argv)
     args::Flag opt_scene_standard3d(group3, "Standard 3D", "Particles are rendered with normal 3D methods", {"s3d"});
     args::Flag opt_scene_standard3dC(group3, "Standard 3D", "Particles are rendered with normal 3D methods with very complex model", {"s3dc"});
     args::Flag opt_scene_disco(group3, "Disco", "Disco scene, with pariodical light field redraw", {"disco"});
-
     try
     {
         parser.ParseCLI(argc, argv);
@@ -88,19 +105,18 @@ int main(int argc, char **argv)
         std::cout << "Argument error, -h for help\n";
         return 1;
     }
-    // glfw: initialize and configure
-    // ------------------------------
+
+    // ===== glfw setup ====
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-
+    glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
 #ifdef __APPLE__
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 #endif
 
-    // glfw window creation
-    // --------------------
+    // ===== window ====
     GLFWwindow *window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "Light Field Particles", NULL, NULL);
     if (window == NULL)
     {
@@ -109,23 +125,28 @@ int main(int argc, char **argv)
         return -1;
     }
     glfwMakeContextCurrent(window);
-    glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+    glfwSetFramebufferSizeCallback(window, nullptr);
 
-    // glad: load all OpenGL function pointers
-    // ---------------------------------------
+    // ===== Load opengl function loader ====
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
     {
         std::cout << "Failed to initialize GLAD" << std::endl;
         return -1;
     }
+
+    // ===== prepare scene from arguments ====
     if (opt_no_vsync)
     {
-        glfwSwapInterval(0);
+        glfwSwapInterval(0); // unlimited FPS
     }
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     float time = 0.0f;
     std::srand(0); // same seed every time
+
+    // create demo object
     LightFieldPsDemo lfps({SCR_WIDTH, SCR_HEIGHT});
+
+    // select scene
     if (opt_scene_benchmark)
     {
         lfps.SetPresetBenchmark();
@@ -169,7 +190,7 @@ int main(int argc, char **argv)
 
         lfps.SetPresetBasic();
     }
-
+    // parameters from CLI
     if (opt_particles)
     {
         lfps.particles.SetPactilesAmount(opt_particles.Get());
@@ -179,6 +200,8 @@ int main(int argc, char **argv)
         lfps.generator_store.SetResolution(opt_resolution.Get());
         lfps.particles.AddTextureHandle(lfps.generator_store);
     }
+
+    // ===== GUI setup ====
     UiManager ui(window);
     ui.AddLFPS(&lfps);
     if (opt_no_vsync)
@@ -191,22 +214,26 @@ int main(int argc, char **argv)
     {
         lfps.ShouldCameraRotate(true);
     }
-    // std::cout << glGetString(GL_VERSION) << "\n";
-    glEnable(GL_BLEND);
-    TextReactangle rec;
 
+    glEnable(GL_BLEND);
+    TextReactangle rec; // rectangle for displaying light field texture
+
+    // ===== MAIN RENDER LOOP ====
     while (!glfwWindowShouldClose(window))
     {
+        // print FPS, for benchmarks
         if (opt_print_fps)
         {
             printFPS();
         }
+
+        // update camera controlls
         ui.HandleCameraControls(lfps.camera);
 
+        // simulalate
         lfps.Update();
-        // bench.Update();
-        time += 0.04f;
 
+        // clear buffer
         processInput(window);
         glEnable(GL_BLEND);
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
@@ -214,54 +241,41 @@ int main(int argc, char **argv)
         glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+        // generate light field textures
         lfps.Generate();
         glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
+
+        // Draw skybox if allowed
         if (ui.config.show_skybox)
         {
             lfps.DrawSkybox();
         }
         if (!ui.config.show_light_field)
         {
+            // Draw light field particle system
             lfps.Draw();
-            //  bench.Draw(lfps.camera);
         }
         else
         {
+            // draw just light field texture instead
             lfps.generator_store.Generators.front()->Bind();
             rec.Draw(glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 1.0f));
         }
-
+        // draw ui
         ui.Draw();
 
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
 
-    // optional: de-allocate all resources once they've outlived their purpose:
-    // ------------------------------------------------------------------------
-    //  glDeleteVertexArrays(1, &VAO);
-    //   glDeleteBuffers(1, &VBO);
-    //   glDeleteProgram(shaderProgram);
-
-    // glfw: terminate, clearing all previously allocated GLFW resources.
-    // ------------------------------------------------------------------
+    lfps.generator_store.Clear(); // dispose textures
     glfwTerminate();
     return 0;
 }
 
-// process all input: query GLFW whether relevant keys are pressed/released this frame and react accordingly
-// ---------------------------------------------------------------------------------------------------------
+// process keyboard input
 void processInput(GLFWwindow *window)
 {
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
-}
-
-// glfw: whenever the window size changed (by OS or user resize) this callback function executes
-// ---------------------------------------------------------------------------------------------
-void framebuffer_size_callback(GLFWwindow *window, int width, int height)
-{
-    // make sure the viewport matches the new window dimensions; note that width and
-    // height will be significantly larger than specified on retina displays.
-    glViewport(0, 0, width, height);
 }
