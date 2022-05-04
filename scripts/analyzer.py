@@ -39,8 +39,8 @@ def GenBasic(df, name, out="graphs"):
            title=f"{name} Průměrné snímky za sekundu pro jednotlivé scény", color=[COL1, COL2, COL3])
     ax.set_xlim([gmin, gmax])
     ax.yaxis.set_ticklabels(labels)
-    ax.set_ylabel("10 000 částic")
-    ax.legend(loc='center left', bbox_to_anchor=(1.0, 0.5))
+    ax.set_ylabel("Scény")
+    ax.legend(loc='center right')
 
     # r = df[df["variant"] == "basic"]
     # r = r[r["particles"] == 4000]
