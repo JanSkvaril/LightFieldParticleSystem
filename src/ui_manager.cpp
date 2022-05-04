@@ -209,7 +209,7 @@ void UiManager::AddLFPS(LightFieldPsDemo *lfps)
         [gs, ps](int value)
         {
             gs->SetResolution(value);
-            ps->AddTextureHandle(gs);
+            ps->AddTextureHandle(*gs); // todo: refactor :(
         },
         [gs]()
         { return gs->GetRelution(); });

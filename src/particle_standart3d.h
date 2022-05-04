@@ -6,12 +6,17 @@
 #include "particle_params.h"
 #include "particle_simulator.h"
 #include "camera.h"
+
+// particle system rendering particles with standard 3D techniques
 class ParticleStandard3d
 {
 public:
     ParticleStandard3d(std::shared_ptr<Model> model, ParticleParameters params);
+    // update all particles
     void Update();
+    // draw particles to current framebuffer
     void Draw(Camera &camera);
+    // simulate n steps without drawing
     void SimulateSteps(int steps);
 
 protected:

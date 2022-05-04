@@ -2,6 +2,8 @@
 #define SHADER_CLASS_DEF
 
 #include <string>
+
+// simple class encapsulating shader program
 class Shader
 {
 public:

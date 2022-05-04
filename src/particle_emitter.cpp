@@ -8,18 +8,6 @@
 #include <execution>
 #include <algorithm>
 #include <omp.h>
-float atan22(float y, float x)
-{
-    bool s = (abs(x) > abs(y));
-    if (s == true)
-    {
-        return glm::pi<float>() / 2.0f - glm::atan(x, y);
-    }
-    else
-    {
-        return glm::atan(y, x);
-    }
-}
 
 ParticleEmitter::ParticleEmitter(int particles)
     : amount_of_particles(particles),
@@ -28,7 +16,6 @@ ParticleEmitter::ParticleEmitter(int particles)
       Parameters(particle_parameters)
 {
     SetPactilesAmount(particles);
-
     Reset();
     CreateVAO();
 }
@@ -47,26 +34,27 @@ void ParticleEmitter::ResetParticle(Particle &particle)
 {
     particle.Reset();
 }
-#include <iostream>
 void ParticleEmitter::Draw(Camera &camera, float texture_density)
 {
-
+    // bind vbos
     BindPositionVBO();
     BindUVVBO();
     BindTextureVBO();
-    // texture.Bind();
-    //  load shader program
+
+    //  load shader
     Shader &used_shader = GetActiveShader();
     used_shader.Use();
-    // emittor object
+
+    // MVP
     glm::mat4 model = glm::mat4(1.0f);
     glm::mat4 view = glm::mat4(1.0f);
     glm::mat4 projection = glm::mat4(1.0f);
 
+    // view from camera object
     view = camera.GetMatrix();
     auto angle = camera.GetAngleToTarget();
-    // std::cout << glm::to_string(camera.GetPosition()) << "\n"
-    //            << glm::to_string(camera.GetAngleToTarget()) << "\n\n";
+
+    // create billboard rotation matrix M
     glm::vec3 camera_normal = glm::vec3(view[0][2], view[1][2], view[2][2]);
     camera_normal = -camera_normal;
     glm::vec3 up = glm::vec3(view[0][1], view[1][1], view[2][1]);
@@ -75,37 +63,29 @@ void ParticleEmitter::Draw(Camera &camera, float texture_density)
     glm::vec3 new_up = cross(camera_normal, r);
     glm::mat3 rot = glm::mat3(r, new_up, camera_normal);
 
+    // create projection matrix
     projection = glm::perspective(glm::radians(45.0f), (float)camera.Resolution.x / (float)camera.Resolution.y, 0.1f, 100.0f);
-    auto camera_pos = camera.GetPosition();
-    auto dir = camera_pos - positions[0];
-    dir = normalize(dir);
-    // std::cout << "Camera Angle: " << glm::to_string(camera.GetAngleToTarget()) << "\n";
-    float a = (glm::atan(dir.z, dir.x));
-    float b = (glm::atan(dir.y, dir.x));
-    // std::cout << "" << b << " " << a << "  " << glm::to_string(dir) << "\n";
-    // std::cout << "Direction:    " << glm::to_string(dir) << "\n\n";
-    //
-    //  set emittor object to uniforms
+
+    // calculate view and mocdel transformation matrix
+    // perspective matrix is calculated in the shader
     glm::mat4 viewmodel = view * model;
     glUniformMatrix4fv(used_shader.GetUniformLocation("viewmodel"), 1, GL_FALSE, glm::value_ptr(viewmodel));
     glUniformMatrix4fv(used_shader.GetUniformLocation("projection"), 1, GL_FALSE, glm::value_ptr(projection));
     glUniformMatrix3fv(used_shader.GetUniformLocation("rot"), 1, GL_FALSE, glm::value_ptr(rot));
-    glUniform2fv(used_shader.GetUniformLocation("camera_angle"), 1, glm::value_ptr(angle));
-    glUniform3fv(used_shader.GetUniformLocation("camera_pos"), 1, glm::value_ptr(camera_pos));
     glUniform1f(used_shader.GetUniformLocation("u_density"), texture_density);
     glUniform1i(used_shader.GetUniformLocation("show_border"), show_borders);
     glUniformHandleui64vARB(used_shader.GetUniformLocation("allTheSamplers"), texture_handles.size(), &texture_handles[0]);
 
     // bind VAO
     glBindVertexArray(VAO);
-    //  glEnable(GL_DEPTH_TEST);
+
+    // draw all particle instances
     glDrawArraysInstanced(GL_TRIANGLES, 0, GL_UNSIGNED_INT, simulator.Particles.size());
-    // glDisable(GL_DEPTH_TEST);
-    //  draw particles
 }
 
 void ParticleEmitter::CreateVAO()
 {
+    // gen VBOs
     glGenBuffers(1, &position_VBO);
     BindPositionVBO();
 
@@ -114,6 +94,8 @@ void ParticleEmitter::CreateVAO()
 
     glGenBuffers(1, &texture_VBO);
     BindTextureVBO();
+
+    // verticies and tex coords for billboard
     float vertices[] = {
         1.0f, 1.0f, 0.0f, 1.0f, 1.0f,
         1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
@@ -122,9 +104,13 @@ void ParticleEmitter::CreateVAO()
         1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
         -1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
         -1.0f, 1.0f, 0.0f, 0.0f, 1.0f};
+
+    // gen VAO
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
     glBindVertexArray(VAO);
+
+    // prep VBOs
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
     // position
@@ -306,12 +292,16 @@ void ParticleEmitter::CalculateUVs(Camera &camera)
         {
             const auto &particle = simulator.Particles[i];
             const auto particle_pos = particle->GetPosition();
+            const auto rot = particle->GetRotation();
+
+            // distance - for depth sorting
             particle->distance = glm::fastDistance(camera_position, particle_pos);
 
-            auto rot = particle->GetRotation();
-
+            // direction from the camera
             auto dir = (camera_position * 4.0f) - particle_pos;
             dir = glm::fastNormalize(dir);
+
+            // uv mapping, with attempt of optimilazations :)
             float inverse_sqrt = glm::fastInverseSqrt(pow(dir.x, 2.0f) + pow(dir.z, 2.0f));
             float u = acos(dir.x * inverse_sqrt) / (2.0f * pi);
             if (dir.z < 0.0)
@@ -322,8 +312,8 @@ void ParticleEmitter::CalculateUVs(Camera &camera)
 
             u += rot.x;
             particle->SetUV({u, v});
-            auto corrected = particle->GetUV();
         }
+        // pass calculated uvs to uvs array (used for VBO)
 #pragma omp for
         for (int i = 0; i < uvs.size(); i++)
         {
@@ -384,7 +374,7 @@ Shader &ParticleEmitter::GetActiveShader()
     }
 }
 
-void ParticleEmitter::AddTextureHandle(GeneratorStore *store)
+void ParticleEmitter::AddTextureHandle(std::shared_ptr<GeneratorStore> store)
 {
     texture_handles.clear();
     for (const auto &generator : store->Generators)

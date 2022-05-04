@@ -12,8 +12,6 @@ out vec3 TexPosition;
 
 uniform mat4 viewmodel;
 uniform mat4 projection;
-uniform vec2 camera_angle;
-uniform vec3 camera_pos;
 uniform float u_density;
 uniform mat3 rot;
 #define PI 3.1415926538

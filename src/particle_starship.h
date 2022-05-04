@@ -1,6 +1,8 @@
 #ifndef PARTICLE_STARSHIP_CLASS_DEF
 #define PARTICLE_STARSHIP_CLASS_DEF
 #include "particle.h"
+
+// modified particle for space flotile scene
 class ParticleStarhip : public Particle
 {
 public:

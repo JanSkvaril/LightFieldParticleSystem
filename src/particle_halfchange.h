@@ -1,6 +1,8 @@
 #ifndef PARTICLE_HALFCHANGE_CLASS_DEF
 #define PARTICLE_HALFCHANGE_CLASS_DEF
 #include "particle.h"
+
+// modified particle for transformation scene
 class ParticleHalfChange : public Particle
 {
 public:

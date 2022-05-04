@@ -3,7 +3,8 @@
 #include <glm/vec3.hpp>
 #include "particle_params.h"
 #include "generator_params.h"
-struct UiSettings : public ParticleParameters, public GeneratorParameters
+
+struct UiSettings
 {
     bool show_border = false;
     bool show_light_field = false;

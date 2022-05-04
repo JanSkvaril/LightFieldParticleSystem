@@ -4,6 +4,8 @@
 #include "camera.h"
 #include <vector>
 
+// scene skybox
+// This class has been adopted from Joey de Vries, from his book Learn OpenGL
 // source: https://github.com/JoeyDeVries/LearnOpenGL/blob/master/src/4.advanced_opengl/6.1.cubemaps_skybox/cubemaps_skybox.cpp
 // 14.03.2022
 class Skybox

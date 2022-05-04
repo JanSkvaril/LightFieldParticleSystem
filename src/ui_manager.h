@@ -5,6 +5,9 @@
 #include "camera.h"
 #include "lightfield_ps_demo.h"
 
+// ui for rendered scene
+// created with NanoGui lib
+// should be refactored
 class UiManager
 {
 public:

@@ -1,12 +1,16 @@
 #include "particle.h"
 void Particle::Reset()
 {
+    // init dirrection
     direction = glm::vec3((rand() % 100) - 50, (rand() % 100 - 50), (rand() % 100) - 50);
-    // particle.direction = glm::vec3(-1.0f, 0.0f, 0.0f);
     direction = glm::normalize(direction);
+
+    // other vals
     speed = params->particle_speed;
     time_to_live = params->starting_time_to_live + rand() % params->time_to_live_dispersion;
     position = glm::vec3(.0f, 5, 0.0f);
+
+    // rotation
     if (params->random_x_rotation)
     {
         rotation = glm::vec2((rand() % 100) / 100.0f, (rand() % 100) / 100.0f);
@@ -23,18 +27,23 @@ void Particle::Reset()
     {
         x_rotation_speed = 0.0f;
     }
+
+    // random time offset for more random behavior
+    // if every particle started at 0, there could be some unwanted patterns
     random_time_offset = (float)rand();
 }
 
 void Particle::Update(float time)
 {
+    // update time to live
     time_to_live--;
     if (time_to_live <= 0)
     {
-        Reset();
+        Reset(); // die and reinicialize
     }
     else
     {
+        // update movement
         UpdatePhysics(time + random_time_offset);
     }
 }
@@ -104,10 +113,15 @@ void Particle::UpdatePhysics(float time)
 
 void Particle::SimulateMovement(float time)
 {
+    // move particle in directtion
     position += direction * speed;
+
+    // apply gravity
     float g = params->gravity_strength;
     auto gravity_dir = params->gravity_direction;
     direction = (1.0f - g) * direction + g * gravity_dir;
+
+    // rotation
     rotation.x += (x_rotation_speed + params->x_rotation_speed) * params->rotation_multiplier;
 }
 

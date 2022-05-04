@@ -3,6 +3,9 @@
 
 #include <glm/vec2.hpp>
 #include "shader.h"
+
+// simple class for rendering rectangle to current frame buffer
+// used for drawing textures
 class TextReactangle
 {
 public:
