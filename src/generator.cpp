@@ -15,81 +15,79 @@ Generator::Generator(std::shared_ptr<Model> model, int density, int res) : gt(mo
 
 void Generator::CreateRenderTexture()
 {
-
+    // frame buffer
     glGenFramebuffers(1, &FramebufferName);
     glBindFramebuffer(GL_FRAMEBUFFER, FramebufferName);
-
-    // The texture we're going to render to
-
+    // texture
     glGenTextures(1, &renderedTexture);
-
-    // "Bind" the newly created texture : all future texture functions will modify this texture
     glBindTexture(GL_TEXTURE_2D, renderedTexture);
 
-    // Give an empty image to OpenGL ( the last "0" )
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, t_size, t_size, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
 
-    // Poor filtering. Needed !
+    // filtering: mipmaping!
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST_MIPMAP_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
     glGenerateTextureMipmap(renderedTexture);
 
-    // The depth buffer
     glGenRenderbuffers(1, &depthrenderbuffer);
     glBindRenderbuffer(GL_RENDERBUFFER, depthrenderbuffer);
     glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, t_size, t_size);
     glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthrenderbuffer);
-
-    // Set "renderedTexture" as our colour attachement #0
     glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, renderedTexture, 0);
-
-    // Set the list of draw buffers.
     GLenum DrawBuffers[1] = {GL_COLOR_ATTACHMENT0};
-    glDrawBuffers(1, DrawBuffers); // "1" is the size of DrawBuffers
+    glDrawBuffers(1, DrawBuffers);
 }
 
 void Generator::Generate()
 {
+    // bind and prep frame buffer
     glBindFramebuffer(GL_FRAMEBUFFER, FramebufferName);
     glEnable(GL_BLEND);
-
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glViewport(0, 0, t_size, t_size);
 
-    // glDisable(GL_DEPTH_TEST);
+    // calculate rotation offset
     const int range = (density - 1) / 2;
     const float rec_site = 1.0f / (density);
     const float rotation = -glm::two_pi<float>() / (density);
+
+    // how many records were generated
     int generated = 0;
 
     for (int x = 0; x < density; x++)
     {
         for (int y = 0; y < density; y++)
         {
-            if (!cache_table.IsActivated(x, y))
-                continue; // skip rendering, already cached or not used
+            if (!cache_table.IsActivated(x, y)) // skip rendering, already cached or not used
+                continue;
+            // rotation vector
             int real_x = x - range;
             int real_y = y - range;
             auto rot = glm::vec3((real_x + range) * rotation, (real_y + range) * rotation, 0.0f);
-            // rot += generator_params.model_rotation;
+            // render to generator texture
             gt.Generate(rot, glm::vec3(0.0f, 0.0f, 0.0f), generator_params);
             glBindFramebuffer(GL_FRAMEBUFFER, FramebufferName);
             glViewport(0, 0, t_size, t_size);
+
+            // draw rectangle with texture on light field texture
             gt.BindTexture();
             rectangle.Draw(glm::vec2(real_x * 2.0f, real_y * 2.0f), glm::vec2(rec_site, rec_site));
+
+            // mark as cached in cache table
             cache_table.MarkCached(x, y);
             generated++;
         }
     }
-
+    // if any records were generated, mipmap must be regenerated
     if (generated != 0)
     {
         glGenerateTextureMipmap(renderedTexture);
     }
+
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
-GLuint Generator::GetTexture()
+GLuint Generator::GetTexture() const
 {
     return renderedTexture;
 }
@@ -101,13 +99,14 @@ void Generator::Bind()
     glBindTexture(GL_TEXTURE_2D, renderedTexture);
 }
 
-int Generator::GetDensity()
+int Generator::GetDensity() const
 {
     return density;
 }
 
 void Generator::SetModelRotation(glm::vec3 rotation)
 {
+    // dont update if rotation has not changed
     auto e = glm::epsilonEqual(rotation, generator_params->model_rotation, 0.01f);
     if (!e.x || !e.y || !e.z)
     {
@@ -149,13 +148,12 @@ void Generator::ChangeResolution(int res)
 GLuint64 Generator::CreateHandle()
 {
     has_handle = true;
-    //   Bind();
     texture_handle = glGetTextureHandleARB(renderedTexture);
     MakeResident();
     return texture_handle;
 }
 
-GLuint64 Generator::GetHandle()
+GLuint64 Generator::GetHandle() const
 {
     return texture_handle;
 }
@@ -191,7 +189,7 @@ void Generator::ResetCache()
 
 void Generator::NotifyChangeAtAngle(glm::ivec2 position)
 {
-    // cache_table[position.x][position.y] = false;
+    // TODO: remove
 }
 
 void Generator::ClearTexture()
@@ -236,4 +234,10 @@ void Generator::SetModel(std::shared_ptr<Model> model)
 std::shared_ptr<GeneratorParameters> Generator::GetCurrentParams() const
 {
     return generator_params;
+}
+
+void Generator::Dispose()
+{
+    MakeNonResident();
+    Delete();
 }

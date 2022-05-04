@@ -19,6 +19,10 @@ void GeneratorStore::AllGenerate()
 
 void GeneratorStore::Clear()
 {
+    for (auto &generator : generators)
+    {
+        generator->Dispose();
+    }
     generators.clear();
 }
 

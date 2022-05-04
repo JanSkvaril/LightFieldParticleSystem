@@ -379,6 +379,7 @@ void LightFieldPsDemo::SetPresetDisco()
 
 void LightFieldPsDemo::Clean()
 {
+    generator_store.Clear(); // dispose GPU allocated stuff
     new (&particles) ParticleEmitter(100);
     new (&camera) Camera(camera.Resolution);
     new (&generator_store) GeneratorStore();

@@ -7,6 +7,8 @@
 #include <glm/vec2.hpp>
 #include <list>
 #include "skybox.h"
+
+// class handling demo logic
 class LightFieldPsDemo
 {
 public:
