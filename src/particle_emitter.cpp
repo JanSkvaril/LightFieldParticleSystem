@@ -5,7 +5,7 @@
 #include <tgmath.h>
 #include "camera.h"
 #include "glm/gtx/rotate_vector.hpp"
-#include <execution>
+//#include <execution>
 #include <algorithm>
 #include <omp.h>
 
@@ -150,7 +150,7 @@ void ParticleEmitter::SortByDepth(Camera &camera)
     const auto camera_pos = camera.GetPosition();
     // std::for_each(std::execution::par, simulator.Particles.begin(), simulator.Particles.end(), [&camera_pos](auto &p_a)
     //               { p_a->distance = glm::fastDistance(camera_pos, p_a->GetPosition()); });
-    std::sort(std::execution::par, simulator.Particles.begin(), simulator.Particles.end(), [](auto &p_a, auto &p_b)
+    std::sort(simulator.Particles.begin(), simulator.Particles.end(), [](auto &p_a, auto &p_b)
               {
                   const auto dist_a = p_a->distance;
                   const auto dist_b = p_b->distance;
@@ -383,7 +383,3 @@ void ParticleEmitter::AddTextureHandle(std::shared_ptr<GeneratorStore> store)
     }
 }
 
-ParticleEmitter &ParticleEmitter::ParticleEmitter::operator=(const ParticleEmitter &rhs)
-{
-    return *this;
-}

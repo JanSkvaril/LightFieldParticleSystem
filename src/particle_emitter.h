@@ -26,7 +26,7 @@ class ParticleEmitter
 public:
     ParticleEmitter(int particles);
     ParticleEmitter(int particles, std::unique_ptr<Particle> particle_prototype_ptr);
-    ParticleEmitter &ParticleEmitter::operator=(const ParticleEmitter &rhs);
+   // ParticleEmitter &ParticleEmitter::operator=(const ParticleEmitter &rhs);
 
     // reset all particles
     void Reset();

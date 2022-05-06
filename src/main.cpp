@@ -49,15 +49,17 @@ with standard 3D rendering techniques.
 #include <exception>
 void processInput(GLFWwindow *window);
 
+#ifndef __linux__ 
 // turn off optimus!
 extern "C"
 {
     __declspec(dllexport) unsigned long NvOptimusEnablement = 0x00000001;
 }
-
+#endif
 // print fps to stdout
 void printFPS()
 {
+    #ifndef __linux__ 
     static std::chrono::time_point<std::chrono::steady_clock> oldTime = std::chrono::high_resolution_clock::now();
     static int fps;
     fps++;
@@ -68,6 +70,7 @@ void printFPS()
         std::cout << "FPS: " << fps << std::endl;
         fps = 0;
     }
+    #endif
 }
 
 // settings

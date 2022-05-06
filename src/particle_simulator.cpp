@@ -1,6 +1,5 @@
 #include "particle_simulator.h"
 #include <algorithm>
-#include <execution>
 void ParticleSimulator::Update()
 {
     time += 0.01f;

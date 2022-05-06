@@ -12,6 +12,8 @@ set(NANOGUI_BUILD_EXAMPLE OFF CACHE BOOL " " FORCE)
 set(NANOGUI_BUILD_PYTHON  OFF CACHE BOOL " " FORCE)
 set(NANOGUI_INSTALL       OFF CACHE BOOL " " FORCE)
 set(NANOGUI_BUILD_SHARED  OFF CACHE BOOL " " FORCE)
+set(NANOGUI_USE_GLAD  ON CACHE BOOL " " FORCE)
+
 
 add_subdirectory(include/nanogui) 
 
@@ -78,7 +80,15 @@ add_executable(light_field_ps_bp src/main.cpp
     src/particle_flower.h
     src/particle_flower.cpp)
 
-target_compile_options(light_field_ps_bp PRIVATE /openmp)
+
+if (WIN32)
+    target_compile_options(light_field_ps_bp PRIVATE /openmp)
+endif (WIN32)
+
+if (UNIX)
+    target_compile_options(light_field_ps_bp PRIVATE -openmp)
+endif (UNIX)
+
 
 target_include_directories(light_field_ps_bp PRIVATE include/args)
 
