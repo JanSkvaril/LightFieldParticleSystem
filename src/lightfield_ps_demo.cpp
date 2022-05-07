@@ -55,7 +55,10 @@ void LightFieldPsDemo::SetPresetBasic()
 
     int density = 21;
     generator_store.AddGenerator(std::make_shared<Generator>(loaded_models.front(), density, 5000));
+    generator_store.SetDensity(41);
+    generator_store.SetResolution(7000);
     particles.AddTextureHandle(generator_store);
+    particles.SimulateSteps(1000);
 
     scene_comentary = "Basic scene";
 }
@@ -114,11 +117,11 @@ void LightFieldPsDemo::SetPresetRealLight()
     generator_store.Generators.front()->ShouldUseLight(false);
     loaded_models.push_front(std::make_shared<ModelNormals>(model_path));
     generator_store.AddGenerator(std::make_shared<Generator>(loaded_models.front(), density, 5000));
-    generator_store.SetDensity(31);
+    generator_store.SetDensity(41);
     particles.UseRealLightShader();
     particles.AddTextureHandle(generator_store);
     particles.Reset();
-
+    particles.SimulateSteps(1000);
     scene_comentary = "This scene is using special shader for dynamic light.\n2 generators are used:\n  - one for model base\n  - second for normals\nTextures are then combinded in fragment shader.\n Try to notice changing shadow on falling particles as they are falling";
 }
 
@@ -135,6 +138,9 @@ void LightFieldPsDemo::SetPresetBenchmark()
     generator_store.AddGenerator(std::make_shared<Generator>(loaded_models.front(), density, 5000));
     particles.SetGravity(0.003f, glm::vec3(0.0f, -1.0f, 0.0f));
     particles.AddTextureHandle(generator_store);
+    particles.SetPactilesAmount(1000);
+    particles.SimulateSteps(1000);
+
     scene_comentary = "This is special scene used for benchmarking.\nDuring benchmark, it's rendered with different amounts\nof particles and different resolutions";
     active_skybox = -1;
 }
