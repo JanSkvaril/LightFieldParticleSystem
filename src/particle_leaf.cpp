@@ -5,8 +5,8 @@ void ParticleLeaf::SimulateMovement(float time)
     position += direction * speed;
     float g = params->gravity_strength;
     auto gravity_dir = params->gravity_direction;
-    gravity_dir.x += sin(time * 2) * 4.0f;
-    gravity_dir.z += cos(time * 3) * 4.0f;
+    gravity_dir.x += sin(time * 2.0f);
+    gravity_dir.z += cos(time * 3.0f);
     direction = (1.0f - g) * direction + g * gravity_dir;
     rotation.x += (x_rotation_speed + params->x_rotation_speed) * params->rotation_multiplier;
 }
