@@ -7,14 +7,6 @@ UiManager::UiManager(GLFWwindow *window)
     this->window = window;
     screen->initialize(window, true);
 
-    // nanogui::ref<nanogui::Window> nanoguiWindow2 = gui->add_window(nanogui::Vector2i(250, 10), "Model");
-    // nanoguiWindow2->set_width(200);
-    // gui->add_group("Position");
-    // gui->add_variable("Rotation x", config.model_rotation.x);
-    // gui->add_variable("Rotation y", config.model_rotation.y);
-    // gui->add_variable("Rotation z", config.model_rotation.z);
-    // gui->add_group("Light");
-
     nanogui::ref<nanogui::Window> nanoguiWindow3 = gui->add_window(nanogui::Vector2i(500, 10), "Scene");
     nanoguiWindow3->set_width(200);
     gui->add_group("Skybox");
@@ -93,8 +85,9 @@ void UiManager::Draw()
 
 void UiManager::HandleCameraControls(Camera &camera)
 {
-    const float speed = 0.05f;
+    const float speed = 0.01f;
     const float zoom_speed = 0.1f;
+    // camera controlls
     if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
     {
         camera.RotateAroundTarget(glm::vec2(speed, 0.0f));
@@ -120,6 +113,7 @@ void UiManager::HandleCameraControls(Camera &camera)
         camera.Zoom(-zoom_speed);
     }
 
+    // hide/show gui
     if (glfwGetKey(window, GLFW_KEY_U) == GLFW_PRESS)
     {
         hide_ui = true;
@@ -136,6 +130,7 @@ void UiManager::AddLFPS(LightFieldPsDemo *lfps)
     ParticleEmitter *ps = &lfps->particles;
     GeneratorStore *gs = &lfps->generator_store;
 
+    // === particle system ===
     nanogui::ref<nanogui::Window> nanoguiWindow = gui->add_window(nanogui::Vector2i(10, 10), "Particle system");
     gui->add_group("Simulation");
     gui->add_variable<int>(
@@ -216,6 +211,7 @@ void UiManager::AddLFPS(LightFieldPsDemo *lfps)
 
     CreateModelWindows();
 
+    // == presents ==
     auto nanoguiWindow4 = gui->add_window(nanogui::Vector2i(750, 10), "Presets");
     nanoguiWindow4->set_width(200);
     gui->add_group("Avaiable presets");
@@ -261,7 +257,6 @@ void UiManager::UpdateComentaryText()
         text_area->append_line(line);
     }
 }
-#include <iostream>
 void UiManager::CreateModelWindows()
 {
     GeneratorStore *gs = &lfps->generator_store;

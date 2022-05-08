@@ -37,8 +37,6 @@ void Model::Draw(glm::vec3 rotation, glm::vec3 position, std::shared_ptr<Generat
     model = glm::rotate(model, generator_params->model_rotation.x, glm::vec3(0.0f, 1.0f, 0.0f));
 
     view = glm::translate(view, glm::vec3(0.0f, 0.0f, -5.5f));
-    const unsigned int SCR_WIDTH = 1200;
-    const unsigned int SCR_HEIGHT = 800;
     projection = glm::perspective(glm::radians(45.0f), 1.0f, 0.1f, 100.0f);
     auto color = generator_params->model_light_color;
     // set emittor object to uniforms
