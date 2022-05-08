@@ -33,7 +33,7 @@ git clone --recursive https://github.com/JanSkvaril/LightFieldParticleSystem.git
 ```
 `--recursive` flag is required, because repository contains two submodules
 ## Compile
-For compilation you must have cmake installed. Program was compilled by `Visual Studio Community 2022` compiler on windows and `GPP` on linux. At least OpenGL 4.X must be installed and it must supported by your GPU. 
+For compilation you must have cmake installed. Program was compilled by `Visual Studio Community 2022` compiler on windows and `GPP` on linux. At least OpenGL 4.X must be installed and it must be supported by your GPU. 
 
 ### Windows
 Majority of development of this thesis was done in Visual Studio 2022 with C++ extention. 
