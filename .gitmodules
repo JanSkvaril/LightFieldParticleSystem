@@ -1,6 +1,6 @@
-[submodule "include/assimp"]
-	path = include/assimp
+[submodule "application/include/assimp"]
+	path = application/include/assimp
 	url = https://github.com/assimp/assimp
-[submodule "include/nanogui"]
-	path = include/nanogui
+[submodule "application/include/nanogui"]
+	path = application/include/nanogui
 	url = https://github.com/JanSkvaril/nanogui
