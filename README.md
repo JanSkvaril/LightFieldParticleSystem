@@ -1,5 +1,26 @@
 # Light Field Particle System
-kfdjdkfd
+The goal of this thesis is to propose and implement a method combining light field and
+particle effects. Particles are rendered as billboards and their textures are created with
+synthetic light field, which is dynamically generated at runtime. Particles can also use
+several of these textures at the same time. The thesis also includes several implemented
+scenes demonstrating various functionality and measurements comparing proposed method
+with standard 3D rendering techniques.
+
+Simple demo video can be found [here](https://www.youtube.com/watch?v=jVIBj0W4zsU) or in the *video* folder
+
+```
++---application         Implemented application
+|   +---assets          Assets, this folder is copied to build folder
+|   |   +---imgs        Images, for skyboxes
+|   |   +---models      Models for generating light fields
+|   |   +---shaders     Containts all used shader programs
+|   +---include         Libs and submodules
+|   +---scripts         Scripts for benchmarking, graphs, etc.
+|   +---src             Source files
++---text                Thesis text in PDF
+|   +---source          Tex source files for PDF
++---video               Simple demo video
+```
 
 # Setup
 ## Repository
