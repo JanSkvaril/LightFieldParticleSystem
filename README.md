@@ -17,6 +17,9 @@ Simple demo video can be found [here](https://www.youtube.com/watch?v=jVIBj0W4zs
 |   +---include         Libs and submodules
 |   +---scripts         Scripts for benchmarking, graphs, etc.
 |   +---src             Source files
++---binaries            Contains executables of application
+|   +---windows         Executable file for windows (+ assets)
+|   +---linux           Executable file for linux (+ assets)
 +---text                Thesis text in PDF
 |   +---source          Tex source files for PDF
 +---video               Simple demo video
