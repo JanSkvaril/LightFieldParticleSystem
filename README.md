@@ -28,13 +28,14 @@ This thesis is also avaiable on [Github](https://github.com/JanSkvaril/LightFiel
 ``` 
 git clone --recursive https://github.com/JanSkvaril/LightFieldParticleSystem.git
 ```
+`--recursive` flag is required, because repository contains two submodules
 ## Compile
 For compilation you must have cmake installed. Program was compilled by `Visual Studio Community 2022` compiler on windows and `GPP` on linux. At least OpenGL 4.X must be installed and it must supported by your GPU. 
 
 ### Windows
 Majority of development of this thesis was done in Visual Studio 2022 with C++ extention. 
 
-In repository folder:
+In application folder:
 ```
 mkdir build
 cd build
@@ -62,7 +63,7 @@ Before compilation, install necessary dependencies:
 # OpenGL:
     sudo apt-get install -y mesa-common-dev mesa-utils freeglut3-dev 
 ```
-In repository folder:
+In application folder:
 ```
 mkdir build
 cd build
