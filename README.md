@@ -24,9 +24,9 @@ Simple demo video can be found [here](https://www.youtube.com/watch?v=jVIBj0W4zs
 
 # Setup
 ## Repository
-This thesis is also avaiable on github: link. You can clone this repository by running: 
+This thesis is also avaiable on [Github](https://github.com/JanSkvaril/LightFieldParticleSystem). You can clone this repository by running: 
 ``` 
-git clone --recursive git@github.com:JanSkvaril/lightfield_particle_system.git
+git clone --recursive https://github.com/JanSkvaril/LightFieldParticleSystem.git
 ```
 ## Compile
 For compilation you must have cmake installed. Program was compilled by `Visual Studio Community 2022` compiler on windows and `GPP` on linux. At least OpenGL 4.X must be installed and it must supported by your GPU. 
