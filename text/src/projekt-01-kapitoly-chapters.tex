@@ -148,7 +148,7 @@ S_i = S_m + Rand() \cdot S_v
 
 Pro reálnější simulaci částic je možné spojit směr a rychlost do jednoho vektoru a přidat atributy jako akcelerace, hmotnost a podobné fyzikální veličiny. Tato a další rozšíření navrhuje a zkoumá autor práce \emph{Particle system dynamics} \cite{witkin1999particle}. 
 
-\subsubsection*{Barva a textura} Počáteční barva může být vždy stejná, nebo náhodně určená (například ohňostroj zobrazený na obrázku \ref{fig:particles_color_expample}). Také se může měnit podle ostatních vlastností částice (rychlost, pozice). Částice může mít také texturu a normálovou mapu. Je tak možné na částice aplikovat světlo. Textura i barva mohou být částečně, či zcela průhledné. V~3D prostoru je v~takovém případě nutné vyřešit problematiku řazení podle průhlednosti.
+\subsubsection*{Barva a textura} Počáteční barva může být vždy stejná, nebo náhodně určená (například ohňostroj zobrazený na obrázku \ref{fig:particles_color_expample}). Také se může měnit podle ostatních vlastností částice (rychlost, pozice). Částice může mít také texturu a normálovou mapu, je tak možné na částice aplikovat světlo. Textura i barva mohou být částečně, či zcela průhledné. V~3D prostoru je v~takovém případě nutné vyřešit problematiku řazení podle průhlednosti.
 
 \begin{figure}[H]
 	\centering
@@ -233,7 +233,7 @@ Při zobrazování light fieldu je nutné sestavit 2D snímek ze 4D funkce repre
 
 Při sestavování snímku je nutné vzorkovat původní light field. Při vzorkování se najdou nejbližší vzorky a výsledná hodnota vznikne pomocí jejich interpolace. Zvolená metoda interpolace má vliv na efektivitu a může způsobovat artefakty ve výsledném snímku. 
 
-Nejjednodušší metoda je použití nejbližšího vzorku. Dle Nyquist–Shannon vzorkovacího theoremu\cite{por2019nyquist} lze tuto metodu použít pouze v~případě, že je vzorkovací frekvence alespoň dvakrát větší, než frekvence vzorku. Případný aliasing a vzniklé rozmazávání je možné řešit použitím konečné hloubky ostrosti \footnote{anglicky depth of field}, avšak je poté nutné zvolit vhodnou clonu. Pokud je počet vzorků nízký, je nutné použít lepší interpolaci. Lze použít lineární interpolaci aplikovanou pouze na \((u,v)\) souřadnice, nebo quadrilineární interpolaci nad souřadnicemi \((u,v,s,t)\). Poslední zmíněná metoda vytváří nejmenší počet vizuálních artefaktů, což je přínosné zejména pro pohybující se objekty. Je však výpočetně značně náročnější než metoda lineární interpolace. Na redukci aliasingu vykreslovaného light fieldu lze například použít mipmaping.
+Nejjednodušší metoda je použití nejbližšího vzorku. Dle Nyquist–Shannon vzorkovacího theoremu\cite{por2019nyquist} lze tuto metodu použít pouze v~případě, že je vzorkovací frekvence alespoň dvakrát větší, než frekvence vzorku. Případný aliasing a vzniklé rozmazávání je možné řešit použitím konečné hloubky ostrosti\footnote{anglicky depth of field}, avšak je poté nutné zvolit vhodnou clonu. Pokud je počet vzorků nízký, je nutné použít lepší interpolaci. Lze použít lineární interpolaci aplikovanou pouze na \((u,v)\) souřadnice, nebo quadrilineární interpolaci nad souřadnicemi \((u,v,s,t)\). Poslední zmíněná metoda vytváří nejmenší počet vizuálních artefaktů, což je přínosné zejména pro pohybující se objekty. Je však výpočetně značně náročnější než metoda lineární interpolace. Na redukci aliasingu vykreslovaného light fieldu lze například použít mipmaping.
 
 
 \section{Mipmapování}
@@ -245,7 +245,7 @@ Spolu s~filtrováním uvádějí autoři možnost použít \textbf{mipmapování
 
 Autoři také uvádějí, že mipmapovaná textura je obvykle jen o~jednu třetinu objemnější než originální textura. Je však možné dosáhnout i paměťových úspor v~případě, že je do paměti nahrána pouze potřebná část mipmapové textury. 
 
-Další významnou výhodou mipmapingu je redukce aliasingu. Tento efekt lze pozorovat například na obrázku \ref{fig:mipmap_alias}. Výraznou nevýhodou mipmapingu je nutnost mipmapovou texturu generovat. Je sice možné ji vygenerovat před začátkem vykreslování, ale je nutné ji generovat za běhu v~případě, že se textura mění. 
+Další významnou výhodou mipmapingu je redukce aliasingu. Tento efekt lze pozorovat například na obrázku \ref{fig:mipmap_alias}. Výraznou nevýhodou mipmapingu je nutnost mipmapovou texturu generovat. Existuje sice možnost ji vygenerovat před začátkem vykreslování, ale musí se generovat za běhu v~případě, že se textura mění. 
 
 \begin{figure}[H]
 	\centering
@@ -281,12 +281,12 @@ Nástroj je rozdělen na několik modulů, které mohou být použity i samostat
 \section{Architektura}
 \label{sec_architecture}
 Architektura nástroje je navržena tak, aby byla snadno rozšiřitelná. Jednotlivé části jsou tedy rozděleny na moduly, které zajišťují určitou funkcionalitu. Řada z~těchto modulů je navhrnuta tak, aby mohly být snadno nahrazeny a šla tak snadno změnit funkcionalita celého nástroje.
-\subsection*{Grafické rozhraní} Slouží k~editování parametrů a přepínání možných scén. Může měnit vlastnosti simulace, jako jsou například síla gravitace, rychlost částice. Scény obsahují různorodé vizuální prostředí (například rozdílné skyboxy) a odlišné \texttt{částicové systémy} demonstrující různou funkcionalitu. Dále je možné měnit parametry generátorů, jako je například \emph{hustota} pořízení light field dat, nebo rozlišení výsledné textury. Grafické rozhraní také zajišťuje ovládání kamery.  
+\subsection*{Grafické rozhraní} Slouží k~editování parametrů a přepínání možných scén. Může měnit vlastnosti simulace, jako jsou například síla gravitace, či rychlost částice. Scény obsahují různorodé vizuální prostředí (například rozdílné skyboxy) a odlišné \texttt{částicové systémy} demonstrující různou funkcionalitu. Dále je možné měnit parametry generátorů, jako je například \emph{hustota} pořízení light field dat, nebo rozlišení výsledné textury. Grafické rozhraní také zajišťuje ovládání kamery.  
 \subsection*{Částice} Každá částice obsahuje informace o~pozici a času života. Obsahuje také rozhraní \texttt{Reset} a \texttt{Update}. \texttt{Reset} uvede částici do počátečního stavu -- například při vypršení doby života. Obvykle jsou některé vlastnosti určeny stochasticky, aby docházelo k~chaotickému chování. \texttt{Update} ovlivňuje chování částice v~průběhu simulace. Obvykle mění pozici částice pro efekt pohybu. 
 
 Při vytváření částicového systému je nutné specifikovat prototyp částice (podle návrhového vzoru \emph{Prototype}), který je poté použit při vytváření částic. Rozšířená částice tedy také obsahuje rozhraní \texttt{Clone} vytvářející kopii této částice. 
 
-Jednotlivé částice jsou vykreslovány jako kamerou orientované billboardy. Textura těchto billboardů je tvořena rekonstrukcí dat zachyceného light fieldu. Výsledný objekt je velmi podobný billboardu typu impostor, avšak nemusí být při každé změně úhlu pohledu opět provedeno renderování (pokud se úhel pohledu již nachází v~mřížce). Navíc přechody mezi úhly jsou díky interpolaci plynulé.
+Jednotlivé částice jsou vykreslovány jako kamerou orientované billboardy. Textura těchto billboardů je tvořena rekonstrukcí dat zachyceného light fieldu. Výsledný objekt je velmi podobný billboardu typu \emph{impostor}, avšak nemusí být při každé změně úhlu pohledu opět provedeno renderování (pokud se úhel pohledu již nachází v~mřížce). Navíc přechody mezi úhly jsou díky interpolaci plynulé.
 
 \subsection*{Simulátor} Spravuje jednotlivé částice a zajišťuje jejich simulaci. Částice jsou vytvářeny z~daného prototypu pomocí rozhraní \texttt{Clone} a simulovány pomocí rozhraní \texttt{Update}. Při změně prototypu se všechny částice znovu inicializují. Modul také uchovává a aktualizuje simulační čas, který je při simulaci předáván částicím. Konkrétní chování vždy implementují samotné částice. 
 
@@ -312,7 +312,7 @@ Konkrétní částice nejsou přímo součástí částicového systému, ale js
 \label{navrh-generator}
 Vytváří data light fieldu. Při vytváření je nutné definovat \emph{model}, s~kterým má generátor pracovat. Generátor obsahuje rozhraní \texttt{Generate}, které vykresluje definovaný model pod různými úhly, a zachycuje tak data light fieldu, které ukládá do textury.
 
-Data jsou uložena jako 2D pole obrázků reprezentující \((u,v)\) souřadnice, kde jednotlivé pixely reprezentují souřadnice ${(s,t)}$, jak je znázorněno na vizualizaci na obrázku \ref{fig:lightfield_reprezentation}. Tato data jsou uložena do textury. Rozměr tohoto pole je dále nazýván jako \textbf{hustota} a určuje míru vzorkování. Pokud je tedy například hodnota hustoty pět, bude mít výsledné pole pět obrázků na šířku i na výšku. Rovina ${(u,v)}$ sféricky obklopuje objekt, musí tedy být vzorkování dostatečné aby byly přechody mezi úhly plynulé. Příliš vysoké vzorkování může mít však velmi negativní efekt na objem potřebné paměti, a je tak nutné snížit kvalitu jednotlivých obrázků, což má dopad na výslednou kvalitu. 
+Data jsou uložena jako 2D pole obrázků reprezentující \((u,v)\) souřadnice, kde jednotlivé pixely reprezentují souřadnice ${(s,t)}$, jak je znázorněno na vizualizaci na obrázku \ref{fig:lightfield_reprezentation}. Tato data jsou uložena do textury. Rozměr tohoto pole je dále nazýván jako \textbf{hustota} a určuje míru vzorkování. Pokud je tedy například hodnota hustoty pět, bude mít výsledné pole pět obrázků na šířku i na výšku. Rovina ${(u,v)}$ sféricky obklopuje objekt, musí tedy být vzorkování dostatečné, aby byly přechody mezi úhly plynulé. Příliš vysoké vzorkování může mít však velmi negativní efekt na objem potřebné paměti, a je tak nutné snížit kvalitu jednotlivých obrázků, což má dopad na výslednou kvalitu. 
 
 Light field může být vygenerován celý, ještě před spuštením hlavní smyčky, nebo může být dokreslován postupně dynamicky za běhu. K~tomuto účelu slouží \texttt{Cache tabulka}. Tato tabulka obsahuje jeden záznam pro každou možnou ${(u,v)}$ souřadnici, její rozměry tedy odpovídají \emph{hustotě}. Každý záznam se může nacházet ve třech stavech: 
 \begin{itemize}
@@ -332,7 +332,7 @@ Ve výchozím stavu jsou všechny záznamy ve stavu \texttt{Empty}. Pokud je zá
 
 \subsection*{Model} Model obsahuje 3D objekt, ze kterého má být vytvářen light field. Musí obsahovat rozhraní \texttt{Draw}, které objekt vykreslí. Při vykreslování je nutné specifikovat rotační vektor, kterým má být objekt při vykreslování rotován. Tento vektor je využíván především modulem \texttt{Generator} při vytváření light filedu, kde je zapotřebí vykreslit objekt při různé rotaci. 
 
-Dále je možné specifikovat parametry, které budou dále nazývány jako \textbf{speciální parametry}. To mohou být například parametry světla, které májí být při vykreslování modelu použito. Takové světlo lze po vytvoření light fieldu měnit pouze přegenerováním a bude dále nazýváno jako \textbf{statické světlo}. Dalším parametrym může být například statický rotační vektor, který bude vždy použit při vykreslování. 
+Dále je možné specifikovat parametry, které budou dále nazývány jako \textbf{speciální parametry}. To mohou být například parametry světla, které májí být při vykreslování modelu použito. Takové světlo lze po vytvoření light fieldu měnit pouze přegenerováním a bude dále nazýváno jako \textbf{statické světlo}. Dalším parametrem může být například statický rotační vektor, který bude vždy použit při vykreslování. 
 
 Speciální parametry i způsob vykreslování rozhraním \texttt{Draw} jsou zavislé na konkrétní implementaci modulu a mohou se libovolně měnit v~podobě rozšíření. Měla by však vždy být dodržena funkcionalita rotování objektu podle rotačního vektoru, aby bylo možné light field vytvořit. 
 
@@ -369,7 +369,7 @@ Kromě grafického rozhraní je také možné nástroj spouštět s~různými ar
 \label{sec:methodology}
 Pro ohodnocení navrhované metody vykreslování částicových efektů je nutné ji otestovat a změřit. Metoda by měla umožnit efektivně zobrazovat velké množství 3D objektů bez nutnosti je přímo renderovat. Každé měření musí být tedy vykonáno pro navrhovanou metodu i pro standardní způsob renderování 3D objektů, aby bylo možné srovnat, zda navrhovaná metoda opravdu přináší přínos. Součástí řešení je i dynamická změna vzhledu částic v~průběhu simulace, a tak je i tuto vlastnost nutné řádně změřit.
 
-Kromě srovnávání je také žádoucí sledovat vliv různých parametrů na sledované metriky, například: různá složitost zobrazovaného objektu, počet částic a kvalita textury částic.
+Kromě srovnávání je také žádoucí sledovat vliv různých parametrů na sledované metriky, například různá složitost zobrazovaného objektu nebo počet částic a kvalita textury částic.
 \subsection*{Sledované metriky}
 Při měření je nutné korektně oba způsoby renderování srovnat. K~tomu lze využít několik metrik. Z~hlediska výkonu lze sledovat vytížení CPU a grafické karty, a především maximální dosažitelný počet vykreslovaných snímků za sekundu. Další důležitou metrikou je požadovaný objem systémové paměti a paměti grafické karty. 
 
@@ -396,7 +396,7 @@ Model je třída zajišťující vykreslování 3D objektu a předává se pomoc
 
 Při inicializaci modelu je nutné specifikovat cestu souboru obsahující model. Pomocí knihovny \texttt{assimp} se načtou jednotlivé stěny (faces), vrcholy, normály a souřadnice textur. Tyto hodnoty jsou uloženy do příslušných bufferů. 
 
-Model implementuje metodu \texttt{Draw}, která je označena jako virtuální, jelikož je určena k~přepsání při rozšiřování pomocí dědičnosti. Výstupem této metody je vykreslení objektu do aktivního framebufferu. Vstupem této metody je rotační vektor $r$ obsahující požadovanou rotaci po osách $x$ a $y$ v~radiánech. Tento vektor je využit generátorem při generování pod různými úhly při tvorbě light fieldu. Dalším vstupem je ukazatel na strukturu se \emph{Speciálními parametry}, které obsahují další informace:
+Model implementuje metodu \texttt{Draw}, která je označena jako virtuální, jelikož je určena k~přepsání při rozšiřování pomocí dědičnosti. Výstupem této metody je vykreslení objektu do aktivního framebufferu. Vstupem této metody je rotační vektor $r$ obsahující požadovanou rotaci po osách $x$ a $y$ v~radiánech. Tento vektor je využit generátorem při generování pod různými úhly při tvorbě light fieldu. Dalším vstupem je ukazatel na strukturu se \emph{Speciálními parametry}, které obsahují další informace.
 \begin{itemize}
     \item Zda má být aplikováno tzv. \uv{statické světlo}. Jedná se o~světlo, kterým bude objekt osvícen již při vytváření light fieldu.
     \item Barva statického světla, pokud je zapnuto.
@@ -418,7 +418,7 @@ V~nástroji je implementováno pouze jedno rozšíření modelu, které při vyk
 % \end{figure}
 
 \subsection{Generátor}
-Generátor je modul zajišťující samotné vytváření light fieldu. Jeho funkcionalita je rozdělena do tří tříd:
+Generátor je modul zajišťující samotné vytváření light fieldu. Jeho funkcionalita je rozdělena do tří tříd.
 \begin{itemize}
     \item \texttt{Generator} - hlavní třída obsahující ostatní a poskytující rozhraní pro práci s~light fieldem. 
     \item \texttt{CacheTable} - cache tabulka obsahující informace o~${uv}$ souřadnicích, jež je třeba do textury light fieldu doplnit.
@@ -426,7 +426,7 @@ Generátor je modul zajišťující samotné vytváření light fieldu. Jeho fun
 \end{itemize}
 Při inicializaci je nutné specifikovat \texttt{model} a \emph{Speciální parametry}, které je možné měnit kdykoliv za běhu. Na rozdíl od většiny tříd v~aplikaci nejsou tyto třídy určeny k~rozšíření a neobsahují tak virtuální metody. Rozšířit chování generátoru lze pomocí různých modelů.
 
-Metoda \texttt{\textbf{Generate}} vykonává generování textury light fieldu. Textura je konceptuálně rozdělena na 2D pole, kde počet záznamů odpovídá předdefinované \emph{hustotě}. Přiklad plně generované textury lze nalézt na obrázku \ref{fig:lf_texture}. Pro každý záznam $uv$ je zavolána metoda \texttt{Draw} modelu s~určitým rotačním vektorem $r_{uv}$. Hodnota tohoto vektoru je určena vztahem \ref{eq:rvector}.
+Metoda \texttt{\textbf{Generate}} vykonává generování textury light fieldu. Textura je konceptuálně rozdělena na 2D pole, kde počet záznamů odpovídá předdefinované \emph{hustotě}. Příklad plně generované textury lze nalézt na obrázku \ref{fig:lf_texture}. Pro každý záznam $uv$ je zavolána metoda \texttt{Draw} modelu s~určitým rotačním vektorem $r_{uv}$. Hodnota tohoto vektoru je určena vztahem \ref{eq:rvector}.
 
 
 \begin{figure}[H]
@@ -440,7 +440,7 @@ Metoda \texttt{\textbf{Generate}} vykonává generování textury light fieldu. 
 {(r_x,r_y)_{uv} = \left(\frac{2\pi}{density} \times u, \frac{2\pi}{density} \times v\right)}
 \end{equation}
 
-Hodnoty $u$ a $v$ jsou indexy příslušného záznamu pole. Model je pomocí \texttt{GeneratorTexture} vyrenderován do textury a tato textura je nanesena na odpovídající $uv$ souřadnice v~textuře light fieldu. Pokud generování není přeskočeno, je patřičný záznam v~\texttt{Cache tabulce} označen jako \texttt{Cached}. Generování probíhá pouze pokud je záznam na daných souřadnicích označen jako \texttt{Active}. Tento proces je znázorněn Algoritmem \ref{alg:generator}.
+Hodnoty $u$ a $v$ jsou indexy příslušného záznamu pole. Model je pomocí \texttt{Generator Texture} vyrenderován do textury a tato textura je nanesena na odpovídající $uv$ souřadnice v~textuře light fieldu. Pokud generování není přeskočeno, je patřičný záznam v~\texttt{Cache tabulce} označen jako \texttt{Cached}. Generování probíhá pouze pokud je záznam na daných souřadnicích označen jako \texttt{Active}. Tento proces je znázorněn Algoritmem \ref{alg:generator}.
 
 \begin{algorithm}[H]
 \caption{Generování dat light fieldu pomocí metody
@@ -480,13 +480,13 @@ Vykreslování částicových efektů zajišťují moduly \textbf{Částicový s
 
 Částice jsou vzhledem k~jejich vysokému počtu vykreslovány pomocí \textbf{instancování}. Každá částice je kamerou orientovaný billboard, jedná se tedy o~pouhý čtverec, který je rotován směrem ke kameře.  
 
-Při inicializaci se vytváří nezbytné buffery. Nejdříve jsou vytvořeny buffery, které jsou sdílené pro všechny instance. Jedná se o~buffer obsahující vrcholy obdélníku a souřadnice textury. Dále je vytvořeno několik bufferů, které mají odlišnou  hodnotu pro každou texturu:
+Při inicializaci se vytváří nezbytné buffery. Nejdříve jsou vytvořeny buffery, které jsou sdílené pro všechny instance. Jedná se o~jeden obsahující vrcholy obdélníku a souřadnice textury. Dále je vytvořeno několik bufferů, které mají odlišnou  hodnotu pro každou texturu.
 \begin{itemize}
     \item Pozice částice -- obsahuje $(x,y,z)$ souřadnice instance částice v~prostoru. Do tohoto bufferu se při každém průběhu renderovací smyčky ukládají pozice všech částic. 
     \item \texttt{Handle} textury -- obsahuje \texttt{handle} textury, které má částice využívat. Hodnoty tohoto bufferu se mohou, ale nemusí, měnit za běhu. 
     \item $(u,v)$ souřadnice -- souřadnice průsečíku úsečky směřující od kamery k~aktuální instanci s~rovinou $uv$. Tyto souřadnice jsou vypočítány při tvorbě \texttt{tabulky potřebných uv}. Vypočtené souřadnice jsou poté předány \texttt{cache tabulce} a konkrétním částicím, a následně uloženy do tohoto bufferu.
 \end{itemize}
-Aby byly hodnoty bufferu korektně rozděleny mezi částice, je dle referenčních stránek \texttt{OpenGL}\cite{glrefpages} nutné vytvořit dělič, který rozdělí hodnoty mezi instance. Ten lze vytvořit pomocí funkce \texttt{glVertexAttribDivisor} pokud je buffer v~aktuálním kontextu. 
+Aby byly hodnoty korektně rozděleny mezi částice, je dle referenčních stránek \texttt{OpenGL}\cite{glrefpages} nutné vytvořit dělič, který rozdělí hodnoty mezi instance. Ten lze vytvořit pomocí funkce \texttt{glVertexAttribDivisor} pokud je buffer v~aktuálním kontextu. 
 
 Při každém vykreslování je nutné specifikovat hodnoty jednotlivých uniformních proměnných pro použité shadery. Jedná se o~modelovou, pohledovou a perspektivní transformační matici. Pohledová matice je vytvořena instancí třídy \texttt{Camera}, kterou spravuje uživatelské rozhraní.
 
@@ -512,7 +512,7 @@ V~sekci \ref{sec:lightfield_zobrazeni} je uvedeno, že při nanášení light fi
       P_{xyz} = normalize(C_{xyz} - S_{xyz})
 \end{equation}
 
-Souřadnice ${(s, t)}$ jsou mapovány přímo na jednotlivé fragmenty výsledného billboardu. Míra vzorkování je omezena pořizovací \emph{hustotou}, a je tedy nutné mezi vzorky interpolovat, jak je popsáno v~sekci \ref{sec:lightfield_zobrazeni}. Byla použita metoda bilineární interpolace, jejíž vypočet opět vychází z~knihy \emph{Moderní počítačová grafika} \cite[kapitola 22.6.4]{zara2004moderni}. Tento vztah byl rozdělen na dvě části. První část, určená rovnicí \ref{eq:inter_first}, je vypočítána ve vertex shaderu a poté předána fragmentovému shaderu. Dojde tedy k~hardwarové interpolaci hodnot ${w_1}$, ${w_2}$ a ${w_3}$. Tento postup ušetří výpočetní kroky vzhledem k~faktu, že při vykreslování billboardu je počet vrcholů značně měnší než počet fragmentů. Druhý vypočet, určený rovnicí \ref{eq:inter_second}, je prováděn ve fragmentovém shaderu pro každý barevný kanál. Výsledné hodnoty jsou i výslednou barvou fragmentu.   
+Souřadnice ${(s, t)}$ jsou mapovány přímo na jednotlivé fragmenty výsledného billboardu. Míra vzorkování je omezena pořizovací \emph{hustotou}, a je tedy nutné mezi vzorky interpolovat, jak je popsáno v~sekci \ref{sec:lightfield_zobrazeni}. Byla použita metoda bilineární interpolace, jejíž vypočet opět vychází z~knihy \emph{Moderní počítačová grafika} \cite[kapitola 22.6.4]{zara2004moderni}. Tento vztah byl rozdělen na dvě části. První část, určená rovnicí \ref{eq:inter_first}, je vypočítána ve vertex shaderu a poté předána fragmentovému shaderu. Dojde tedy k~hardwarové interpolaci hodnot ${w_1}$, ${w_2}$ a ${w_3}$. Tento postup ušetří výpočetní kroky vzhledem k~faktu, že při vykreslování billboardu je počet vrcholů značně menší než počet fragmentů. Druhý výpočet, určený rovnicí \ref{eq:inter_second}, je prováděn ve fragmentovém shaderu pro každý barevný kanál. Výsledné hodnoty jsou i výslednou barvou fragmentu.   
 
 \begin{equation}
 \label{eq:inter_first}
@@ -565,7 +565,7 @@ Hlavní problém sférického mapování textury nastává v~momentě, kdy se so
 Každá instance částice se skládá z~několika vrcholů, které dohromady tvoří čtverec. Vrcholy tohoto čtverce jsou ve vertex shaderu rotovány tak, aby vznikl kamerou orientovaný billboard. Tato rotace probíhá dle metody popsané v~sekci \ref{sec:camoriented_billboard}. Normálový vektor kamery $n$ je získán z~pohledové matice. 
 
 Částice uchovává \texttt{handle} textury, který má být použit, a přidělené $(u,v)$ souřadnice. Také zajišťuje, aby byly udrženy v~rozsahu $(0,1)$. Pokud je rozsah překročen či podkročen, je hodnota rotována zpět do rozsahu. Například souřadnice s~hodnotou $1.3$ budou transformovány na $0.3$.
-Pro částice jsou implementovány dva různé shadery, které lze v~částicovém systému přepínát. První je obyčejný, obsahuje vertex shader, který orotuje vrcholy a spočítá první část interpolace. Fragmentový shader načte poté zvolenou texturu pomocí \texttt{handle} a dokončí interpolaci. Pseudokód implementace shaderu je vyjádřen výpisem \ref{code:vertexp}.
+Pro částice jsou implementovány dva různé shadery, které lze v~částicovém systému přepínát. První je obyčejný, obsahuje vertex shader, který rotuje vrcholy a spočítá první část interpolace. Fragmentový shader načte poté zvolenou texturu pomocí \texttt{handle} a dokončí interpolaci. Pseudokód implementace shaderu je vyjádřen výpisem \ref{code:vertexp}.
 \begin{lstlisting}[caption={Pseudokód vertex shaderu částic (zjednodušeno)}, label={code:vertexp}, language=C]
 void main()
 {
@@ -584,7 +584,7 @@ void main()
     TexturePoints = pos + (A,B,C,D) / density;
 }
 \end{lstlisting}
-Implementace fragmentového shaderu je naznačeta algoritmem \ref{code:fragp}. Dojde pouze k~dokončení interpolace
+Implementace fragmentového shaderu je naznačeta algoritmem \ref{code:fragp}. Dojde pouze k~dokončení interpolace.
 \begin{lstlisting}[caption={Pseudokód fragmentového shaderu částic (zjednodušeno)}, label={code:fragp}, language=C]]
 uniform uint64_t texture_samples[MAX_TEXTURES];
 void main() {
@@ -620,7 +620,7 @@ V~rámci rozšíření je implementován ještě další fragmentový shader, kt
 % \end{lstlisting}
 \subsection{Částicový systém}
 \label{sec:impl_particles}
-Tato třída zajišťuje inicializaci všech bufferů, načtení shaderů a samotné vykreslování. Poskytuje také rozhraní k~změně různých parametrů simulace. Další velmi významná úloha této třídy je tvorba a předání \texttt{tabulky potřebných uv}.
+Tato třída zajišťuje inicializaci všech bufferů, načtení shaderů a samotné vykreslování. Poskytuje také rozhraní ke změně různých parametrů simulace. Další velmi významná úloha této třídy je tvorba a předání \texttt{tabulky potřebných uv}.
 
 Tento výpočet je popsán v~sekci \ref{sec:texture_mapping}. Souřadnice $(u,v)$ jsou spočítány pro každou částici. Vstupem funkce pro tvorbu tabulky je třída \texttt{Generátor store}. Po dokončení tvorby tabulky je předána právě této třídě, která ji postupně předá každému vlastněnému generátoru. Generátory postupně tabulku procházejí a nastavují záznamy v~\texttt{Cache tabulce} na odpovídajících souřadnicích do stavu \texttt{Activated}. 
 
@@ -630,9 +630,9 @@ V~implementaci třídy není předpokládáno, že by byla rozšiřována, jelik
 
 Primární účel této třídy je možnost srovnat a změřit vizuální a výkonnostní rozdíl mezi navrhovanou metodou využívající light field a metodou klasického 3D vykreslování. Při inicializaci je nutné specifikovat \texttt{model}, jehož objekt bude vykreslován, a parametry částic. Stejně jako u~light field částicového systému, je i zde použito instancování a je využit stejný simulátor.   
 \section{Simulace}
-Další důležitou součástí nástroje je simulace částic. Je téměř zcela oddělená od vykreslování a je ji tak možné využívat nezávisle, nebo například před spuštěním předsimulovat scénu, aby se již systém nacházel v~přirozeném stavu. 
+Další důležitou součástí nástroje je simulace částic. Je téměř zcela oddělená od vykreslování a což umožňuje ji využívat nezávisle, nebo například před spuštěním předsimulovat scénu, aby se již systém nacházel v~přirozeném stavu. 
 
-Část simulační logiky je implementována ve třídě \texttt{Simulátor} a část implementuje přímo částice. Simulátor uchovává list všech vytvořených částic. Částice jsou vytvářeny z~prototypu částice. Ten může být specifikován pomocí metody \texttt{SetParticlePrototype}, která zničí všechny částice a vytvoří je z~poskytnutého prototypu. Poskytuje také metodu \texttt{Reset}, jejímž vstupem jsou \emph{parametry částice}. Metoda vyresetuje všechny částice a přiřadí jim poskytnuté parametry. 
+Část simulační logiky implementuje třída \texttt{Simulátor} a část implementuje přímo částice. Simulátor uchovává list všech vytvořených částic, které jsou vytvářeny z~prototypu částice. Ten může být specifikován pomocí metody \texttt{SetParticlePrototype}, která zničí všechny částice a vytvoří je z~poskytnutého prototypu. Poskytuje také metodu \texttt{Reset}, jejímž vstupem jsou \emph{parametry částice}. Metoda vyresetuje všechny částice a přiřadí jim poskytnuté parametry. 
 
 \texttt{Parametry částice} je struktura obsahující různé parametry týkající se vlastností simulace. Například je zde síla a směr gravitace, rychlost a doba života částice nebo možnost zapnout jejich náhodnou počáteční rotaci. Tyto parametry je pomocí dědičnosti možné obohatit o~další. 
 
@@ -658,7 +658,7 @@ Scéna na obrázku \ref{fig:ps_podzim} obsahuje podzimní scenérii, kde je s~po
     \text{ textureIndex} = rand() \text{ } mod \text{ maxTextures} 
 \end{equation}
 
-Souřadnice $x$ a $z$ jsou určeny náhodně a souřadnice $y$ je konstantní. Částice jsou tak generovány na čtvercové ploše. Modifikován je i pohyb částic. Ke směrovému vektoru gravitace je při každém kroku přičítána hodnota $w$, jenž je určena vztahem \ref{eq:sin_movement}. Její sinusový průběh závislý na čase dodává částici efekt spirálového pohybu. Hodnota $\alpha$ určuje rychlost změny a hodnota $\beta$ její sílu. Během pohybu ještě částice vertikálně rotují náhodnou rychlostí. Rotace je uskutečněna pomocí změny souřadnice $u$ při každém kroku simulace. 
+Souřadnice $x$ a $z$ jsou určeny náhodně a souřadnice $y$ je konstantní. Částice jsou tak generovány na čtvercové ploše a pohyb částic modifikován. Ke směrovému vektoru gravitace je při každém kroku přičítána hodnota $w$, jenž je určena vztahem \ref{eq:sin_movement}. Její sinusový průběh závislý na čase dodává částici efekt spirálového pohybu. Hodnota $\alpha$ určuje rychlost změny a hodnota $\beta$ její sílu. Během pohybu ještě částice vertikálně rotují náhodnou rychlostí. Rotace je uskutečněna pomocí změny souřadnice $u$ při každém kroku simulace. 
 \begin{equation}
     \label{eq:sin_movement}
     w = sin(time \times \alpha) \times \beta
@@ -676,7 +676,7 @@ Tato scéna znázorňuje flotilu vesmírných lodí. Lze ji nalézt na obrázcí
 \end{figure}
 
 
-Byly použity tři generátory se standardními modely. Každý model je vytvořen jiným objektem. Tyto se skládají přibližně z~123~000, 112~000 a 7~000 trojúhelníků. Scéna ve výchozím stavu obsahuje 5~000 částic, avšak při testování na výkonnější sestavě bylo dosaženo i 20~000 částic. Měření výkonu je věnována kapitola \ref{sec:mereni}.
+Jsou použity tři generátory se standardními modely. Každý model je vytvořen jiným objektem. Tyto se skládají přibližně z~123~000, 112~000 a 7~000 trojúhelníků. Scéna ve výchozím stavu obsahuje 5~000 částic, avšak při testování na výkonnější sestavě bylo dosaženo i 20~000 částic. Měření výkonu je věnována kapitola \ref{sec:mereni}.
 
 Částice jsou opět rozšířeny o~náhodnou volbu textury popsanou vztahem \ref{eq:rand_index}. Počáteční souřadnice částice jsou určeny náhodně z~určitého rozsahu. Částice jsou tedy vytvářeny v~krychlovitém prostoru. Jejich pohyb není určen gravitací, pohybují se rychlostí, která je při zrození částice náhodně určena a poté zůstává konstantní.
 
@@ -684,7 +684,7 @@ Byly použity tři generátory se standardními modely. Každý model je vytvoř
 
 
 \subsection*{Transformace}
-V~obou předchozích scénách byla používaná textura určena při zrodu částice. Tato scéna však demonstruje možnost změny v~průběhu života částice. Byly použity dva generátory, jeden pro texturu krychle a druhý pro torus. Při zrodu částice využívá texturu krychle a při průchodu plochou, jež se nachází ve středu obrazovky, dojde k~přepnutí textury. Částice jsou také při zrodu náhodně rotovány, ale rychlost rotace je nulová. Tuto scénu lze nalézt na obrázku \ref{fig:ps_transformation}.
+V~obou předchozích scénách je používaná textura určena při zrodu částice. Tato scéna však demonstruje možnost změny v~průběhu života částice. Jsou použity dva generátory, jeden pro texturu krychle a druhý pro torus. Při zrodu částice využívá texturu krychle a při průchodu plochou, jež se nachází ve středu obrazovky, dojde k~přepnutí textury. Částice jsou také při zrodu náhodně rotovány, ale rychlost rotace je nulová. Tuto scénu lze nalézt na obrázku \ref{fig:ps_transformation}.
 
 \begin{figure}[H]
 	\centering
@@ -705,7 +705,7 @@ Tato scéna využívá pouze jeden generátor. V~průběhu simulace probíhá cy
 \end{figure}
 
 \subsection*{Disco}
-Na obrázku \ref{fig:ps_disco} lze vidět další scénu demonstrující dynamické překreslování light fieldu. Systém se skládá z~velkého množství částic, které se pohybují podle směru gravitace. Je použit pouze jeden generátor se standardním modelem. V~krátkých pravidelných intervalech je měněno statické světlo modelu a jelikož se jedná o~\emph{Speciální parametr}, je vyresetována \texttt{Cache tabulka} a light field textura je opětovně generována. 
+Na obrázku \ref{fig:ps_disco} lze vidět další scénu demonstrující dynamické překreslování light fieldu. Systém se skládá z~velkého množství částic, které se pohybují podle směru gravitace. Scéna využívá pouze jeden generátor se standardním modelem. V~krátkých pravidelných intervalech je měněno statické světlo modelu a jelikož se jedná o~\emph{Speciální parametr}, je vyresetována \texttt{Cache tabulka} a light field textura se opětovně generuje.
 
 \begin{figure}[H]
 	\centering
@@ -731,16 +731,16 @@ V~nástroji je implementováno několik scén určených pro měření. Někter�
 
 Scény nazývané \textbf{Benchmark Basic} a \textbf{Benchmark Complex} obsahují totožné částicové systémy avšak různé modely. První zmíněná scéna obsahuje model s~objektem o~velikosti 3 476 trojúhelníků a druhý velmi složitý objekt obsahující 144 046 trojúhelníků.
 
-Scény \textbf{Standard3D Basic} a \textbf{Standard3D Complex} využívají speciálního částicového systému, jenž nevyužívá light field renderingu, ale standardních renderovacích technik a instancování. Tento částicový systém je implementován třídou \texttt{standard3DParticles} a je popsán v~sekci \ref{sec:impl_particles}. Pro obě scény byly použity stejné modely jako u~jejich light field variant. To stejné platí i pro simulační část. 
+Scény \textbf{Standard3D Basic} a \textbf{Standard3D Complex} využívají speciálního částicového systému, jenž nevyužívá light field renderingu, ale standardních renderovacích technik a instancování. Tento částicový systém je implementován třídou \texttt{standard3DParticles} a je popsán v~sekci \ref{sec:impl_particles}. Pro obě scény jsou použity stejné modely jako u~jejich light field variant. To stejné platí i pro simulační část. 
 
 Poslední scénou určenou pro měření je \textbf{Benchmark Disco}. Jedná se o~upravenou scénu \emph{Disco} pro účely měření. Parametry simulace byly nastaveny tak, aby odpovídaly ostatním měřícím scénám a scéna tak mohla být porovnávána s~ostatními. 
 \section{Testovací nástroj}
 \label{sec_benchmark_impl}
-Cílem testovacího nástroje je provést měření popsané v~sekci \ref{sec:methodology} a výsledky zaznamenat. Nástroj také umožňuje analýzu těchto výsledků. Byl rozdělen na dva oddělené skripty sloužící k~různým účelům. Oba skripty byly implementovány v~jazyce \texttt{Python}.
+Cílem testovacího nástroje je provést měření popsané v~sekci \ref{sec:methodology} a výsledky zaznamenat. Nástroj také umožňuje analýzu těchto výsledků. Je rozdělen na dva oddělené skripty sloužící k~různým účelům. Oba skripty byly implementovány v~jazyce \texttt{Python}.
 
-Skript \texttt{benchmark.py} slouží k~samotnému měření. Spouští hlavní aplikaci s~různými parametry a zaznamenává měřené metriky. Výstup poté uloží do souboru pro pozdější analýzu. Skript spouští aplikaci s~různými parametry, které určují scénu, počet částic, rotaci scény a případné rozlišení light field textury. K~práci s~procesem aplikace byla použita knihovna \texttt{psutil}. Knihovna také umožňuje sledovat využití CPU či kolik RAM proces využívá. Ke sledování grafické karty byla použita knihovna \texttt{GPUtil}, jenž využívá nástroj \texttt{nvidia-smi}. Skript je tedy schopný pouze měřit metriky od společnosti \texttt{Nvidia}. Pro práci s~daty a jejich uložení byla použita knihovna \texttt{pandas}.
+Skript \texttt{benchmark.py} slouží k~samotnému měření. Spouští hlavní aplikaci s~různými parametry a zaznamenává měřené metriky. Výstup poté uloží do souboru pro pozdější analýzu. Skript spouští aplikaci s~různými parametry, které určují scénu, počet částic, rotaci scény a případné rozlišení light field textury. K~práci s~procesem aplikace je použita knihovna \texttt{psutil}. Knihovna také umožňuje sledovat využití CPU či kolik RAM proces využívá. Ke sledování grafické karty nástroj používá knihovnu \texttt{GPUtil}, jenž využívá nástroj \texttt{nvidia-smi}. Skript je tedy schopný pouze měřit metriky od společnosti \texttt{Nvidia}. Pro práci s~daty a jejich uložení zajišťuje knihovna \texttt{pandas}.
 
-Skript \texttt{analyzer.py} slouží k~analýze naměřených dat. Data jsou načtena ze souboru, kde byla vytvořena prvním skriptem. Pro agregaci a jiné datové operace byla také použita knihovna \texttt{pandas}. Výsledné grafy jsou vytvořeny za pomocí knihovny \texttt{Matplotlib}.
+Skript \texttt{analyzer.py} slouží k~analýze naměřených dat. Data jsou načtena ze souboru, kde byla vytvořena prvním skriptem. Pro agregaci a jiné datové operace je také použita knihovna \texttt{pandas}. Výsledné grafy jsou vytvořeny za pomocí knihovny \texttt{Matplotlib}.
 
 Měřící skript byl pomocí nástroje \texttt{pyinstaller} převeden na spustitelný binární soubor. Takový sobor nevyžaduje, aby na sestavě, na které je měření prováděno, byly nainstalovány potřebné závislosti. Měření je tak možné provést bez jakékoliv instalace.
 
@@ -795,7 +795,7 @@ Vliv textury na vizuální kvalitu částice je naznačen na obrázcích \ref{fi
 	\label{fig:texture_visual}
 \end{figure}
 
-Na obrázcích \ref{fig:comp_zoomed} lze pozorovat částici vykreslenou pomocí light fieldu a částici vykreslenou standardním způsobem. Lze zde pozorovat mírné rozostření celého modelu a vizuální artefakty nacházející se především u~okrajů modelu. Částice jsou obvykle pozorovány při pohybu a ze větší vzdálenosti, což výrazně potlačí viditelnost těchto vizuálních defektů. 
+Na obrázcích \ref{fig:comp_zoomed} lze pozorovat částici vykreslenou pomocí light fieldu a částici vykreslenou standardním způsobem. Lze si povšimnout mírné rozostření celého modelu a vizuální artefakty nacházející se především u~okrajů modelu. Částice jsou obvykle pozorovány při pohybu a ze větší vzdálenosti, což výrazně potlačí viditelnost těchto vizuálních defektů. 
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.45\textwidth]{obrazky-figures/bunny_nolightfield.png}
@@ -876,7 +876,7 @@ Poslední sestava S4 byla ze všech nejméně výkonná, což se velmi znatelně
 \end{figure}
 
 \subsection{Vliv počtu částic}
-Značně výrazný vliv na rychlost systému má počet částic. Větší počet částic nejenom ovlivňuje počet vertexů a fragmentů ve scéně, ale také velikost bufferů obsahujících pozici, uv souřadnice a textury. Především se zvyšuje počet přístupů k~textuře. 
+Značně výrazný vliv na rychlost systému má počet částic. Větší počet částic nejenom ovlivňuje počet vertexů a fragmentů ve scéně, ale také velikost bufferů obsahujících pozici, $uv$ souřadnice a textury. Především se zvyšuje počet přístupů k~textuře. 
 
 V~grafu na obrázku \ref{fig:graph_particles} je možné sledovat, jak se počet snímků za sekundu snižuje s~přibývajícím počtem  částic. Tento pokles je nejdříve velmi prudký, s~větším počtem částic však zpomaluje, jelikož se částice začínají častěji překrývat. Pokles FPS je u~sestavy S3 pomalejší, než u~sestav S1 a S2. Toto může být způsobeno velkým počtem výpočetních jednotek, ale i například dostatečným chlazením.
 
