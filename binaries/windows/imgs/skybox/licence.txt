@@ -1,0 +1,11 @@
+skyboxes are from:
+https://opengameart.org/content/faq#q-how-to-credit
+
+Park and field:
+CC-BY-3.0. 	https://opengameart.org/content/park-skyboxes
+
+Space:
+Free use	https://opengameart.org/content/space-nebulas-skybox
+
+Basic:
+https://learnopengl.com/
